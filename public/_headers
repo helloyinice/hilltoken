@@ -1,0 +1,5 @@
+# 品牌素材：先移除默认长缓存，再要求每次重新校验
+# 否则浏览器会缓存同名 SVG 长达 4 小时，更新 Logo 后仍显示旧版
+/assets/brand-kit/*
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate

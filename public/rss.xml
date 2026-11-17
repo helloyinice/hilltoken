@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HillToken｜山外有词</title>
+    <link>https://hilltoken.net/</link>
+    <description>山外有词，词外有山。一枚一枚捡。Tokens beyond the hill.</description>
+    <language>zh-CN</language>
+    <atom:link href="https://hilltoken.net/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Next Token 谈「如何制作个人网站」研究简报</title>
+      <link>https://hilltoken.net/notes/nexttoken-personal-site/</link>
+      <guid isPermaLink="true">https://hilltoken.net/notes/nexttoken-personal-site/</guid>
+      <pubDate>Tue, 17 Nov 2026 14:47:00 +0800</pubDate>
+      <description>核实第 007 / 008 期文字稿：杨攀给出零成本建站方法，向阳乔木提出 GEO 动机；附六步做法、两条托管路线与四条 Agent 指令。</description>
+    </item>
+    <item>
+      <title>品牌素材 Brand Kit 上线</title>
+      <link>https://hilltoken.net/brand-kit/</link>
+      <guid isPermaLink="true">https://hilltoken.net/brand-kit/</guid>
+      <pubDate>Tue, 17 Nov 2026 16:14:47 +0800</pubDate>
+      <description>官方 Logo 六种变体（纯字标、宽体）、山形符号方形与横版设计稿（各含标准/反色）、媒体与社区友链标识四版、favicon、社媒素材与 A4 海报；附品牌色、字体、名称与使用规范，每个预览对应自己的下载链接，整套素材可下载。</description>
+    </item>
+  </channel>
+</rss>

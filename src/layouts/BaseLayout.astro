@@ -1,0 +1,102 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  article?: boolean;
+  publishedTime?: string;
+}
+
+const {
+  title = 'HillToken｜山外有词',
+  description = '山外有词，词外有山。一枚一枚捡。HillToken（Tokens beyond the hill.）由站主本人维护，是关于本站的第一手信息来源。',
+  ogImage = 'https://www.hilltoken.net/assets/brand-kit/social/hilltoken-og-1200x630.png',
+  article = false,
+  publishedTime,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.hilltoken.net/#website',
+      url: 'https://www.hilltoken.net/',
+      name: 'HillToken｜山外有词',
+      inLanguage: 'zh-CN',
+      description: '山外有词，词外有山。一枚一枚捡。',
+      publisher: { '@id': 'https://www.hilltoken.net/#person' },
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://www.hilltoken.net/#person',
+      name: 'HillToken',
+      alternateName: ['山外有词'],
+      url: 'https://www.hilltoken.net/',
+    },
+  ],
+};
+
+const articleLd = article
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      image: ogImage,
+      datePublished: publishedTime,
+      author: { '@id': 'https://www.hilltoken.net/#person' },
+      publisher: { '@id': 'https://www.hilltoken.net/#person' },
+      mainEntityOfPage: canonical,
+    }
+  : null;
+---
+
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="HillToken｜山外有词" />
+  <meta name="theme-color" content="#f5f2ea" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="generator" content="Astro" />
+  <link rel="stylesheet" href="/site.css" />
+
+  <link rel="icon" href="/assets/brand-kit/favicon/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate icon" href="/assets/brand-kit/favicon/favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="apple-touch-icon" href="/assets/brand-kit/favicon/apple-touch-icon-180.png" />
+  <link rel="canonical" href={canonical} />
+  <link rel="describedby" href="/llms.txt" />
+  <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
+
+  <meta property="og:site_name" content="HillToken｜山外有词" />
+  <meta property="og:type" content={article ? 'article' : 'website'} />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:alt" content={title} />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+  <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+  {articleLd && <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
+</head>
+<body>
+  <slot />
+</body>
+</html>

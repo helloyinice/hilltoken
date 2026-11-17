@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HillToken · Pages CMS 接入操作卡</title>
+<style>
+:root{--paper:#f5f2ea;--paper-2:#fbf9f4;--ink:#141414;--ink-2:#3d3a34;--ink-3:#6f6a60;--rule:rgba(20,20,20,.18);--signal:#ff4b18;--signal-text:#b8320d;--serif:"Songti SC","STSong","Noto Serif CJK SC",Georgia,serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75;font-size:15px}
+.wrap{max-width:860px;margin:0 auto;padding:clamp(28px,6vw,64px) clamp(18px,4vw,40px) 60px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--signal-text);text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.dot{width:7px;height:7px;background:var(--signal);display:inline-block}
+h1{font-family:var(--serif);font-size:clamp(1.9rem,5vw,3rem);font-weight:700;line-height:1.25;margin:14px 0 12px}
+.lead{font-size:16px;color:var(--ink-2);max-width:46em}
+.rule{height:2px;background:linear-gradient(to right,var(--signal) 0 64px,var(--ink) 64px 100%);margin:30px 0}
+.note{background:var(--paper-2);border:1px solid var(--rule);border-left:3px solid var(--signal);padding:14px 18px;font-size:14px;color:var(--ink-2);margin:20px 0}
+section{margin-top:34px;break-inside:avoid}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-top:2px solid var(--ink);padding-top:12px;margin-bottom:16px}
+.no{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--signal-text)}
+h2{font-family:var(--serif);font-size:1.4rem;font-weight:700}
+p{margin:0 0 12px;color:var(--ink-2)}
+ol.steps{list-style:none;padding:0;counter-reset:s}
+ol.steps>li{position:relative;padding:0 0 14px 40px;counter-increment:s}
+ol.steps>li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;font-family:var(--mono);font-size:12px;color:var(--signal-text)}
+ol.steps b{color:var(--ink)}
+code,.path{font-family:var(--mono);font-size:13px;background:var(--paper-2);border:1px solid var(--rule);padding:1px 6px;word-break:break-all}
+a{color:var(--signal-text);text-decoration:underline;text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);font-weight:400;text-transform:uppercase}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-3);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+@media print{body{background:#fff;font-size:11pt}section{break-inside:avoid}.wrap{max-width:none;padding:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker"><span class="dot"></span> HILLTOKEN · 建站与运维 · 操作卡</p>
+  <h1>Pages CMS 接入：在手机上改网站</h1>
+  <p class="lead">Astro 项目已在工作区 <code>hilltoken-astro/</code> 搭好，内容抽成了可编辑文件。下面 4 步需要你本人操作（涉及 GitHub 账号授权，无法代劳）。完成后，你在手机浏览器打开 Pages CMS 就能改首页文案、发文章，保存即自动上线。</p>
+  <div class="rule"></div>
+
+  <div class="note"><strong>先看懂这条链路：</strong>你在 Pages CMS 里改内容 → 它把改动提交成一个 Git commit，推到 GitHub 仓库 → GitHub Actions 自动运行 <code>npm run build</code> → 构建产物自动部署到 Cloudflare Pages → 网站更新。<strong>全程免费</strong>，且你的源文件有了版本记录。</div>
+
+  <section>
+    <div class="sec-head"><span class="no">01</span><h2>准备 GitHub 账号（若已有可跳过）</h2></div>
+    <p>前往 <a href="https://github.com/signup">github.com/signup</a> 注册。你的 git 邮箱是 <code>yinicehk@gmail.com</code>，若有对应账号直接登录即可。国内访问较慢，属正常现象，请耐心等待。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="no">02</span><h2>创建仓库并把项目推上去</h2></div>
+    <ol class="steps">
+      <li>在 GitHub 点 <b>New repository</b>，仓库名填 <code>hilltoken</code>（或你喜欢的名字），选 <b>Public</b>（Pages CMS 免费版需要公开仓库），<b>不要</b>勾选 README / .gitignore（保持空仓库），点 Create。</li>
+      <li>本机终端执行（把 <code>你的用户名</code> 换成实际账号）：<br><code>cd /Users/yinice/WorkBuddy/2026-11-17-09-59-07/hilltoken-astro</code><br><code>git init</code><br><code>git remote add origin https://github.com/你的用户名/hilltoken.git</code><br><code>git add -A && git commit -m "Astro migration with Pages CMS"</code><br><code>git push -u origin main</code></li>
+      <li>首次 push 会弹 GitHub 登录：用浏览器登录，或按提示生成 Personal Access Token 粘贴为密码。</li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="no">03</span><h2>在 Cloudflare 配置自动部署密钥</h2></div>
+    <p>进入 Cloudflare 控制台 → 你的账号 → <b>My Profile → API Tokens</b>，创建一个 token，权限给 <b>Account : Cloudflare Pages : Edit</b>，复制备用。</p>
+    <p>回到 GitHub 仓库 → <b>Settings → Secrets and variables → Actions → New repository secret</b>，添加两条：</p>
+    <table>
+      <thead><tr><th>Name</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td><code>CLOUDFLARE_API_TOKEN</code></td><td>上一步创建的 API Token</td></tr>
+        <tr><td><code>CLOUDFLARE_ACCOUNT_ID</code></td><td><code>493bd010ce62a6a94d5651328b849189</code></td></tr>
+      </tbody>
+    </table>
+    <p>项目里已备好工作流 <code>.github/workflows/deploy.yml</code>，push 后会自动构建部署到现有 Cloudflare Pages 项目 <code>hilltoken</code>，自定义域名 <code>www.hilltoken.net</code> 保持不变。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="no">04</span><h2>接通 Pages CMS</h2></div>
+    <ol class="steps">
+      <li>打开 <a href="https://app.pagescms.org">app.pagescms.org</a>，点 <b>Sign in with GitHub</b> 登录。</li>
+      <li>首次会要求安装 GitHub App：点 <b>Install</b>，选择「Only select repositories」，勾选刚建的 <code>hilltoken</code> 仓库，确认授权。</li>
+      <li>回到 Pages CMS，选择 <code>hilltoken</code> 仓库和 <code>main</code> 分支。它会读取仓库根目录的 <code>.pages.yml</code>（已配好），随即出现两个可编辑区。</li>
+      <li>试试：点「首页文案与站点设置」→ 改一句首屏文案 → <b>Save</b>。Pages CMS 会提交 commit，几分钟后网站自动更新。</li>
+    </ol>
+    <p>以后在手机浏览器打开 Pages CMS 就能发文、改文案，不必再碰命令行。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="no">05</span><h2>可编辑内容与字段</h2></div>
+    <table>
+      <thead><tr><th>编辑区</th><th>对应文件</th><th>能改什么</th></tr></thead>
+      <tbody>
+        <tr><td>首页文案与站点设置</td><td><code>src/data/site.json</code></td><td>日期、眉标、大标题、首屏正文、数字块、关于栏目、三条理由、三张卡片、页脚简介</td></tr>
+        <tr><td>文章与记录</td><td><code>src/content/notes/*.md</code></td><td>新增/修改文章：标题、摘要、发布时间、正文</td></tr>
+      </tbody>
+    </table>
+    <p>品牌素材两页（完整版与单页版）和那篇研究简报的完整排版页，作为精心排版的静态页原样保留，暂不纳入 CMS 编辑；需要改它们时按原流程走。</p>
+  </section>
+
+  <footer>
+    <span>HillToken｜山外有词 · Astro + Pages CMS 建站与运维</span>
+    <span>生成于 2026-11-18</span>
+  </footer>
+</div>
+</body>
+</html>

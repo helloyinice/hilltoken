@@ -1,0 +1,33 @@
+{
+  "displayDate": "17 NOV 2026 · TUE",
+  "eyebrow": "HillToken · Tokens beyond the hill.",
+  "heroTitleBefore": "山外有",
+  "heroTitleAccent": "词",
+  "heroTitleAfter": "，\n词外有山。",
+  "heroKicker": "一枚一枚捡。",
+  "heroIntro1": "成语「山外有山」现成翻新：山（hill）之外还有词（token），暗合「下一个词永远在山外」，也最贴 Next Token 的精神。",
+  "heroIntro2": "英文副题 Tokens beyond the hill.　意义永远在下一个词元，风景永远在下一座山外——重要的东西都在边界之外。",
+  "lastUpdated": "2026 年 11 月 17 日",
+  "stats": [
+    { "num": "04", "label": "字，一个刊名：山外有词" },
+    { "num": "02", "label": "重意象，山（hill）与词（token）" },
+    { "num": "∞", "label": "枚，山外的词，捡不完" }
+  ],
+  "aboutAside": "意境来源：成语「山外有山」现成翻新",
+  "aboutParagraphs": [
+    { "value": "和 HillToken 的呼应：山（hill）之外还有词（token），「山外有词」四个字恰好把两个词都放进去了，还各自留在原位；暗合「下一个词永远在山外」。" },
+    { "value": "Next Token 讲的是「意义永远在下一个词元」，山外有词讲的是「风景永远在下一座山外」——说的都是同一件事：重要的东西在边界之外。" },
+    { "value": "联系：暂不设公开联系方式，先让文字说话。" }
+  ],
+  "reasons": [
+    { "no": "01", "title": "零解释成本", "text": "一听就知道是「山外有山」的变体，会心一笑，这正是好刊名的标志。" },
+    { "no": "02", "title": "语义严丝合缝", "text": "Hill 是山，Token 是词；四个字把两个词都放了进去，还各自留在原位。" },
+    { "no": "03", "title": "精神同构", "text": "意义永远在下一个词元，风景永远在下一座山外；都在说边界之外。" }
+  ],
+  "picks": [
+    { "no": "01", "title": "第一枚", "text": "还在山外，等真正想留下的东西出现。" },
+    { "no": "02", "title": "第二枚", "text": "也空着。不凑数，空着也是一种诚实。" },
+    { "no": "03", "title": "第三枚", "text": "慢慢来，山外还有的是词。" }
+  ],
+  "footerNote": "山外有词，词外有山。内容由站主本人维护，更新优先发布在这里。"
+}

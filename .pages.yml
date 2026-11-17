@@ -1,0 +1,62 @@
+media:
+  input: public/assets/brand-kit/media
+  output: /assets/brand-kit/media
+
+content:
+  - name: site
+    label: 首页文案与站点设置
+    type: file
+    path: src/data/site.json
+    fields:
+      - { name: displayDate, label: 顶栏日期, type: string }
+      - { name: eyebrow, label: 首屏眉标, type: string }
+      - { name: heroTitleBefore, label: 大标题前半, type: string }
+      - { name: heroTitleAccent, label: 大标题点睛字, type: string }
+      - { name: heroTitleAfter, label: 大标题后半, type: string }
+      - { name: heroKicker, label: 首屏引导语, type: string }
+      - { name: heroIntro1, label: 首屏正文一, type: text }
+      - { name: heroIntro2, label: 首屏正文二, type: text }
+      - { name: lastUpdated, label: 最后更新日期, type: string }
+      - name: stats
+        label: 刊名速写数字块
+        type: list
+        fields:
+          - { name: num, label: 数字, type: string }
+          - { name: label, label: 说明, type: string }
+      - { name: aboutAside, label: 关于栏目侧注, type: string }
+      - name: aboutParagraphs
+        label: 关于这个名字·正文
+        type: list
+        fields:
+          - { name: value, label: 段落, type: text }
+      - name: reasons
+        label: 关于这个名字·三条理由
+        type: list
+        fields:
+          - { name: no, label: 编号, type: string }
+          - { name: title, label: 标题, type: string }
+          - { name: text, label: 说明, type: text }
+      - name: picks
+        label: 一枚一枚捡·卡片
+        type: list
+        fields:
+          - { name: no, label: 编号, type: string }
+          - { name: title, label: 标题, type: string }
+          - { name: text, label: 说明, type: text }
+      - { name: footerNote, label: 页脚简介, type: text }
+
+  - name: notes
+    label: 文章与记录
+    type: collection
+    path: src/content/notes
+    format: markdown-frontmatter
+    filename:
+      template: "{slug}.md"
+      field: title
+    fields:
+      - { name: title, label: 标题, type: string, required: true }
+      - { name: description, label: 摘要, type: text }
+      - { name: publishedTime, label: 发布时间(ISO), type: string }
+      - { name: order, label: 序号, type: string }
+      - { name: external, label: 原有完整版路径(可选), type: string }
+      - { name: body, label: 正文, type: rich-text }
