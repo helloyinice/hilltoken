@@ -59,7 +59,8 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-si
   </section>
 
   <section>
-    <div class="sec-head"><span class="no">03</span><h2>在 Cloudflare 配置自动部署密钥</h2></div>
+    <div class="sec-head"><span class="no">03</span><h2>在 Cloudflare 配置自动部署密钥</h2><span class="done">已完成 · DONE</span></div>
+    <div class="note"><strong>本机已代你完成：</strong>Cloudflare API Token（权限 Account : Cloudflare Pages : Edit，有效期 1 年）已创建并写入 GitHub Secrets，<code>CLOUDFLARE_API_TOKEN</code> 与 <code>CLOUDFLARE_ACCOUNT_ID</code> 均已就位。GitHub Actions 重新部署已 <strong>success</strong>，<code>www.hilltoken.net</code> 已切到 Astro 版本并验证通过（首页 200、RSS / llms.txt / favicon 均 200、JSON-LD 与样式正常）。这一步无需再操作，直接做第 04 步。</div>
     <p>进入 Cloudflare 控制台 → 你的账号 → <b>My Profile → API Tokens</b>，创建一个 token，权限给 <b>Account : Cloudflare Pages : Edit</b>，复制备用。</p>
     <p>回到 GitHub 仓库 → <b>Settings → Secrets and variables → Actions → New repository secret</b>，添加两条：</p>
     <table>
