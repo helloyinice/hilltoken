@@ -18,6 +18,7 @@ h1{font-family:var(--serif);font-size:clamp(1.9rem,5vw,3rem);font-weight:700;lin
 section{margin-top:34px;break-inside:avoid}
 .sec-head{display:flex;align-items:baseline;gap:14px;border-top:2px solid var(--ink);padding-top:12px;margin-bottom:16px}
 .no{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--signal-text)}
+.done{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--signal-text);border:1px solid var(--signal);padding:2px 9px;white-space:nowrap}
 h2{font-family:var(--serif);font-size:1.4rem;font-weight:700}
 p{margin:0 0 12px;color:var(--ink-2)}
 ol.steps{list-style:none;padding:0;counter-reset:s}
@@ -43,16 +44,17 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-si
   <div class="note"><strong>先看懂这条链路：</strong>你在 Pages CMS 里改内容 → 它把改动提交成一个 Git commit，推到 GitHub 仓库 → GitHub Actions 自动运行 <code>npm run build</code> → 构建产物自动部署到 Cloudflare Pages → 网站更新。<strong>全程免费</strong>，且你的源文件有了版本记录。</div>
 
   <section>
-    <div class="sec-head"><span class="no">01</span><h2>准备 GitHub 账号（若已有可跳过）</h2></div>
+    <div class="sec-head"><span class="no">01</span><h2>准备 GitHub 账号（若已有可跳过）</h2><span class="done">已完成 · DONE</span></div>
     <p>前往 <a href="https://github.com/signup">github.com/signup</a> 注册。你的 git 邮箱是 <code>yinicehk@gmail.com</code>，若有对应账号直接登录即可。国内访问较慢，属正常现象，请耐心等待。</p>
   </section>
 
   <section>
-    <div class="sec-head"><span class="no">02</span><h2>创建仓库并把项目推上去</h2></div>
+    <div class="sec-head"><span class="no">02</span><h2>创建仓库并把项目推上去</h2><span class="done">已完成 · DONE</span></div>
+    <div class="note"><strong>本机已代你完成：</strong>仓库 <code>helloyinice/hilltoken</code>（Public）已建立，84 个文件已提交并推送到 <code>main</code> 分支，自动部署工作流 <code>.github/workflows/deploy.yml</code> 已触发。这一步你无需再操作，直接从第 03 步开始即可。</div>
     <ol class="steps">
-      <li>在 GitHub 点 <b>New repository</b>，仓库名填 <code>hilltoken</code>（或你喜欢的名字），选 <b>Public</b>（Pages CMS 免费版需要公开仓库），<b>不要</b>勾选 README / .gitignore（保持空仓库），点 Create。</li>
-      <li>本机终端执行（把 <code>你的用户名</code> 换成实际账号）：<br><code>cd /Users/yinice/WorkBuddy/2026-11-17-09-59-07/hilltoken-astro</code><br><code>git init</code><br><code>git remote add origin https://github.com/你的用户名/hilltoken.git</code><br><code>git add -A && git commit -m "Astro migration with Pages CMS"</code><br><code>git push -u origin main</code></li>
-      <li>首次 push 会弹 GitHub 登录：用浏览器登录，或按提示生成 Personal Access Token 粘贴为密码。</li>
+      <li>仓库名填 <code>hilltoken</code>，选 <b>Public</b>（Pages CMS 免费版需要公开仓库），<b>不要</b>勾选 README / .gitignore（保持空仓库）。</li>
+      <li>本机实际执行的命令（账号为 <code>helloyinice</code>，非 yinice）：<br><code>cd /Users/yinice/WorkBuddy/2026-11-17-09-59-07/hilltoken-astro</code><br><code>git init</code><br><code>git remote add origin https://github.com/helloyinice/hilltoken.git</code><br><code>git add -A &amp;&amp; git commit -m "Astro migration with Pages CMS"</code><br><code>git push -u origin main</code></li>
+      <li>推送需 Personal Access Token，权限必须含 <code>repo</code> <b>和</b> <code>workflow</code> 两项——只勾 <code>repo</code> 会因无法写入 <code>.github/workflows/</code> 而被拒绝（HTTP 400）。</li>
     </ol>
   </section>
 
