@@ -8,6 +8,14 @@ import { getCollection } from 'astro:content';
 const notes = (await getCollection('notes')).sort(
   (a, b) => (a.data.order || '').localeCompare(b.data.order || '')
 );
+
+const fmtEntryDate = (value: string) => {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return d.toLocaleDateString('en-GB', {
+    day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Shanghai',
+  }).toUpperCase();
+};
 ---
 
 <BaseLayout>
@@ -90,7 +98,7 @@ const notes = (await getCollection('notes')).sort(
         <ul class="entries">
           {notes.map((n) => (
             <li class="entry">
-              <span class="entry-meta">{n.data.order} · 17 NOV 2026</span>
+              <span class="entry-meta">{n.data.order} · {fmtEntryDate(n.data.publishedTime)}</span>
               <a class="entry-title" href={n.data.external || `/notes/${n.id}/`}>{n.data.title}<span class="entry-note">{n.data.description}</span></a>
               <span class="entry-arrow" aria-hidden="true">→</span>
             </li>
