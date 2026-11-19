@@ -47,7 +47,7 @@
   .mast{border-bottom:1px solid var(--rule)}
   .mast-top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;padding-top:22px;padding-bottom:16px}
   .mast-brand{display:flex;align-items:center;gap:14px}
-  .mast-logo{width:52px;height:52px;flex:none;background:var(--ink);color:var(--white);display:grid;place-items:center;font-family:var(--latin);font-size:13px;line-height:1.05;text-align:center;letter-spacing:-.02em}
+  .mast-logo{width:52px;height:52px;flex:none;display:block}
   .mast-wordmark{display:flex;flex-direction:column}
   .mast-wordmark-name{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.2;letter-spacing:.01em}
   .mast-wordmark-name .wm-divider{color:var(--ink-3);font-weight:400;margin:0 6px}
@@ -226,7 +226,7 @@
 <header class="mast">
   <div class="wrap mast-top">
     <div class="mast-brand">
-      <div class="mast-logo">H<br>I<br>L<br>L</div>
+      <a class="mast-logo" href="/" aria-label="HillToken｜山外有词 · 返回首页"><img src="../../assets/brand-kit/logo/hilltoken-logo-square-paper.svg" alt="HillToken 方形米纸底字标" width="52" height="52"></a>
       <div class="mast-wordmark">
         <div class="mast-wordmark-name">香港北部算力枢纽<span class="wm-divider">｜</span><span class="wm-tag">分析简报</span></div>
         <div class="mast-meta">HONG KONG NORTH · COMPUTE HUB · RESEARCH BRIEF</div>
@@ -410,8 +410,8 @@
     </div>
 
     <div class="prose" style="margin-top:30px">
-      <p><strong>其二，你的判断基本对，但要更精确：</strong>不是「成本 vs 电网」二选一，而是电力有两个独立维度——训练可以接受偶发波动、追求低成本跑完模型，天然流向西部；跨境推理优先追求稳定连续，成本只是权衡因素之一。香港放弃了「成本牌」，打的是「可靠＋制度＋跨境」这张牌。</p>
-      <p><strong>其三，「内地岂不是更强吗？」——要看比什么。</strong>论电网规模、发电能力与绿电价格，内地当然更强；但算力选址不是单一指标竞赛，而是市场分层：训练算力去西部，图便宜绿电与天然降温；推理算力来香港，图供电零容忍稳定、数据跨境协议、国际光纤出海、普通法体系与优质金融数据。IDC 预测到 2027 年，中国 AI 智能算力中推理占比将超过 70%——这正是香港「跨境推理枢纽」定位的市场空间。</p>
+      <p><strong>其二，更精确的理解是：并非「成本 vs 电网」二选一，而是电力存在两个相互独立的维度。</strong>训练环节可以接受偶发波动，以低成本完成模型计算，因而天然向西部集聚；跨境推理则优先追求稳定连续，成本只是权衡因素之一。香港放弃了单纯的「成本牌」，打的是「可靠＋制度＋跨境」这张牌。</p>
+      <p><strong>其三，比较需要区分维度。</strong>论电网规模、发电能力与绿电价格，内地当然更强；但算力选址并非单一指标竞赛，而是市场分层——训练算力去西部，图便宜绿电与天然降温；推理算力来香港，图供电零容忍稳定、数据跨境协议、国际光纤出海、普通法体系与优质金融数据。IDC 预测到 2027 年，中国 AI 智能算力中推理占比将超过 70%——这正是香港「跨境推理枢纽」定位的市场空间。</p>
     </div>
     <div class="quote">
       <p>香港算力产业的敌人不是高电价本身，而是「高电价叠加没有差异化价值」。如果复制东南亚廉价机房模式去拼训练，一定全面落败。</p>
