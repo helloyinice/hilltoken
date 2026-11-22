@@ -63,7 +63,9 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
 .video-shell{border:1px solid var(--rule-strong);background:var(--ink)}
 .video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;user-select:none;-webkit-user-select:none}
 .video-frame video{width:100%;height:100%;display:block;object-fit:contain}
-.video-bar{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 14px;color:var(--paper-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
+.video-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:10px 14px;color:var(--paper-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
+.video-bar button{flex:none;border:1px solid rgba(245,242,234,.34);background:transparent;color:var(--paper-2);font-family:var(--mono);font-size:10px;letter-spacing:.08em;padding:4px 9px;cursor:pointer}
+.video-bar button:hover{border-color:var(--paper-2);background:rgba(255,255,255,.08)}
 .video-bar span:last-child{color:#9a978e}
 .prose{max-width:52em}
 .prose p{font-size:15.5px;color:var(--ink-2);margin:0 0 14px}
@@ -153,9 +155,9 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
        浏览器不支持内嵌视频，请使用现代浏览器在线观看。
      </video>
    </div>
-   <div class="video-bar"><span>TESLA · FSD V15 DEMO · 4K UHD</span><span>视频来源：Tesla 官方发布素材</span></div>
+   <div class="video-bar"><span>TESLA · FSD V15 DEMO · 4K UHD</span><button id="qLock" type="button">锁定 4K</button><span>视频来源：Tesla 官方发布素材</span></div>
   </div>
-  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，并以原片 H.264 高码率直接封装为 HLS 分片，画质未经二次压缩，播放时边看边加载。页面仅提供在线观看，未提供下载入口。</p>
+  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，以原片为基准做 4K H.264 高质量重编码（平均 PSNR 47.3dB），固定 2 秒关键帧、切成 4 秒分片，码率封顶约 10Mbps。默认自适应：网络与设备足够时使用 4K，否则自动切到 1080p 备用档以避免停顿；也可手动锁定 4K。页面仅提供在线观看，未提供下载入口。</p>
  </section>
 
  <section class="sec" id="review">
@@ -220,24 +222,57 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
 (function(){
   var frame = document.getElementById('vFrame');
   var video = document.getElementById('v');
+  var qLock = document.getElementById('qLock');
   var hls = null;
-  var src = 'hls/index.m3u8';
+  var lock4K = false;
+  var src = 'hls/master.m3u8';
 
   video.draggable = false;
   video.disablePictureInPicture = true;
+  video.preload = 'auto';
 
-  if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = src;
-  } else if (window.Hls && Hls.isSupported()) {
+  if (window.Hls && Hls.isSupported()) {
     hls = new Hls({
       enableWorker: true,
-      maxBufferLength: 30,
-      backBufferLength: 60,
+      maxBufferLength: 60,
+      maxMaxBufferLength: 120,
+      maxBufferSize: 80 * 1000 * 1000,
+      backBufferLength: 30,
       capLevelToPlayerSize: false
     });
     hls.loadSource(src);
     hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, function(){
+      if(lock4K) applyQuality();
+    });
+    hls.on(Hls.Events.ERROR, function(event, data){
+      if(!data.fatal) return;
+      if(data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
+      else if(data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+    });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = src;
+    qLock.hidden = true;
   }
+
+  function applyQuality(){
+    if(!hls || !hls.levels.length) return;
+    if(!lock4K){
+      hls.currentLevel = -1;
+      return;
+    }
+    var idx = 0;
+    for(var i=0;i<hls.levels.length;i++){
+      if(hls.levels[i].height >= 2160){ idx = i; break; }
+    }
+    hls.currentLevel = idx;
+  }
+
+  qLock.addEventListener('click', function(){
+    lock4K = !lock4K;
+    qLock.textContent = lock4K ? '自动画质' : '锁定 4K';
+    applyQuality();
+  });
 
   frame.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   frame.addEventListener('dragstart', function(e){ e.preventDefault(); });
