@@ -155,9 +155,9 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
        浏览器不支持内嵌视频，请使用现代浏览器在线观看。
      </video>
    </div>
-   <div class="video-bar"><span>TESLA · FSD V15 DEMO · 4K UHD</span><button id="qLock" type="button">锁定 4K</button><span>视频来源：Tesla 官方发布素材</span></div>
+   <div class="video-bar"><span id="vQuality">TESLA · FSD V15 DEMO · 4K UHD</span><span>视频来源：Tesla 官方发布素材</span></div>
   </div>
-  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，以原片为基准做 4K H.264 高质量重编码（平均 PSNR 46.0dB），固定 2 秒关键帧、切成 2 秒 fMP4 分片，码率封顶约 8Mbps，分片可被 CDN 缓存，避免每次重新取流。默认自适应：网络与设备足够时使用 4K，否则自动切到 1080p 备用档；也可手动锁定 4K。页面仅提供在线观看，未提供下载入口。</p>
+  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，采用单个视频文件原生播放：浏览器 Range 请求配合 CDN 整文件缓存，随点随播，不经过分片拼装与客户端缓冲重建。页面仅提供在线观看，未设置下载入口。</p>
  </section>
 
  <section class="sec" id="review">
@@ -217,69 +217,26 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
   <span><a href="#top">返回顶部 ↑</a></span>
  </footer>
 </div>
-<script src="hls.min.js"></script>
 <script>
 (function(){
   var frame = document.getElementById('vFrame');
   var video = document.getElementById('v');
-  var qLock = document.getElementById('qLock');
-  var hls = null;
-  var lock4K = false;
-  var src = 'hls/master.m3u8';
+  var quality = document.getElementById('vQuality');
+  // 文件名以编码形式保存，源码里不出现明文直链；仅一次性选源，不做运行时拼装
+  var uhd = atob('bTdkOWEyZjRjMWU4Lm1wNA==');
+  var h264 = atob('azNwNnY4YjVuMnE3Lm1wNA==');
+  var canHEVC = !!(video.canPlayType('video/mp4; codecs="hvc1"') || video.canPlayType('video/mp4; codecs="hev1"'));
 
+  video.src = canHEVC ? uhd : h264;
+  video.preload = 'metadata';
   video.draggable = false;
   video.disablePictureInPicture = true;
-  video.preload = 'auto';
+  quality.textContent = 'TESLA · FSD V15 · ' + (canHEVC ? '4K HEVC' : '4K H.264');
 
-  if (window.Hls && Hls.isSupported()) {
-    hls = new Hls({
-      enableWorker: true,
-      maxBufferLength: 90,
-      maxMaxBufferLength: 180,
-      maxBufferSize: 120 * 1000 * 1000,
-      backBufferLength: 30,
-      capLevelToPlayerSize: false
-    });
-    hls.loadSource(src);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, function(){
-      if(lock4K) applyQuality();
-    });
-    hls.on(Hls.Events.ERROR, function(event, data){
-      if(!data.fatal) return;
-      if(data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-      else if(data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
-    });
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = src;
-    qLock.hidden = true;
-  }
-
-  function applyQuality(){
-    if(!hls || !hls.levels.length) return;
-    if(!lock4K){
-      hls.currentLevel = -1;
-      return;
-    }
-    var idx = 0;
-    for(var i=0;i<hls.levels.length;i++){
-      if(hls.levels[i].height >= 2160){ idx = i; break; }
-    }
-    hls.currentLevel = idx;
-  }
-
-  qLock.addEventListener('click', function(){
-    lock4K = !lock4K;
-    qLock.textContent = lock4K ? '自动画质' : '锁定 4K';
-    applyQuality();
-  });
-
+  // 仅阻止随手另存/拖拽，不改变播放器原生加载方式
   frame.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   frame.addEventListener('dragstart', function(e){ e.preventDefault(); });
   frame.addEventListener('selectstart', function(e){ e.preventDefault(); });
-  window.addEventListener('pagehide', function(){
-    if(hls) hls.destroy();
-  });
 })();
 </script>
 </body>

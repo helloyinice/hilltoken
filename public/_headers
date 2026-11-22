@@ -4,16 +4,12 @@
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
 
-# FSD V15 视频：HLS 边播边加载，禁止跨站热链与内容嗅探
-/notes/fsd-v15-video/hls/*.m3u8
-  Content-Type: application/vnd.apple.mpegurl
-  Cross-Origin-Resource-Policy: same-origin
-  Cache-Control: public, max-age=31536000, immutable
-
-/notes/fsd-v15-video/hls/*.mp4
+# FSD V15 视频：单文件原生播放，走浏览器 Range 请求；CDN 整文件缓存保证流畅
+/notes/fsd-v15-video/*.mp4
   Content-Type: video/mp4
   X-Content-Type-Options: nosniff
   Cross-Origin-Resource-Policy: same-origin
+  Accept-Ranges: bytes
   Cache-Control: public, max-age=31536000, immutable
 
 /notes/fsd-v15-video/
