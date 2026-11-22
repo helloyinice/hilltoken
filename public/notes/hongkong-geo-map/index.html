@@ -77,7 +77,9 @@ button,input{font-family:inherit}
 .maplayout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
 .mapcol{min-width:0}
 .maptop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.btn{padding:8px 14px;font-size:13px;border:1px solid var(--rule-strong);background:transparent;color:var(--ink);cursor:pointer;border-radius:1px;transition:background .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease)}
+.btn{padding:8px 14px;font-size:13px;border:1px solid var(--rule-strong);background:transparent;color:var(--ink);cursor:pointer;border-radius:1px;transition:background .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease),transform .16s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--ink)}
+.btn:active{transform:translateY(0)}
 .btn:hover{background:var(--ink);color:var(--paper);text-decoration:none}
 .btn.primary{background:var(--ink);color:var(--paper)}
 .btn.primary:hover{background:var(--signal);border-color:var(--signal);color:#fff}
@@ -107,6 +109,9 @@ button,input{font-family:inherit}
 .zonetabs button[data-z="九龙"]{--zc:var(--kln)}
 .zonetabs button[data-z="新界"]{--zc:var(--nt)}
 .zonetabs button:hover{background:var(--zc);color:#fff}
+.zonetabs button::after{content:'';position:absolute;left:0;right:0;bottom:0;height:0;background:var(--signal);transition:height .28s var(--ease)}
+.zonetabs button.active::after{height:2px}
+.zonetabs button:active{transform:translateY(1px)}
 .zonetabs button:hover i{background:#fff}
 .zonetabs button.active{background:var(--zc);color:#fff;font-weight:600}
 .zonetabs button.active i{background:#fff}
@@ -132,18 +137,28 @@ button,input{font-family:inherit}
 /* svg: 18区独立着色，选中片区强化对比 */
 .dist{stroke:var(--white);stroke-width:1;stroke-linejoin:round;cursor:pointer;transition:fill .42s var(--ease),opacity .42s var(--ease),stroke .42s var(--ease),stroke-width .42s var(--ease)}
 .dist.hover{stroke:var(--signal-text);stroke-width:2}
-.dlabel{font-family:var(--serif);font-size:calc(10.5px * var(--k,1));fill:#fffdf8;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.45);stroke-width:calc(2.2px * var(--k,1));pointer-events:none;opacity:.9}
-.zone{fill:#fffdf8;text-anchor:middle;font-family:var(--serif);font-size:calc(22px * var(--k,1));font-weight:700;letter-spacing:.2em;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3px * var(--k,1));pointer-events:none;opacity:.95}
-.plabel{font-family:var(--serif);font-size:calc(12.5px * var(--k,1));fill:#fffdf8;text-anchor:middle;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3px * var(--k,1));pointer-events:none}
-.pdot{fill:#fffdf8;stroke:var(--ink);stroke-width:calc(1.6px * var(--k,1));r:calc(3px * var(--k,1))}
-.pgroup{cursor:pointer;transition:opacity .3s var(--ease)}
-.pgroup.muted{opacity:.12}
-.pgroup:hover .pdot{fill:var(--signal);stroke:#fffdf8}
+.dist.flash{stroke:#fffdf8!important;stroke-width:3.4!important}
+/* 字号：描边/点用 --k 完全补偿保持精细；字体用 --kf=k^0.72，放大后温和变大 */
+.dlabel{font-family:var(--serif);font-size:calc(14px * var(--kf,1));fill:#fffdf8;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:calc(2.4px * var(--k,1));pointer-events:none;opacity:.92;transition:opacity .4s var(--ease)}
+#svg:not(.zoomed) .dlabel{opacity:.5}
+#svg.zoomed .dlabel{opacity:.36}
+.zone{fill:#fffdf8;text-anchor:middle;font-family:var(--serif);font-size:calc(32px * var(--kf,1));font-weight:700;letter-spacing:.18em;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3.6px * var(--k,1));pointer-events:none;opacity:.95;transition:opacity .4s var(--ease)}
+.plabel{font-family:var(--serif);font-size:calc(18px * var(--kf,1));fill:#fffdf8;text-anchor:middle;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3.4px * var(--k,1));pointer-events:none;transition:fill .25s var(--ease),stroke .25s var(--ease)}
+.pdot{fill:#fffdf8;stroke:var(--ink);stroke-width:calc(1.6px * var(--k,1));r:calc(3.2px * var(--k,1));transition:fill .25s var(--ease),stroke .25s var(--ease),r .28s var(--ease)}
+.pgroup{cursor:pointer;transition:opacity .35s var(--ease)}
+.pgroup.muted{opacity:.11}
+/* LOD：密集区次要地名全图收起，放大后展开 */
+.pgroup.minor{opacity:0;pointer-events:none}
+#svg.zoomed .pgroup.minor{opacity:.92;pointer-events:auto}
+#svg.zoomed .pgroup.minor.muted{opacity:.11}
+.pgroup.major .plabel{font-weight:600}
+.pgroup:hover .pdot{fill:var(--signal);stroke:#fffdf8;r:calc(5.2px * var(--k,1))}
 .pgroup:hover .plabel{fill:#fffdf8;stroke:var(--signal);font-weight:700}
-.pgroup.zone-hit .pdot{fill:var(--signal);stroke:#fffdf8;stroke-width:calc(2.2px * var(--k,1))}
-.pgroup.selected .pdot{fill:#fffdf8;stroke:var(--signal);stroke-width:calc(3px * var(--k,1))}
+.pgroup.zone-hit .pdot{fill:var(--signal);stroke:#fffdf8;stroke-width:calc(2.4px * var(--k,1))}
+.pgroup.selected .pdot{fill:#fffdf8;stroke:var(--signal);stroke-width:calc(3.4px * var(--k,1));r:calc(6px * var(--k,1))}
 .pgroup.selected .plabel{fill:var(--signal);font-weight:700}
 .focusring{fill:none;stroke:var(--signal);stroke-width:calc(2px * var(--k,1));pointer-events:none}
+.focusring.inner{stroke-width:calc(1px * var(--k,1))}
 /* caption & footer */
 .legend{display:flex;flex-wrap:wrap;gap:20px;font-size:12.5px;color:var(--ink-2);padding-top:14px}
 .legend span{display:inline-flex;align-items:center;gap:7px}
@@ -326,7 +341,7 @@ HK.roads.forEach(r=>{
   roadLayer.appendChild(g);roadEls.push(g);
 });
 /* 三大片区大字 */
-HK.zoneLabels.forEach(([t,x,y])=>{
+HK.zoneLabels.filter(z=>z[0]!=='九　龍').forEach(([t,x,y])=>{
   const el=document.createElementNS(NS,'text');
   el.setAttribute('x',x);el.setAttribute('y',y);el.setAttribute('class','zone');el.textContent=t;
   zoneLayer.appendChild(el);
@@ -339,7 +354,8 @@ function zoneOf(p){
 }
 HK.places.filter(p=>!(p.kind&&p.kind.includes('片区'))).forEach(pl=>{
   const g=document.createElementNS(NS,'g');
-  g.setAttribute('class','pgroup');g.dataset.name=pl.name;g.dataset.zone=zoneOf(pl);
+  const MINOR=new Set(['金钟','上环','西营盘','湾仔','跑马地','鲗鱼涌','黄竹坑','浅水湾','鸭脷洲','油麻地','黄大仙','粉岭']);
+  g.setAttribute('class','pgroup '+(MINOR.has(pl.name)?'minor':'major'));g.dataset.name=pl.name;g.dataset.zone=zoneOf(pl);
   const c=document.createElementNS(NS,'circle');
   c.setAttribute('cx',pl.xy[0]);c.setAttribute('cy',pl.xy[1]);c.setAttribute('r',3);c.setAttribute('class','pdot');
   const t=document.createElementNS(NS,'text');
@@ -377,12 +393,19 @@ document.getElementById('search').oninput=e=>renderList(e.target.value.trim(),cu
 let vb=[...FULL],anim=null;
 const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function cancelAnim(){if(anim){cancelAnimationFrame(anim);anim=null;}}
-function setVB(){svg.setAttribute('viewBox',vb.join(' '));svg.style.setProperty('--k',(vb[2]/FULL[2]).toFixed(4));}
-function animateVB(target,dur=780){
+function setVB(){
+  const k=vb[2]/FULL[2];
+  svg.setAttribute('viewBox',vb.join(' '));
+  svg.style.setProperty('--k',k.toFixed(4));
+  svg.style.setProperty('--kf',Math.pow(k,0.72).toFixed(4));
+  svg.classList.toggle('zoomed',k<0.72);
+}
+function animateVB(target,dur){
   cancelAnim();
   if(reduceMotion){vb=target.slice();setVB();return;}
+  if(!dur){const span=Math.abs(target[2]-vb[2])/vb[2];dur=Math.min(1080,Math.max(580,580+span*340));}
   const from=[...vb],t0=performance.now();
-  const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const ease=t=>t<.5?16*t*t*t*t*t:1-Math.pow(-2*t+2,5)/2;
   function step(now){const u=Math.min(1,(now-t0)/dur),e=ease(u);vb=from.map((v,i)=>v+(target[i]-v)*e);setVB();if(u<1)anim=requestAnimationFrame(step);else anim=null;}
   anim=requestAnimationFrame(step);
 }
@@ -412,22 +435,31 @@ function setZone(z,animate=true){
   curZ=z;selDist=null;
   document.querySelectorAll('#zoneTabs button').forEach(b=>b.classList.toggle('active',b.dataset.z===z));
   paintZones(z,null);
+  if(z!=='all')HK.districts.filter(d=>d.zone===z).forEach(d=>{const el=distEls[d.name];el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),560);});
   pLayer.childNodes.forEach(g=>{const hit=(z==='all'||g.dataset.zone===z);g.classList.toggle('muted',!hit);g.classList.toggle('zone-hit',z!=='all'&&hit);});
   tpuEls.forEach(g=>g.classList.toggle('muted',z!=='all'&&g.dataset.zone!==z));
   roadEls.forEach(g=>g.classList.toggle('muted',z!=='all'&&g.dataset.zone!==z));
   renderList(document.getElementById('search').value.trim(),z);
   const target=ZV[z].vb||fitBox(ZV[z].box);
-  if(animate)animateVB(target,820);else{vb=target.slice();setVB();}
+  if(animate)animateVB(target);else{vb=target.slice();setVB();}
 }
 document.querySelectorAll('#zoneTabs button').forEach(b=>b.onclick=()=>setZone(b.dataset.z,true));
 
 function pulse(x,y){
-  const c=document.createElementNS(NS,'circle');
-  c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',6);c.setAttribute('class','focusring');
-  svg.insertBefore(c,zoneLayer);
-  const t0=performance.now();
-  function step(now){const u=Math.min(1,(now-t0)/900),k=vb[2]/FULL[2];c.setAttribute('r',(6+30*u)*k);c.setAttribute('opacity',String(1-u));if(u<1)requestAnimationFrame(step);else c.remove();}
-  requestAnimationFrame(step);
+  [[0,'focusring'],[140,'focusring inner']].forEach(([delay,cls],idx)=>{
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',6);c.setAttribute('class',cls);
+    svg.insertBefore(c,zoneLayer);
+    const t0=performance.now()+delay;
+    function step(now){
+      if(now<t0){requestAnimationFrame(step);return;}
+      const u=Math.min(1,(now-t0)/820),k=vb[2]/FULL[2];
+      c.setAttribute('r',(6+34*u)*k);
+      c.setAttribute('opacity',String((1-u)*(idx?0.7:0.95)));
+      if(u<1)requestAnimationFrame(step);else c.remove();
+    }
+    requestAnimationFrame(step);
+  });
 }
 function focusXY(x,y,w){animateVB([x-w/2,y-(w*FULL[3]/FULL[2])/2,w,w*FULL[3]/FULL[2]]);pulse(x,y);}
 function showDistrict(d){
@@ -467,7 +499,7 @@ let sx=0,sy=0,svb=null;
 svg.addEventListener('pointerdown',e=>{cancelAnim();sx=e.clientX;sy=e.clientY;svb=[...vb];svg.setPointerCapture(e.pointerId);});
 svg.addEventListener('pointermove',e=>{if(!svb)return;const dx=(e.clientX-sx)/svg.getBoundingClientRect().width*vb[2];const dy=(e.clientY-sy)/svg.getBoundingClientRect().height*vb[3];vb[0]=svb[0]-dx;vb[1]=svb[1]-dy;setVB();});
 svg.addEventListener('pointerup',()=>{svb=null;});
-function doZoom(f){const w=Math.max(100,Math.min(2400,vb[2]*f)),h=w*FULL[3]/FULL[2];animateVB([vb[0]+(vb[2]-w)/2,vb[1]+(vb[3]-h)/2,w,h],420);}
+function doZoom(f){const w=Math.max(100,Math.min(2400,vb[2]*f)),h=w*FULL[3]/FULL[2];animateVB([vb[0]+(vb[2]-w)/2,vb[1]+(vb[3]-h)/2,w,h]);}
 document.getElementById('zin').onclick=()=>doZoom(0.72);
 document.getElementById('zout').onclick=()=>doZoom(1.38);
 document.getElementById('reset').onclick=()=>{pLayer.childNodes.forEach(g=>g.classList.remove('selected'));setZone('all',true);};
