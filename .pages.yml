@@ -37,7 +37,7 @@ content:
           - { name: title, label: 标题, type: string }
           - { name: text, label: 说明, type: text }
       - name: picks
-        label: 一枚一枚捡·卡片
+        label: 在做的事·卡片
         type: list
         fields:
           - { name: no, label: 编号, type: string }
