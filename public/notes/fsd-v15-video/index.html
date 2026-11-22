@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FSD V15 · 一次真正的代际跃迁 | HillToken｜山外有词</title>
+<meta name="description" content="特斯拉 FSD V15 公开评价速览：端到端网络重构、Tesla Reality View、安全场景处理能力提升25倍。附官方演示视频与简短结论。">
+<meta name="theme-color" content="#f5f2ea">
+<style>
+:root{
+  --paper:#f5f2ea;--paper-2:#eeeae0;--white:#fffdf8;
+  --ink:#141414;--ink-2:#4a4a48;--ink-3:#7b7972;
+  --rule:rgba(20,20,20,.16);--rule-strong:#141414;
+  --signal:#ff4b18;--signal-text:#b8320d;--signal-soft:#f9dfd2;
+  --max:1240px;--gutter:clamp(20px,4vw,48px);
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --latin:"Iowan Old Style","Baskerville",Georgia,"Times New Roman",serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none;text-underline-offset:4px}
+a:hover{text-decoration:underline;text-decoration-thickness:1px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.mono{font-family:var(--mono)}
+.dot{display:inline-block;width:7px;height:7px;background:var(--signal);flex:none}
+::selection{background:var(--signal);color:#fff}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.mast{border-bottom:1px solid var(--rule)}
+.mast-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:22px 0 16px}
+.mast-brand{display:flex;align-items:center;gap:13px}
+.mast-logo{width:52px;height:52px;flex:none;display:block}
+.mast-logo:hover{text-decoration:none;opacity:.82}
+.mast-logo svg,.mast-logo img{display:block;width:100%;height:100%}
+.mast-wordmark{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.2}
+.mast-wordmark span{font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--ink-3);letter-spacing:.12em;display:block;margin-top:4px;text-transform:uppercase}
+.mast-meta{text-align:right;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);line-height:1.7;text-transform:uppercase}
+.mast-nav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--rule);padding:12px 0}
+.mast-nav nav{display:flex;flex-wrap:wrap;gap:26px;font-size:13.5px;color:var(--ink-2)}
+.mast-nav a:hover{color:var(--signal-text);text-decoration:none}
+.hero{padding:clamp(38px,6vw,64px) 0 0}
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:20px}
+.hero-title{font-family:var(--serif);font-size:clamp(2.6rem,7vw,5rem);font-weight:700;line-height:1.15;letter-spacing:-.01em;margin:0}
+.hero-rule{height:2px;background:linear-gradient(to right,var(--signal) 0 64px,var(--rule-strong) 64px 100%);margin:26px 0 0}
+.hero-lower{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,5vw,72px);padding:28px 0 clamp(40px,5vw,60px)}
+.hero-intro p{color:var(--ink-2);font-size:15px;max-width:40em}
+.hero-intro p+p{margin-top:10px}
+.hero-kicker{font-family:var(--serif)!important;font-size:21px!important;color:var(--ink)!important;font-weight:700;margin-bottom:12px!important}
+.stats{display:flex;flex-direction:column;justify-content:center;gap:10px}
+.stat{display:grid;grid-template-columns:minmax(90px,.4fr) 1fr;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);padding-bottom:9px}
+.stat:last-child{border-bottom:0}
+.stat-num{font-family:var(--latin);font-size:clamp(1.6rem,3vw,2.5rem);line-height:1;letter-spacing:-.03em;color:var(--signal-text)}
+.stat-label{font-size:12.5px;color:var(--ink-3)}
+.sec{padding-bottom:clamp(44px,6vw,72px)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-top:2px solid var(--rule-strong);padding-top:15px;margin-bottom:26px;flex-wrap:wrap}
+.sec-head-left{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.sec-no{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--signal-text);text-transform:uppercase}
+.sec-head h2{font-family:var(--serif);font-size:clamp(1.35rem,2.4vw,1.85rem);font-weight:700;line-height:1.3;margin:0}
+.sec-aside{font-size:12.5px;color:var(--ink-3)}
+.video-shell{border:1px solid var(--rule-strong);background:var(--ink)}
+.video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.video-frame video{width:100%;height:100%;display:block;object-fit:contain}
+.video-bar{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 14px;color:var(--paper-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
+.video-bar span:last-child{color:#9a978e}
+.prose{max-width:52em}
+.prose p{font-size:15.5px;color:var(--ink-2);margin:0 0 14px}
+.prose p strong{color:var(--ink)}
+.lead{font-family:var(--serif);font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--ink)!important;line-height:1.6}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{border-top:2px solid var(--rule-strong);border-bottom:1px solid var(--rule);padding:18px 28px 22px 0}
+.card+.card{padding-left:24px;border-left:1px solid var(--rule)}
+.card-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase}
+.card h3{font-family:var(--serif);font-size:1.2rem;font-weight:700;margin:10px 0 6px}
+.card p{font-size:13.5px;color:var(--ink-2);line-height:1.7;margin:0}
+.versus{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);background:var(--white)}
+.vcol{padding:22px 24px}
+.vcol+.vcol{border-left:1px solid var(--rule)}
+.vtag{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal-text)}
+.vcol.calm .vtag{color:var(--ink-3)}
+.vcol h3{font-family:var(--serif);font-size:1.15rem;margin:8px 0 12px}
+.vcol ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-2)}
+.vcol li{margin-bottom:8px}
+.quote{border-left:3px solid var(--signal);background:var(--white);padding:16px 20px;font-family:var(--serif);font-size:1.05rem;color:var(--ink);margin:0 0 18px}
+.quote cite{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);font-style:normal;letter-spacing:.06em;margin-top:8px}
+.map-note{font-size:12px;color:var(--ink-3);line-height:1.7;border-top:1px solid var(--rule);padding-top:10px;margin-top:16px}
+.foot{border-top:1px solid var(--rule);padding:18px 0 40px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+.foot a:hover{color:var(--signal-text)}
+@media(max-width:760px){
+  .hero-lower{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+  .card+.card{padding-left:0;border-left:0}
+  .versus{grid-template-columns:1fr}
+  .vcol+.vcol{border-left:0;border-top:1px solid var(--rule)}
+}
+@media print{.mast-nav,.video-bar{display:none}body{background:#fff}}
+</style>
+<link rel="icon" href="../../assets/brand-kit/favicon/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="../../assets/brand-kit/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../../assets/brand-kit/favicon/apple-touch-icon-180.png">
+<link rel="canonical" href="https://hilltoken.net/notes/fsd-v15-video/">
+<link rel="describedby" href="/llms.txt">
+<link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml">
+<meta property="og:site_name" content="HillToken｜山外有词">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hilltoken.net/notes/fsd-v15-video/">
+<meta property="og:image" content="https://hilltoken.net/assets/brand-kit/social/hilltoken-og-1200x630.png">
+<meta property="article:published_time" content="2026-11-22T22:20:00+08:00">
+</head>
+<body>
+<div class="wrap" id="top">
+ <header class="mast">
+  <div class="mast-top">
+   <div class="mast-brand">
+    <a class="mast-logo" href="/" aria-label="HillToken｜山外有词 · 返回首页"><img src="../../assets/brand-kit/logo/hilltoken-logo-square-paper.svg" alt="HillToken 方形米纸底字标" width="52" height="52"></a>
+    <div class="mast-wordmark">HillToken<span>山外有词 · 技术与观察</span></div>
+   </div>
+   <div class="mast-meta">Field Note / 023<br>Autonomous Driving · FSD V15</div>
+  </div>
+  <div class="mast-nav">
+    <nav><a href="#video">01 / 视频</a><a href="#review">02 / 评价</a><a href="#sources">03 / 出处</a></nav>
+    <span class="mono" style="font-size:11px;letter-spacing:.1em;color:var(--ink-3)">END-TO-END · REALITY VIEW · 25×</span>
+  </div>
+ </header>
+
+ <section class="hero">
+  <div class="eyebrow"><span class="dot"></span>01 / Autonomous Driving</div>
+  <h1 class="hero-title">FSD V15</h1>
+  <div class="hero-rule"></div>
+  <div class="hero-lower">
+   <div class="hero-intro">
+    <p class="hero-kicker">一次真正的代际跃迁，而不是一次常规迭代。</p>
+    <p>2026 年 11 月 22 日，特斯拉在美国开始推送 FSD V15 监督式自动驾驶版本，首批面向 EAP 早期体验用户。端到端网络重构、参数规模扩大十倍、实景可视化上线——社区与媒体的普遍判断是：这一版非常不错，是近年最扎实的一次升级。</p>
+   </div>
+   <div class="stats">
+    <div class="stat"><span class="stat-num">10×</span><span class="stat-label">神经网络参数：约 10 亿 → 约 100 亿</span></div>
+    <div class="stat"><span class="stat-num">25×</span><span class="stat-label">官方称安全关键场景处理能力提升</span></div>
+    <div class="stat"><span class="stat-num">AI4</span><span class="stat-label">硬件门槛：仅 HW4 / AI4 车型可升级</span></div>
+   </div>
+  </div>
+ </section>
+
+ <section class="sec" id="video">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">01 / Footage</span><h2>官方演示视频</h2></div>
+   <span class="sec-aside">46 秒 · 1080p</span>
+  </div>
+  <div class="video-shell">
+   <div class="video-frame">
+     <video controls preload="metadata" poster="poster.jpg" playsinline>
+       <source src="fsd-v15.mp4" type="video/mp4">
+       浏览器不支持内嵌视频，可<a href="fsd-v15.mp4">下载观看</a>。
+     </video>
+   </div>
+   <div class="video-bar"><span>TESLA · FSD V15 DEMO</span><span>视频来源：Tesla 官方发布素材</span></div>
+  </div>
+  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。原始素材为 4K，本站压缩至 1080p 以适配网页播放。</p>
+ </section>
+
+ <section class="sec" id="review">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">02 / Assessment</span><h2>简短评价</h2></div>
+   <span class="sec-aside">基于公开报道与早期实测</span>
+  </div>
+  <div class="prose">
+   <p class="lead">结论先行：FSD V15 非常不错。它真正的进步不在某个单点，而在于把「看得见」「看得懂」「开得稳」三件事同时往前推了一大步。</p>
+   <p>第一，<strong>把黑箱变成透明的交互</strong>。新上线的 Tesla Reality View 把中控屏从抽象线条变成实时渲染的道路场景：车看到了什么、下一步打算怎么走，一眼可辨；在画面上点选位置即可引导车辆前往，到达后还能从多个车位中自主选择停靠。早期实测者对这套界面最一致的反馈是「直觉」——它显著降低了监督驾驶时的认知负担。</p>
+   <p>第二，<strong>补齐长期被诟病的感知短板</strong>。针对小动物、路面杂物、坑洼、深积水、交通标识的识别与避让被重点强化；学校区域、限速路段和恶劣天气下的车速控制更自然，还能在测速摄像头前主动减速。这些高频日常场景的优化，比任何演示画面都更影响实际体验。</p>
+   <p>第三，<strong>底层架构的规模化</strong>。端到端网络重构后，参数规模由约 10 亿扩大到约 100 亿，视觉编码器与 Robotaxi、Optimus 共用同一套架构。官方称安全关键场景处理能力提升 25 倍——若这一数字经得起后续验证，意味着关键干预间隔将进入数万英里量级。</p>
+  </div>
+ </section>
+
+ <section class="sec">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">03 / Balance</span><h2>两点必要的克制</h2></div>
+   <span class="sec-aside">热度之外的诚实注脚</span>
+  </div>
+  <div class="versus">
+   <div class="vcol">
+    <span class="vtag">Positive / 普遍肯定</span>
+    <h3>实测口碑</h3>
+    <ul>
+      <li>高速与夜间城市实测画面获大量转发，实景还原度超出预期。</li>
+      <li>有测试者记录到车辆在行人穿过前提前制动，比上一版更谨慎。</li>
+      <li>有车主评价：没想到 AI4 硬件能跑出这种水平。</li>
+    </ul>
+   </div>
+   <div class="vcol calm">
+    <span class="vtag">Caution / 审慎视角</span>
+    <h3>仍需时间验证</h3>
+    <ul>
+      <li>25 倍为厂方口径，未公布基线与绝对数值，需独立数据检验。</li>
+      <li>本质仍是 L2 监督式辅助驾驶，全程注意力不可放松。</li>
+      <li>此前版本曾出现「两点向前、一点后退」的回归，稳定性待观察。</li>
+    </ul>
+   </div>
+  </div>
+  <p class="map-note">需要说明：马斯克「驾驶能力超越人类」属于营销表述，目前缺乏权威第三方数据支撑；车队路线学习现阶段仅覆盖行程起终点，全程导航要等后续迭代。硬件上，老款 HW3 车型止步 V14 Lite，更大范围推送预计 12 月展开。</p>
+ </section>
+
+ <section class="sec" id="sources">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">04 / Sources</span><h2>出处与口径</h2></div>
+   <span class="sec-aside">2026-11-22 检索</span>
+  </div>
+  <div class="prose">
+   <div class="quote">「能看见系统在想什么，还能直接点屏幕指挥它走」——「像 GTA」这个类比，更多指向交互逻辑的直观性，而非单纯的画面噱头。<cite>综合早期车主实测与媒体报道</cite></div>
+   <p>本页事实与数字来自特斯拉官方发布说明，以及 InsideEVs、车质网、凤凰网科技、新浪财经、TeslaBytes 等公开报道；评价部分为基于上述材料的独立判断，不构成投资建议或驾驶安全承诺。</p>
+  </div>
+ </section>
+
+ <footer class="foot">
+  <span>HillToken｜山外有词 · 技术与观察系列　/　视频为 Tesla 官方素材，评论为独立观点</span>
+  <span><a href="#top">返回顶部 ↑</a></span>
+ </footer>
+</div>
+</body>
+</html>
