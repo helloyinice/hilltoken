@@ -151,7 +151,7 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
   </div>
   <div class="video-shell">
    <div class="video-frame" id="vFrame">
-     <video id="v" controls preload="metadata" poster="poster.jpg" playsinline webkit-playsinline x5-playsinline controlsList="nodownload noremoteplayback nofullscreen" disablePictureInPicture>
+     <video id="v" controls muted preload="metadata" poster="poster.jpg" playsinline webkit-playsinline x5-playsinline controlsList="nodownload noremoteplayback nofullscreen" disablePictureInPicture>
        浏览器不支持内嵌视频，请使用现代浏览器在线观看。
      </video>
    </div>
@@ -227,8 +227,11 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
 
   video.src = h264;
   video.preload = 'metadata';
+  video.muted = true;
   video.draggable = false;
   video.disablePictureInPicture = true;
+  // 页面从后台/缓存恢复时保持静音，避免突然出声
+  window.addEventListener('pageshow', function(){ video.muted = true; });
   quality.textContent = 'TESLA · FSD V15 · 4K H.264';
 
   // 仅阻止随手另存/拖拽，不改变播放器原生加载方式
