@@ -119,6 +119,7 @@ button,input{font-family:inherit}
 .list button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--rule);background:transparent;padding:8px 4px;font-size:13px;color:var(--ink-2);cursor:pointer}
 .list button:last-child{border-bottom:0}
 .list button:hover{background:var(--paper);color:var(--signal-text)}
+.list button.sel{background:var(--signal);color:#fff;font-weight:600;padding-left:9px;border-left:3px solid var(--ink)}
 .detail{border-top:2px solid var(--rule-strong);padding-top:12px;min-height:150px}
 .detail .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase}
 .detail h4{font-family:var(--serif);font-size:1.3rem;font-weight:700;margin:6px 0 10px}
@@ -142,6 +143,9 @@ button,input{font-family:inherit}
 .dlabel{font-family:var(--serif);font-size:calc(14px * var(--kf,1));fill:#fffdf8;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:calc(2.4px * var(--k,1));pointer-events:none;opacity:.92;transition:opacity .4s var(--ease)}
 #svg:not(.zoomed) .dlabel{opacity:.5}
 #svg.zoomed .dlabel{opacity:.36}
+/* 区名与地名重叠时全图收起，放大后作为背景恢复 */
+.dlabel-dup{display:none}
+#svg.zoomed .dlabel-dup{display:block}
 .zone{fill:#fffdf8;text-anchor:middle;font-family:var(--serif);font-size:calc(32px * var(--kf,1));font-weight:700;letter-spacing:.18em;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3.6px * var(--k,1));pointer-events:none;opacity:.95;transition:opacity .4s var(--ease)}
 .plabel{font-family:var(--serif);font-size:calc(18px * var(--kf,1));fill:#fffdf8;text-anchor:middle;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3.4px * var(--k,1));pointer-events:none;transition:fill .25s var(--ease),stroke .25s var(--ease)}
 .pdot{fill:#fffdf8;stroke:var(--ink);stroke-width:calc(1.6px * var(--k,1));r:calc(3.2px * var(--k,1));transition:fill .25s var(--ease),stroke .25s var(--ease)}
@@ -312,11 +316,13 @@ HK.districts.forEach(d=>{
   landLayer.appendChild(p);distEls[d.name]=p;
   const t=document.createElementNS(NS,'text');
   t.setAttribute('x',d.label[0]);t.setAttribute('y',d.label[1]);
-  t.setAttribute('class','dlabel');t.textContent=d.name.replace('区','');
+  const nm=d.name.replace('区','');
+  const nearPlace=HK.places.some(p=>!(p.kind&&p.kind.includes('片区'))&&Math.hypot(p.xy[0]-d.label[0],p.xy[1]-d.label[1])<32);
+  t.setAttribute('class','dlabel'+(nearPlace?' dlabel-dup':''));t.textContent=nm;
   labelLayer.appendChild(t);
   p.addEventListener('mouseenter',()=>p.classList.add('hover'));
   p.addEventListener('mouseleave',()=>p.classList.remove('hover'));
-  p.onclick=e=>{showDistrict(d);e.stopPropagation();};
+  p.onclick=e=>{showDistrict(d,e);e.stopPropagation();};
 });
 /* 街区层：规划署 TPU 细线，默认关闭，开关控制 */
 const tpuEls=[];
@@ -373,14 +379,16 @@ const list=document.getElementById('list');
 let curZ='all',selDist=null;
 function renderList(q='',z='all'){
   list.innerHTML='';
-  HK.places.filter(p=>(z==='all'||zoneOf(p)===z)&&(!q||p.name.includes(q)||p.district.includes(q))).forEach(p=>{
+  HK.places.filter(p=>!(p.kind&&p.kind.includes('片区'))&&(z==='all'||zoneOf(p)===z)&&(!q||p.name.includes(q)||p.district.includes(q))).forEach(p=>{
     const b=document.createElement('button');
-    b.textContent=p.name+((p.kind&&p.kind.includes('片区'))?'（大片区）':' · '+p.district);
+    b.dataset.name=p.name;b.dataset.kind='place';
+    b.textContent=p.name+' · '+p.district;
     b.onclick=()=>showPlace(p);list.appendChild(b);
   });
   if(z!=='all'){
     HK.districts.filter(d=>d.zone===z&&(!q||d.name.includes(q))).forEach(d=>{
       const b=document.createElement('button');
+      b.dataset.name=d.name;b.dataset.kind='dist';
       b.textContent='▸ '+d.name+'（区）';
       b.onclick=()=>showDistrict(d);list.appendChild(b);
     });
@@ -389,8 +397,14 @@ function renderList(q='',z='all'){
 renderList();
 document.getElementById('search').oninput=e=>renderList(e.target.value.trim(),curZ);
 
-/* ---- 视图动画 ---- */
-let vb=[...FULL],anim=null;
+function svgPoint(e){const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse());}
+function locateInList(name,kind){
+  const bs=[...list.querySelectorAll('button')];
+  bs.forEach(x=>x.classList.remove('sel'));
+  const b=bs.find(x=>x.dataset.name===name&&(!kind||x.dataset.kind===kind));
+  if(b){b.classList.add('sel');b.scrollIntoView({block:'nearest',behavior:reduceMotion?'auto':'smooth'});}
+}
+/* ---- 视图动画 ---- */let vb=[...FULL],anim=null;
 const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function cancelAnim(){if(anim){cancelAnimationFrame(anim);anim=null;}}
 function setVB(){
@@ -462,13 +476,14 @@ function pulse(x,y){
   });
 }
 function focusXY(x,y,w){animateVB([x-w/2,y-(w*FULL[3]/FULL[2])/2,w,w*FULL[3]/FULL[2]]);pulse(x,y);}
-function showDistrict(d){
+function showDistrict(d,e){
   selDist=d.name;
   document.querySelectorAll('#zoneTabs button').forEach(b=>b.classList.toggle('active',b.dataset.z==='all'));
-  curZ='all';paintZones('all',d.name);
+  curZ=d.zone;paintZones('all',d.name);
+  renderList('',d.zone);locateInList(d.name,'dist');
   pLayer.childNodes.forEach(g=>g.classList.remove('selected'));
-  const cx=(d.box[0]+d.box[2])/2,cy=(d.box[1]+d.box[3])/2;
-  focusXY(cx,cy,Math.max(110,(d.box[2]-d.box[0])*2.2));
+  const q=e?svgPoint(e):{x:d.label[0],y:d.label[1]};
+  focusXY(q.x,q.y,Math.max(110,(d.box[2]-d.box[0])*2.2));
   document.getElementById('detail').innerHTML=
     '<span class="mono">DISTRICT · '+d.zone+'</span><h4>'+d.name+'</h4>'+
     '<p><b>所属片区：</b>'+d.zone+'</p><p><b>英文名：</b>'+d.en+'</p>'+
@@ -486,6 +501,7 @@ function showPlace(p){
   pLayer.childNodes.forEach(g=>g.classList.remove('selected'));
   if(wide)setZone(z,false);
   else{const g=[...pLayer.childNodes].find(el=>el.dataset.name===p.name);if(g)g.classList.add('selected');}
+  locateInList(p.name,'place');
 }
 const tt=document.getElementById('toggleTpu');
 tt.onclick=()=>{const show=tpuLayer.style.display==='none';tpuLayer.style.display=show?'':'none';tt.textContent='街区：'+(show?'隐藏':'显示');};
