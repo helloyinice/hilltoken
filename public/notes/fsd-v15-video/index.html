@@ -62,20 +62,7 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
 .sec-aside{font-size:12.5px;color:var(--ink-3)}
 .video-shell{border:1px solid var(--rule-strong);background:var(--ink)}
 .video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;user-select:none;-webkit-user-select:none}
-.video-frame video{width:100%;height:100%;display:block;object-fit:contain;pointer-events:auto}
-.video-play{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;border:0;background:radial-gradient(circle at 50% 46%,rgba(20,20,20,.18),rgba(0,0,0,.76));color:#fff;cursor:pointer;z-index:3}
-.video-play[hidden]{display:none}
-.video-play:disabled{cursor:wait;opacity:.86}
-.play-mark{width:56px;height:56px;border:1px solid rgba(255,255,255,.72);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;background:rgba(255,255,255,.08);transition:transform .25s var(--ease),background .25s var(--ease)}
-.video-play:hover:not(:disabled) .play-mark{transform:scale(1.06);background:rgba(255,255,255,.16)}
-.play-title{font-family:var(--serif);font-size:clamp(1rem,2vw,1.35rem);font-weight:700;letter-spacing:.02em}
-.play-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:rgba(255,255,255,.62);text-transform:uppercase}
-.video-controls{position:absolute;left:0;right:0;bottom:0;z-index:4;display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,0));color:#fff}
-.video-controls[hidden]{display:none}
-.video-controls button{flex:none;border:1px solid rgba(255,255,255,.36);background:rgba(0,0,0,.28);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:6px 10px;cursor:pointer}
-.video-controls button:hover{border-color:#fff;background:rgba(255,255,255,.14)}
-.video-controls input[type=range]{flex:1;min-width:80px;accent-color:var(--signal);cursor:pointer}
-.video-controls .clock{flex:none;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.78);letter-spacing:.04em;min-width:92px;text-align:right}
+.video-frame video{width:100%;height:100%;display:block;object-fit:contain}
 .video-bar{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 14px;color:var(--paper-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
 .video-bar span:last-child{color:#9a978e}
 .prose{max-width:52em}
@@ -162,25 +149,13 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
   </div>
   <div class="video-shell">
    <div class="video-frame" id="vFrame">
-     <video id="v" preload="none" poster="poster.jpg" playsinline webkit-playsinline x5-playsinline controlsList="nodownload noremoteplayback nofullscreen" disablePictureInPicture>
+     <video id="v" controls preload="metadata" poster="poster.jpg" playsinline webkit-playsinline x5-playsinline controlsList="nodownload noremoteplayback nofullscreen" disablePictureInPicture>
        浏览器不支持内嵌视频，请使用现代浏览器在线观看。
      </video>
-     <button class="video-play" id="vPlay" type="button" aria-label="加载并播放视频">
-       <span class="play-mark" aria-hidden="true">▶</span>
-       <span class="play-title" id="vPlayTitle">点击加载 4K 视频</span>
-       <span class="play-sub" id="vPlaySub">在线播放 · 不提供下载</span>
-     </button>
-     <div class="video-controls" id="vControls" hidden>
-       <button id="vPP" type="button">播放</button>
-       <input id="vSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="播放进度">
-       <span class="clock" id="vClock">00:00 / 00:00</span>
-       <button id="vMute" type="button">静音</button>
-       <button id="vFull" type="button">全屏</button>
-     </div>
    </div>
    <div class="video-bar"><span>TESLA · FSD V15 DEMO · 4K UHD</span><span>视频来源：Tesla 官方发布素材</span></div>
   </div>
-  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，采用 H.265 高质量编码（PSNR 40.5dB，接近肉眼无损），画面细节与原始素材一致。视频仅在本页提供在线观看，未提供下载入口；媒体资源按分片临时读取，不暴露单一视频文件地址。</p>
+  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，并以原片 H.264 高码率直接封装为 HLS 分片，画质未经二次压缩，播放时边看边加载。页面仅提供在线观看，未提供下载入口。</p>
  </section>
 
  <section class="sec" id="review">
@@ -240,132 +215,35 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
   <span><a href="#top">返回顶部 ↑</a></span>
  </footer>
 </div>
+<script src="hls.min.js"></script>
 <script>
 (function(){
   var frame = document.getElementById('vFrame');
   var video = document.getElementById('v');
-  var playBtn = document.getElementById('vPlay');
-  var playTitle = document.getElementById('vPlayTitle');
-  var playSub = document.getElementById('vPlaySub');
-  var controls = document.getElementById('vControls');
-  var pp = document.getElementById('vPP');
-  var seek = document.getElementById('vSeek');
-  var clock = document.getElementById('vClock');
-  var mute = document.getElementById('vMute');
-  var full = document.getElementById('vFull');
-  var parts = JSON.parse(atob('WyJtZWRpYS8yZmQ4YTA0N2UxZmViNi5wMDAiLCJtZWRpYS8yOGU3ZjQ3MzA1ODAzNC5wMDEiLCJtZWRpYS9iOTc0ZTgxNjIzYzJiMS5wMDIiLCJtZWRpYS9mYWUyMDI5OGQ1ZjYyMy5wMDMiLCJtZWRpYS8wNGU1ZmQ5ZTM0YzkyMS5wMDQiLCJtZWRpYS8xMmJlNTI0MmJjMzEwMy5wMDUiLCJtZWRpYS9hNWVjMGMyMzYxYjBiYy5wMDYiLCJtZWRpYS85YWQ1N2RkZTFjNGJiMy5wMDciLCJtZWRpYS8zOGRlNTAzODRiOWQ5Yi5wMDgiLCJtZWRpYS8wN2RmNDJmZTRiMTY4Ni5wMDkiLCJtZWRpYS83YmMyMTZjNzIyYTBlMS5wMTAiLCJtZWRpYS8xNDRmOTVkY2Q0NWZkMi5wMTEiXQ=='));
-  var loading = false;
-  var ready = false;
-  var objectUrl = '';
+  var hls = null;
+  var src = 'hls/index.m3u8';
 
   video.draggable = false;
   video.disablePictureInPicture = true;
 
-  function fmt(sec){
-    if(!isFinite(sec) || sec < 0) sec = 0;
-    var m = Math.floor(sec / 60);
-    var s = Math.floor(sec % 60);
-    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-  }
-
-  function setLoadingText(pct){
-    playTitle.textContent = '正在加载 4K 视频… ' + pct + '%';
-    playSub.textContent = '首次播放需要读取媒体分片';
-  }
-
-  function prepare(){
-    if(ready || loading) return Promise.resolve(ready);
-    loading = true;
-    playBtn.disabled = true;
-    setLoadingText(0);
-    var chain = Promise.resolve();
-    var chunks = [];
-    parts.forEach(function(part, i){
-      chain = chain.then(function(){
-        return fetch(part, {cache:'force-cache', credentials:'omit', referrerPolicy:'no-referrer'});
-      }).then(function(res){
-        if(!res.ok) throw new Error('media part ' + i);
-        return res.arrayBuffer();
-      }).then(function(buf){
-        chunks.push(buf);
-        setLoadingText(Math.round((i + 1) / parts.length * 100));
-      });
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = src;
+  } else if (window.Hls && Hls.isSupported()) {
+    hls = new Hls({
+      enableWorker: true,
+      maxBufferLength: 30,
+      backBufferLength: 60,
+      capLevelToPlayerSize: false
     });
-    return chain.then(function(){
-      var blob = new Blob(chunks, {type:'video/mp4'});
-      objectUrl = URL.createObjectURL(blob);
-      video.src = objectUrl;
-      video.load();
-      ready = true;
-      playTitle.textContent = '点击播放';
-      playSub.textContent = '已就绪 · 在线播放 · 不提供下载';
-    }).catch(function(){
-      playTitle.textContent = '视频加载失败';
-      playSub.textContent = '刷新页面后重试';
-    }).then(function(){
-      loading = false;
-      playBtn.disabled = false;
-    });
+    hls.loadSource(src);
+    hls.attachMedia(video);
   }
-
-  function togglePlay(){
-    if(!ready){ prepare(); return; }
-    if(video.paused){
-      var p = video.play();
-      if(p && p.catch) p.catch(function(){ playTitle.textContent = '点击播放'; });
-    } else {
-      video.pause();
-    }
-  }
-
-  playBtn.addEventListener('click', togglePlay);
-  video.addEventListener('click', togglePlay);
-
-  video.addEventListener('play', function(){
-    playBtn.hidden = true;
-    controls.hidden = false;
-    pp.textContent = '暂停';
-  });
-  video.addEventListener('pause', function(){
-    pp.textContent = '播放';
-    if(!video.ended && ready){
-      playBtn.hidden = false;
-      playTitle.textContent = '继续播放';
-      playSub.textContent = '在线播放 · 不提供下载';
-    }
-  });
-  video.addEventListener('ended', function(){
-    playBtn.hidden = false;
-    playTitle.textContent = '重新播放';
-    playSub.textContent = '在线播放 · 不提供下载';
-    video.currentTime = 0;
-  });
-  video.addEventListener('loadedmetadata', function(){
-    clock.textContent = fmt(0) + ' / ' + fmt(video.duration);
-  });
-  video.addEventListener('timeupdate', function(){
-    clock.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
-    if(video.duration) seek.value = Math.round(video.currentTime / video.duration * 1000);
-  });
-
-  pp.addEventListener('click', togglePlay);
-  seek.addEventListener('input', function(){
-    if(video.duration) video.currentTime = video.duration * Number(seek.value) / 1000;
-  });
-  mute.addEventListener('click', function(){
-    video.muted = !video.muted;
-    mute.textContent = video.muted ? '取消静音' : '静音';
-  });
-  full.addEventListener('click', function(){
-    if(frame.requestFullscreen) frame.requestFullscreen();
-    else if(frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
-  });
 
   frame.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   frame.addEventListener('dragstart', function(e){ e.preventDefault(); });
   frame.addEventListener('selectstart', function(e){ e.preventDefault(); });
   window.addEventListener('pagehide', function(){
-    if(objectUrl) URL.revokeObjectURL(objectUrl);
+    if(hls) hls.destroy();
   });
 })();
 </script>
