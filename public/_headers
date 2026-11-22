@@ -10,8 +10,8 @@
   Cross-Origin-Resource-Policy: same-origin
   Cache-Control: public, max-age=31536000, immutable
 
-/notes/fsd-v15-video/hls/*.ts
-  Content-Type: video/mp2t
+/notes/fsd-v15-video/hls/*.mp4
+  Content-Type: video/mp4
   X-Content-Type-Options: nosniff
   Cross-Origin-Resource-Policy: same-origin
   Cache-Control: public, max-age=31536000, immutable

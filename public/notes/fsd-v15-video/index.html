@@ -157,7 +157,7 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
    </div>
    <div class="video-bar"><span>TESLA · FSD V15 DEMO · 4K UHD</span><button id="qLock" type="button">锁定 4K</button><span>视频来源：Tesla 官方发布素材</span></div>
   </div>
-  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，以原片为基准做 4K H.264 高质量重编码（平均 PSNR 47.3dB），固定 2 秒关键帧、切成 4 秒分片，码率封顶约 10Mbps。默认自适应：网络与设备足够时使用 4K，否则自动切到 1080p 备用档以避免停顿；也可手动锁定 4K。页面仅提供在线观看，未提供下载入口。</p>
+  <p class="map-note">视频 01 · 城市路口识别交警手势、车内视角穿越桥梁、中控屏实时渲染周围车辆与行驶规划。保留 3840×2160 原生 4K 分辨率，以原片为基准做 4K H.264 高质量重编码（平均 PSNR 46.0dB），固定 2 秒关键帧、切成 2 秒 fMP4 分片，码率封顶约 8Mbps，分片可被 CDN 缓存，避免每次重新取流。默认自适应：网络与设备足够时使用 4K，否则自动切到 1080p 备用档；也可手动锁定 4K。页面仅提供在线观看，未提供下载入口。</p>
  </section>
 
  <section class="sec" id="review">
@@ -234,9 +234,9 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
   if (window.Hls && Hls.isSupported()) {
     hls = new Hls({
       enableWorker: true,
-      maxBufferLength: 60,
-      maxMaxBufferLength: 120,
-      maxBufferSize: 80 * 1000 * 1000,
+      maxBufferLength: 90,
+      maxMaxBufferLength: 180,
+      maxBufferSize: 120 * 1000 * 1000,
       backBufferLength: 30,
       capLevelToPlayerSize: false
     });
