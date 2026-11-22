@@ -4,6 +4,20 @@
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
 
+# 根目录站点图标：每次重新校验，避免标签栏/主屏长期显示旧图标
+/favicon.ico
+  Cache-Control: public, max-age=0, must-revalidate
+/favicon.svg
+  Cache-Control: public, max-age=0, must-revalidate
+/favicon-32.png
+  Cache-Control: public, max-age=0, must-revalidate
+/favicon-16.png
+  Cache-Control: public, max-age=0, must-revalidate
+/apple-touch-icon.png
+  Cache-Control: public, max-age=0, must-revalidate
+/safari-pinned-tab.svg
+  Cache-Control: public, max-age=0, must-revalidate
+
 # FSD V15 视频：单文件原生播放，走浏览器 Range 请求；CDN 整文件缓存保证流畅
 /notes/fsd-v15-video/*.mp4
   Content-Type: video/mp4
