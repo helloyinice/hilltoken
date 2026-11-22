@@ -222,16 +222,14 @@ a:hover{text-decoration:underline;text-decoration-thickness:1px}
   var frame = document.getElementById('vFrame');
   var video = document.getElementById('v');
   var quality = document.getElementById('vQuality');
-  // 文件名以编码形式保存，源码里不出现明文直链；仅一次性选源，不做运行时拼装
-  var uhd = atob('bTdkOWEyZjRjMWU4Lm1wNA==');
+  // 文件名以编码形式保存，源码里不出现明文直链；单一 H.264 源覆盖所有浏览器，避免 HEVC 黑屏
   var h264 = atob('azNwNnY4YjVuMnE3Lm1wNA==');
-  var canHEVC = !!(video.canPlayType('video/mp4; codecs="hvc1"') || video.canPlayType('video/mp4; codecs="hev1"'));
 
-  video.src = canHEVC ? uhd : h264;
+  video.src = h264;
   video.preload = 'metadata';
   video.draggable = false;
   video.disablePictureInPicture = true;
-  quality.textContent = 'TESLA · FSD V15 · ' + (canHEVC ? '4K HEVC' : '4K H.264');
+  quality.textContent = 'TESLA · FSD V15 · 4K H.264';
 
   // 仅阻止随手另存/拖拽，不改变播放器原生加载方式
   frame.addEventListener('contextmenu', function(e){ e.preventDefault(); });
