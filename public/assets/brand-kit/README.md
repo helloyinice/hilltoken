@@ -1,8 +1,8 @@
-# HillToken｜山外有词 · 品牌素材 Brand Kit v1.5
+# HillToken｜山外有词 · 品牌素材 Brand Kit v1.6
 
-山外有词，词外有山。一枚一枚捡。
+山外有词，词外有山。
 英文副题：Tokens beyond the hill.
-版本日期：2026-11-17 · 官方入口：https://hilltoken.net/brand-kit/
+版本日期：2026-11-23 · 官方入口：https://hilltoken.net/brand-kit/
 
 本包为媒体引用、友情链接、合作物料与 AI 抓取准备的官方资料。所有 Logo 文件均带不透明底色与完整留白；SVG 的字形已转为轮廓，**无需安装任何字体**即可使用。
 
@@ -54,7 +54,7 @@ HillToken_Brand_Kit_2026-11-17/
 ### 图形符号、媒体与社区友链标识与应用素材
 
 - `symbol/hilltoken-symbol{,-dark}.svg` / `-1024.png`：**方形设计稿** 1024 × 1024，标准（米纸底）与反色（墨黑底），折线山脊 + 朱砂方点。
-- `symbol/hilltoken-symbol-wide{,-dark}.svg` / `.png`：**横版设计稿** 1600 × 600，标准与反色各一版。左侧方形符号等比缩放（不拉伸），右侧宋体轮廓「山外有山」与朱砂短细线。
+- `symbol/hilltoken-symbol-wide{,-dark}.svg` / `.png`：**横版设计稿** 1600 × 600，标准与反色各一版。左侧方形符号等比缩放（不拉伸），右侧宋体轮廓品牌名「山外有词」与朱砂短细线。
 - `lockup/hilltoken-lockup-{inline,stacked}-{light,dark}.svg` / `.png`：四种友链标识。单行长条版 478 × 108、双行组合版 391 × 108，各含白底与黑底；左侧固定为方形标准 Logo，右侧**只有正式品牌名 `HillToken｜山外有词`**，不出现英文副题、域名、编号或任何其它文字。白底版用于浅色页面，黑底版用于深色页面，均带不透明底色。友链可直接引用：
   `<a href="https://www.hilltoken.net/"><img src="https://www.hilltoken.net/assets/brand-kit/lockup/hilltoken-lockup-inline-light.svg" alt="HillToken｜山外有词" width="239" height="54"></a>`
 - `favicon/favicon.svg`（32 × 32）、`favicon-32.png`、`favicon-16.png`、`favicon.ico`（16/32/48）、`apple-touch-icon-180.png`。
@@ -106,11 +106,13 @@ Logo 固定三色，不随背景替换：
 
 ## 七、设计说明
 
-构图方法参考 `nexttoken.tv/brand-kit`：单一标准构图、方／圆两种裁切、多底色与多尺寸交付、字形转轮廓、固定色号、可复制的官方文案，以及按栏目编号的使用规范。
+构图采用单一标准、方／圆两种裁切、多底色与多尺寸交付、字形转轮廓、固定色号、可复制的官方文案，以及按栏目编号的使用规范。
 
-属于 HillToken 自有的部分：两行纯字标 `Hill / Token`、右上「山外的一枚词」朱砂方点、主标不放中文的层级安排、折线山脊符号、Avenir Next Heavy + Songti SC 的字体组合、色板命名与全部品牌文案。未使用对方的字标、图形或字体文件。
+全部字标、图形、字体组合、色板命名与品牌文案均为 HillToken 自有：`Hill / Token` 两行纯字标、右上「山外的一枚词」朱砂方点、主标不放中文的层级安排、折线山脊符号与 Avenir Next Heavy + Songti SC 的字体组合。
 
 字标由 `fontTools` 在生成时转为 SVG 轮廓，位图由无头浏览器按矢量渲染。可复现脚本位于工作区 `brand-tools/generate_svg.py`、`brand-tools/make_symbol_wide.py`（横版符号）、`brand-tools/render_bitmaps.py`、`brand-tools/make_onepager.py` 与 `brand-tools/make_zip.py`。
+
+**v1.6 横版符号文字与文案更新**：图形符号横版设计稿右侧文字由「山外有山」改为品牌名「山外有词」，标准（米纸底）与反色（墨黑底）两版 SVG / PNG 同步重出；官网完整版、单页版与本 README 的官方介绍、命名说明一致更新；所有素材链接升级 `?v=1.6`。
 
 **v1.2 整套视觉统一**：主 Logo 六种变体均为纯字标（无中文落款、Avenir Next Heavy 宽体）；四种媒体与社区友链标识重做为官方构图，横排只保留品牌名；品牌页与单页按官方统一网格重排（3 × 2 等尺寸格子 + 等高下载行 + 白／黑底两列对照），应用素材改为四列等高。
 
@@ -120,9 +122,9 @@ Logo 固定三色，不随背景替换：
 
 **v1.3 横排标识收小与抖音背景图**：单行长条版字标字号收小约三成，画布随内容收缩为 478 × 108，四版友链标识、页面标注、嵌入代码尺寸与最小尺寸规范同步更新；新增两版抖音个人主页背景图（1125 × 633）。
 
-**关于缓存**：页面里所有素材链接都带版本参数 `?v=1.5`，刷新页面即会重新拉取新版文件，不会读到缓存里的旧版 Logo。站点 `_headers` 另外声明了「每次重新校验」；自定义域若被 Cloudflare 账户层的 4 小时浏览器缓存规则覆盖，仍以版本参数为准。以后每次更新素材，同步升级版本号即可。
+**关于缓存**：页面里所有素材链接都带版本参数 `?v=1.6`，刷新页面即会重新拉取新版文件，不会读到缓存里的旧版 Logo。站点 `_headers` 另外声明了「每次重新校验」；自定义域若被 Cloudflare 账户层的 4 小时浏览器缓存规则覆盖，仍以版本参数为准。以后每次更新素材，同步升级版本号即可。
 
-**单页版**：`brand-kit/one-page/index.html` 是一份自包含 HTML，主 Logo、六种 Logo 变体与四张图形符号设计稿均已内联 SVG（官网完整版首屏同样内联主 Logo），断网也能看到全部主视觉且底色不会串；每个预览下方就是它自己的文件链接。工作区根目录的转发版把下载链接换成绝对线上 URL。结构参照 `nexttoken.tv/brand-kit` 的五节编号，含可复制的官方文案、色号与友链嵌入代码、A4 打印样式，可直接转发给媒体或合作方。线上地址 `https://hilltoken.net/brand-kit/one-page/`，生成脚本 `brand-tools/make_onepager.py`。工作区根目录另有 `HillToken_品牌素材页_2026-11-17.html`，素材链接换成绝对线上 URL，双击即可打开。
+**单页版**：`brand-kit/one-page/index.html` 是一份自包含 HTML，主 Logo、六种 Logo 变体与四张图形符号设计稿均已内联 SVG（官网完整版首屏同样内联主 Logo），断网也能看到全部主视觉且底色不会串；每个预览下方就是它自己的文件链接。工作区根目录的转发版把下载链接换成绝对线上 URL。结构采用五节编号，含可复制的官方文案、色号与友链嵌入代码、A4 打印样式，可直接转发给媒体或合作方。线上地址 `https://hilltoken.net/brand-kit/one-page/`，生成脚本 `brand-tools/make_onepager.py`。工作区根目录另有 `HillToken_品牌素材页_2026-11-17.html`，素材链接换成绝对线上 URL，双击即可打开。
 
 ## 八、引用
 
