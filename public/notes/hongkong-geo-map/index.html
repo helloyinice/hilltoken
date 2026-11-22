@@ -144,7 +144,7 @@ button,input{font-family:inherit}
 #svg.zoomed .dlabel{opacity:.36}
 .zone{fill:#fffdf8;text-anchor:middle;font-family:var(--serif);font-size:calc(32px * var(--kf,1));font-weight:700;letter-spacing:.18em;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3.6px * var(--k,1));pointer-events:none;opacity:.95;transition:opacity .4s var(--ease)}
 .plabel{font-family:var(--serif);font-size:calc(18px * var(--kf,1));fill:#fffdf8;text-anchor:middle;paint-order:stroke;stroke:var(--ink);stroke-width:calc(3.4px * var(--k,1));pointer-events:none;transition:fill .25s var(--ease),stroke .25s var(--ease)}
-.pdot{fill:#fffdf8;stroke:var(--ink);stroke-width:calc(1.6px * var(--k,1));r:calc(3.2px * var(--k,1));transition:fill .25s var(--ease),stroke .25s var(--ease),r .28s var(--ease)}
+.pdot{fill:#fffdf8;stroke:var(--ink);stroke-width:calc(1.6px * var(--k,1));r:calc(3.2px * var(--k,1));transition:fill .25s var(--ease),stroke .25s var(--ease)}
 .pgroup{cursor:pointer;transition:opacity .35s var(--ease)}
 .pgroup.muted{opacity:.11}
 /* LOD：密集区次要地名全图收起，放大后展开 */
@@ -398,14 +398,14 @@ function setVB(){
   svg.setAttribute('viewBox',vb.join(' '));
   svg.style.setProperty('--k',k.toFixed(4));
   svg.style.setProperty('--kf',Math.pow(k,0.72).toFixed(4));
-  svg.classList.toggle('zoomed',k<0.72);
+  const z=k<0.72;if(z!==window.__zoomed){window.__zoomed=z;svg.classList.toggle('zoomed',z);}
 }
 function animateVB(target,dur){
   cancelAnim();
   if(reduceMotion){vb=target.slice();setVB();return;}
-  if(!dur){const span=Math.abs(target[2]-vb[2])/vb[2];dur=Math.min(1080,Math.max(580,580+span*340));}
+  if(!dur){const span=Math.abs(target[2]-vb[2])/vb[2];dur=Math.min(820,Math.max(460,460+span*260));}
   const from=[...vb],t0=performance.now();
-  const ease=t=>t<.5?16*t*t*t*t*t:1-Math.pow(-2*t+2,5)/2;
+  const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
   function step(now){const u=Math.min(1,(now-t0)/dur),e=ease(u);vb=from.map((v,i)=>v+(target[i]-v)*e);setVB();if(u<1)anim=requestAnimationFrame(step);else anim=null;}
   anim=requestAnimationFrame(step);
 }
