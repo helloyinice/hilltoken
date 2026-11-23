@@ -9,7 +9,7 @@
     --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","Noto Serif SC","SimSun",Georgia,serif;
     --latin:"Iowan Old Style","Baskerville",Georgia,"Times New Roman",serif;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    --brand-logo:"Avenir Next Heavy","Avenir Next","Helvetica Neue","Arial Black",Arial,sans-serif;
+    --brand-logo:"Avenir Next","Helvetica Neue","Arial Black",Arial,sans-serif;
     --ease:cubic-bezier(.23,1,.32,1);
   }
   *{box-sizing:border-box}
