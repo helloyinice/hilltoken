@@ -57,3 +57,15 @@
   Cache-Control: public, max-age=0, must-revalidate
 /hilltoken-favicon-180.png
   Cache-Control: public, max-age=0, must-revalidate
+
+# 全新文件名（Safari 从未缓存过的 URL）：每次重新校验，绕开旧 URL 的缓存锁死
+/site-icon.ico
+  Cache-Control: public, max-age=0, must-revalidate
+/site-icon.svg
+  Cache-Control: public, max-age=0, must-revalidate
+/site-icon-16.png
+  Cache-Control: public, max-age=0, must-revalidate
+/site-icon-32.png
+  Cache-Control: public, max-age=0, must-revalidate
+/site-icon-180.png
+  Cache-Control: public, max-age=0, must-revalidate
