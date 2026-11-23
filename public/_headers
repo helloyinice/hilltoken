@@ -4,6 +4,15 @@
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
 
+# 站点样式表：每次重新校验，避免改了 CSS 后浏览器仍用 4 小时旧缓存
+# 否则样式类特效/配色更新会被浏览器缓存挡住，表现「改了没生效」
+/site.css
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+/theme-switcher.css
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+
 # 根目录站点图标：每次重新校验，避免标签栏/主屏长期显示旧图标
 # 注意：必须覆盖当前实际引用的 2026 版文件名，否则会走 Pages 默认 4 小时缓存，
 # 导致更新后标签页图标时有时无（历史上反复出现）。
