@@ -84,13 +84,10 @@ html[data-theme="night"] .btn-dark:hover{color:var(--paper)}
 .ts-reset:hover{color:var(--signal-text)}
 .ts-reset:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
 
-/* 中窄屏避让：601–1360px 区间报头右上角有 llms.txt / RSS，固定按钮会压住链接，
-   此区间改为右下角悬浮；手机（<=600px 站点本身已隐藏该链接）与宽屏仍留在右上角。 */
-@media(min-width:601px) and (max-width:1360px){
-  .ts-root{top:auto;bottom:20px;right:18px}
-  .ts-panel{top:auto;bottom:52px;transform-origin:bottom right;transform:translateY(6px) scale(.97)}
-  .ts-root.open .ts-panel{transform:translateY(0) scale(1)}
-}
+/* 顶栏右侧现在是「订阅 RSS」按钮，配色圆环统一在右下角悬浮，避免遮挡顶栏。 */
+.ts-root{top:auto;bottom:20px;right:18px}
+.ts-panel{top:auto;bottom:52px;transform-origin:bottom right;transform:translateY(6px) scale(.97)}
+.ts-root.open .ts-panel{transform:translateY(0) scale(1)}
 @media(max-width:560px){
-  .ts-root{--ts-top:12px;--ts-right:12px}
+  .ts-root{right:12px;bottom:12px}
 }
