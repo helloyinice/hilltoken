@@ -5,6 +5,8 @@
   Cache-Control: public, max-age=0, must-revalidate
 
 # 根目录站点图标：每次重新校验，避免标签栏/主屏长期显示旧图标
+# 注意：必须覆盖当前实际引用的 2026 版文件名，否则会走 Pages 默认 4 小时缓存，
+# 导致更新后标签页图标时有时无（历史上反复出现）。
 /favicon.ico
   Cache-Control: public, max-age=0, must-revalidate
 /favicon.svg
@@ -16,6 +18,14 @@
 /apple-touch-icon.png
   Cache-Control: public, max-age=0, must-revalidate
 /safari-pinned-tab.svg
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-icon-2026.ico
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-icon-2026-32.png
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-touch-2026.png
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-pinned-2026.svg
   Cache-Control: public, max-age=0, must-revalidate
 
 # FSD V15 视频：单文件原生播放，走浏览器 Range 请求；CDN 整文件缓存保证流畅
