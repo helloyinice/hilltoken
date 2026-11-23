@@ -66,6 +66,11 @@ const articleLd = article
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="generator" content="Astro" />
   <link rel="stylesheet" href="/site.css" />
+  <link rel="stylesheet" href="/theme-switcher.css" />
+  <script is:inline>
+    try { var t = localStorage.getItem('hilltoken:colourway'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <script is:inline src="/theme-switcher.js" defer></script>
 
   <link rel="icon" href="/hilltoken-icon-2026.ico" sizes="16x16 32x32" />
   <link rel="icon" type="image/png" sizes="32x32" href="/hilltoken-icon-2026-32.png" />

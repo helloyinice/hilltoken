@@ -1,0 +1,96 @@
+/* HillToken 圆环调色盘组件 · 样式与 6 套配色 · 2026-11-23
+ * 用法：放进 public/，在 BaseLayout <head> 引入 <link rel="stylesheet" href="/theme-switcher.css">
+ * 通过 html[data-theme] 覆盖 site.css 的 :root，特异性更高，无需改动原文件。
+ * 交互：悬停扇区即时预览，点击确认并记住；移出圆环或关闭面板回到已确认配色。
+ * 想调整按钮位置：改 .ts-root 的 --ts-top / --ts-right。
+ */
+
+/* ===== 6 套配色 ===== */
+html[data-theme="base"]{
+  --paper:#f5f2ea; --paper-2:#eeeae0; --white:#fffdf8;
+  --ink:#141414; --ink-2:#4a4a48; --ink-3:#7b7972;
+  --rule:rgba(20,20,20,.16); --rule-strong:#141414;
+  --signal:#ff4b18; --signal-text:#b8320d; --signal-soft:#f9dfd2;
+  --band:#141414; --band-ink:#f2f0e9; --band-line:rgba(242,240,233,.22);
+}
+html[data-theme="indigo"]{
+  --paper:#eef2f6; --paper-2:#e2e9f0; --white:#f9fbfd;
+  --ink:#152232; --ink-2:#42566b; --ink-3:#73879b;
+  --rule:rgba(21,34,50,.16); --rule-strong:#152232;
+  --signal:#1d5fa8; --signal-text:#17497f; --signal-soft:#d9e6f4;
+  --band:#152232; --band-ink:#eef2f6; --band-line:rgba(238,242,246,.22);
+}
+html[data-theme="pine"]{
+  --paper:#f0f2ea; --paper-2:#e5e9dc; --white:#fafbf4;
+  --ink:#1c2a20; --ink-2:#465748; --ink-3:#788778;
+  --rule:rgba(28,42,32,.16); --rule-strong:#1c2a20;
+  --signal:#2f6b4a; --signal-text:#23513a; --signal-soft:#dcebdd;
+  --band:#1c2a20; --band-ink:#f0f2ea; --band-line:rgba(240,242,234,.22);
+}
+html[data-theme="ochre"]{
+  --paper:#f5efe2; --paper-2:#ece3d0; --white:#fdf8ed;
+  --ink:#2b2419; --ink-2:#574a37; --ink-3:#887a63;
+  --rule:rgba(43,36,25,.16); --rule-strong:#2b2419;
+  --signal:#a9602a; --signal-text:#7e451c; --signal-soft:#f0dfc6;
+  --band:#2b2419; --band-ink:#f5efe2; --band-line:rgba(245,239,226,.22);
+}
+html[data-theme="plum"]{
+  --paper:#f2eef5; --paper-2:#e8e1ed; --white:#fbf8fd;
+  --ink:#251c2e; --ink-2:#4f425b; --ink-3:#80738d;
+  --rule:rgba(37,28,46,.16); --rule-strong:#251c2e;
+  --signal:#74448c; --signal-text:#573268; --signal-soft:#e8dbf0;
+  --band:#251c2e; --band-ink:#f2eef5; --band-line:rgba(242,238,245,.22);
+}
+html[data-theme="night"]{
+  --paper:#121821; --paper-2:#1b2430; --white:#0c1118;
+  --ink:#eef1ec; --ink-2:#b9c0bb; --ink-3:#88918d;
+  --rule:rgba(238,241,236,.18); --rule-strong:#eef1ec;
+  --signal:#e9b968; --signal-text:#f2cd8c; --signal-soft:#3b3220;
+  --band:#eef1ec; --band-ink:#121821; --band-line:rgba(18,24,33,.22);
+}
+/* 夜航反相的两处硬编码白字补丁 */
+html[data-theme="night"]::selection,html[data-theme="night"] ::selection{color:var(--paper)}
+html[data-theme="night"] .btn-dark:hover{color:var(--paper)}
+
+/* ===== 组件 UI · 圆环调色盘 ===== */
+.ts-root{--ts-top:18px;--ts-right:18px;position:fixed;top:var(--ts-top);right:var(--ts-right);z-index:9999;font-family:var(--sans);font-size:13px;line-height:1.5}
+.ts-btn{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:var(--paper);color:var(--ink);border:1px solid var(--rule-strong);cursor:pointer;padding:0;transition:border-color .18s ease,transform .18s ease}
+.ts-btn:hover{border-color:var(--signal);transform:rotate(-8deg)}
+.ts-btn:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.ts-btn svg{display:block;pointer-events:none}
+.ts-panel{position:absolute;top:52px;right:0;width:268px;max-height:calc(100vh - 80px);overflow-y:auto;background:var(--paper);color:var(--ink);border:1px solid var(--rule-strong);border-radius:14px;padding:12px;box-sizing:border-box;opacity:0;visibility:hidden;transform:translateY(-6px) scale(.97);transform-origin:top right;transition:opacity .18s ease,transform .18s ease,visibility .18s}
+.ts-root.open .ts-panel{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.ts-root.open .ts-btn{border-color:var(--signal)}
+@media(prefers-reduced-motion:reduce){.ts-btn,.ts-panel,.ts-slice{transition:none}}
+.ts-head{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 6px}
+.ts-head strong{font-family:var(--serif);font-size:14px;font-weight:700}
+.ts-head span{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase}
+.ts-wheel{position:relative;width:240px;height:240px;margin:0 auto}
+.ts-wheel svg{display:block;width:100%;height:100%;overflow:visible}
+.ts-slice{cursor:pointer;transform-box:view-box;transform-origin:100px 100px;transition:transform .18s ease,opacity .18s ease;opacity:.88}
+.ts-slice path{stroke:var(--rule-strong);stroke-width:.5}
+.ts-slice:hover,.ts-slice.is-preview{transform:scale(1.05);opacity:1}
+.ts-slice:focus-visible{outline:none}
+.ts-slice:focus-visible path{stroke:var(--signal);stroke-width:2}
+.ts-slice .ts-mark{fill:var(--ink);opacity:0;transition:opacity .18s ease}
+.ts-slice.is-confirmed .ts-mark{opacity:1}
+.ts-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:88px;text-align:center;pointer-events:none}
+.ts-core b{display:block;font-family:var(--serif);font-size:12.5px;font-weight:700;line-height:1.3;white-space:nowrap}
+.ts-core em{display:block;font-style:normal;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase;margin-top:3px}
+.ts-core i{display:block;font-style:normal;font-size:9.5px;color:var(--signal-text);margin-top:5px;font-weight:700}
+.ts-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--rule);margin-top:6px;padding:9px 4px 0}
+.ts-foot span{font-size:10.5px;color:var(--ink-3)}
+.ts-reset{background:transparent;border:0;color:var(--ink-2);font-family:inherit;font-size:10.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0}
+.ts-reset:hover{color:var(--signal-text)}
+.ts-reset:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+/* 中窄屏避让：601–1360px 区间报头右上角有 llms.txt / RSS，固定按钮会压住链接，
+   此区间改为右下角悬浮；手机（<=600px 站点本身已隐藏该链接）与宽屏仍留在右上角。 */
+@media(min-width:601px) and (max-width:1360px){
+  .ts-root{top:auto;bottom:20px;right:18px}
+  .ts-panel{top:auto;bottom:52px;transform-origin:bottom right;transform:translateY(6px) scale(.97)}
+  .ts-root.open .ts-panel{transform:translateY(0) scale(1)}
+}
+@media(max-width:560px){
+  .ts-root{--ts-top:12px;--ts-right:12px}
+}
