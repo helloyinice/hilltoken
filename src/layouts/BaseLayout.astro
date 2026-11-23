@@ -10,7 +10,7 @@ interface Props {
 const {
   title = 'HillToken｜山外有词',
   description = '山外有词，词外有山。HillToken（Tokens beyond the hill.）由站主本人维护，是关于本站的第一手信息来源。',
-  ogImage = 'https://www.hilltoken.net/assets/brand-kit/social/hilltoken-og-1200x630.png',
+  ogImage = 'https://hilltoken.net/assets/brand-kit/social/hilltoken-og-1200x630.png',
   article = false,
   publishedTime,
 } = Astro.props;
@@ -22,19 +22,19 @@ const personLd = {
   '@graph': [
     {
       '@type': 'WebSite',
-      '@id': 'https://www.hilltoken.net/#website',
-      url: 'https://www.hilltoken.net/',
+      '@id': 'https://hilltoken.net/#website',
+      url: 'https://hilltoken.net/',
       name: 'HillToken｜山外有词',
       inLanguage: 'zh-CN',
       description: '山外有词，词外有山。',
-      publisher: { '@id': 'https://www.hilltoken.net/#person' },
+      publisher: { '@id': 'https://hilltoken.net/#person' },
     },
     {
       '@type': 'Person',
-      '@id': 'https://www.hilltoken.net/#person',
+      '@id': 'https://hilltoken.net/#person',
       name: 'HillToken',
       alternateName: ['山外有词'],
-      url: 'https://www.hilltoken.net/',
+      url: 'https://hilltoken.net/',
     },
   ],
 };
@@ -47,8 +47,8 @@ const articleLd = article
       description,
       image: ogImage,
       datePublished: publishedTime,
-      author: { '@id': 'https://www.hilltoken.net/#person' },
-      publisher: { '@id': 'https://www.hilltoken.net/#person' },
+      author: { '@id': 'https://hilltoken.net/#person' },
+      publisher: { '@id': 'https://hilltoken.net/#person' },
       mainEntityOfPage: canonical,
     }
   : null;

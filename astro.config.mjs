@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://www.hilltoken.net',
+  site: 'https://hilltoken.net',
   output: 'static',
   build: { format: 'directory' },
   trailingSlash: 'always',
