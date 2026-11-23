@@ -19,14 +19,6 @@
   Cache-Control: public, max-age=0, must-revalidate
 /safari-pinned-tab.svg
   Cache-Control: public, max-age=0, must-revalidate
-/hilltoken-icon-2026.ico
-  Cache-Control: public, max-age=0, must-revalidate
-/hilltoken-icon-2026-32.png
-  Cache-Control: public, max-age=0, must-revalidate
-/hilltoken-touch-2026.png
-  Cache-Control: public, max-age=0, must-revalidate
-/hilltoken-pinned-2026.svg
-  Cache-Control: public, max-age=0, must-revalidate
 
 # FSD V15 视频：单文件原生播放，走浏览器 Range 请求；CDN 整文件缓存保证流畅
 /notes/fsd-v15-video/*.mp4
@@ -56,16 +48,4 @@
 /hilltoken-favicon-32.png
   Cache-Control: public, max-age=0, must-revalidate
 /hilltoken-favicon-180.png
-  Cache-Control: public, max-age=0, must-revalidate
-
-# 全新文件名（Safari 从未缓存过的 URL）：每次重新校验，绕开旧 URL 的缓存锁死
-/site-icon.ico
-  Cache-Control: public, max-age=0, must-revalidate
-/site-icon.svg
-  Cache-Control: public, max-age=0, must-revalidate
-/site-icon-16.png
-  Cache-Control: public, max-age=0, must-revalidate
-/site-icon-32.png
-  Cache-Control: public, max-age=0, must-revalidate
-/site-icon-180.png
   Cache-Control: public, max-age=0, must-revalidate
