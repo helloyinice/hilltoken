@@ -6,7 +6,7 @@ import site from '../data/site.json';
 import { getCollection } from 'astro:content';
 
 const notes = (await getCollection('notes')).sort(
-  (a, b) => (a.data.order || '').localeCompare(b.data.order || '')
+  (a, b) => (b.data.publishedTime || '').localeCompare(a.data.publishedTime || '')
 );
 
 const fmtEntryDate = (value: string) => {
@@ -98,7 +98,7 @@ const fmtEntryDate = (value: string) => {
         <ul class="entries">
           {notes.map((n) => (
             <li class="entry">
-              <span class="entry-meta">{n.data.order} · {fmtEntryDate(n.data.publishedTime)}</span>
+              <span class="entry-meta">{fmtEntryDate(n.data.publishedTime)}</span>
               <a class="entry-title" href={n.data.external || `/notes/${n.id}/`}>{n.data.title}<span class="entry-note">{n.data.description}</span></a>
               <span class="entry-arrow" aria-hidden="true">→</span>
             </li>
