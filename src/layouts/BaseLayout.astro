@@ -76,6 +76,21 @@ const articleLd = article
   <link rel="icon" type="image/png" sizes="32x32" href="/hilltoken-favicon-32.png?v=20261123f" />
   <link rel="icon" href="/hilltoken-favicon.ico?v=20261123f" sizes="16x16 32x32" />
   <link rel="apple-touch-icon" href="/hilltoken-favicon-180.png?v=20261123f" />
+  {/* Safari 会按「页面 URL」顽固缓存 favicon，即使 HTML 换了图标链接也不重拉。
+      每次加载时动态改写图标 URL 的时间戳，迫使 Safari 重新获取图标。 */}
+  <script is:inline>
+    (function () {
+      var stamp = Date.now();
+      var links = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+      for (var i = 0; i < links.length; i++) {
+        var href = links[i].getAttribute('href');
+        if (!href) continue;
+        href = href.replace(/([?&])v=[^&]*/, '$1v=' + stamp);
+        if (href.indexOf('v=') < 0) href += (href.indexOf('?') < 0 ? '?' : '&') + 'v=' + stamp;
+        links[i].setAttribute('href', href);
+      }
+    })();
+  </script>
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
   <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
