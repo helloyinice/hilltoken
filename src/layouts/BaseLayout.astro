@@ -60,6 +60,19 @@ const articleLd = article
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
+
+  {/* favicon 声明必须放在 head 最前面、任何 <script> 之前：
+      主页被 Cloudflare HTML Auto-Minify 压成单行后，
+      <script>…</script><link rel="icon"> 的衔接在 Safari 里会被误解析，
+      导致 favicon 的 link 标签不被识别（子页面未压缩所以正常）。
+      把图标声明提到最前，彻底避开 script 紧跟 link 的解析问题。 */}
+  <link rel="shortcut icon" href="/site-icon.ico" />
+  <link rel="icon" href="/site-icon.ico" sizes="16x16 32x32" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/site-icon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/site-icon-16.png" />
+  <link rel="apple-touch-icon" href="/site-icon-180.png" />
+  <link rel="icon" type="image/svg+xml" href="/site-icon.svg" />
+
   <meta name="description" content={description} />
   <meta name="author" content="HillToken｜山外有词" />
   <meta name="theme-color" content="#f5f2ea" />
@@ -71,17 +84,6 @@ const articleLd = article
     try { var t = localStorage.getItem('hilltoken:colourway'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
   </script>
   <script is:inline src="/theme-switcher.js" defer></script>
-
-  {/* Safari 对 SVG favicon 支持很差，且倾向使用写在最前面的图标声明。
-      因此把 Safari 最可靠的 ICO 放在第一位，SVG 放到最后。
-      文件名用全新的 site-icon.*（Safari 从未缓存过的 URL），强制 Safari 重新加载，
-      绕开它此前对 hilltoken-favicon.ico 这个 URL 锁死的「加载失败/默认占位」缓存状态。 */}
-  <link rel="shortcut icon" href="/site-icon.ico" />
-  <link rel="icon" href="/site-icon.ico" sizes="16x16 32x32" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/site-icon-32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/site-icon-16.png" />
-  <link rel="apple-touch-icon" href="/site-icon-180.png" />
-  <link rel="icon" type="image/svg+xml" href="/site-icon.svg" />
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
   <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
