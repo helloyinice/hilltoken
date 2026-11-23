@@ -45,3 +45,15 @@
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-store
   X-Content-Type-Options: nosniff
+
+# 标签页图标（透明底新版）：每次重新校验
+/hilltoken-favicon.svg
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-favicon.ico
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-favicon-16.png
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-favicon-32.png
+  Cache-Control: public, max-age=0, must-revalidate
+/hilltoken-favicon-180.png
+  Cache-Control: public, max-age=0, must-revalidate
