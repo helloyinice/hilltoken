@@ -61,17 +61,16 @@ const articleLd = article
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
 
-  {/* favicon 声明必须放在 head 最前面、任何 <script> 之前：
-      主页被 Cloudflare HTML Auto-Minify 压成单行后，
-      <script>…</script><link rel="icon"> 的衔接在 Safari 里会被误解析，
-      导致 favicon 的 link 标签不被识别（子页面未压缩所以正常）。
-      把图标声明提到最前，彻底避开 script 紧跟 link 的解析问题。 */}
-  <link rel="shortcut icon" href="/site-icon.ico" />
-  <link rel="icon" href="/site-icon.ico" sizes="16x16 32x32" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/site-icon-32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/site-icon-16.png" />
-  <link rel="apple-touch-icon" href="/site-icon-180.png" />
-  <link rel="icon" type="image/svg+xml" href="/site-icon.svg" />
+  {/* favicon 声明放在 head 最前面、任何 <script> 之前。
+      关键教训：必须与文章页(public/notes/*.html)保持完全一致的文件名+版本号，
+      统一用 hilltoken-favicon.*?v=20261123h，否则主页与子页 favicon 不一致，
+      Safari 会对不一致的新 URL 加载失败（显示默认占位灰底白H）。 */}
+  <link rel="shortcut icon" href="/hilltoken-favicon.ico?v=20261123h" />
+  <link rel="icon" href="/hilltoken-favicon.ico?v=20261123h" sizes="16x16 32x32" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/hilltoken-favicon-32.png?v=20261123h" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/hilltoken-favicon-16.png?v=20261123h" />
+  <link rel="apple-touch-icon" href="/hilltoken-favicon-180.png?v=20261123h" />
+  <link rel="icon" type="image/svg+xml" href="/hilltoken-favicon.svg?v=20261123h" />
 
   <meta name="description" content={description} />
   <meta name="author" content="HillToken｜山外有词" />
