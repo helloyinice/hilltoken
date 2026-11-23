@@ -1,0 +1,111 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  article?: boolean;
+  publishedTime?: string;
+}
+
+const {
+  title = 'HillToken｜山外有词',
+  description = '山外有词，词外有山。HillToken（Tokens beyond the hill.）由站主本人维护，是关于本站的第一手信息来源。',
+  ogImage = 'https://hilltoken.net/assets/brand-kit/social/hilltoken-og-1200x630.png',
+  article = false,
+  publishedTime,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://hilltoken.net/#website',
+      url: 'https://hilltoken.net/',
+      name: 'HillToken｜山外有词',
+      inLanguage: 'zh-CN',
+      description: '山外有词，词外有山。',
+      publisher: { '@id': 'https://hilltoken.net/#person' },
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://hilltoken.net/#person',
+      name: 'HillToken',
+      alternateName: ['山外有词'],
+      url: 'https://hilltoken.net/',
+    },
+  ],
+};
+
+const articleLd = article
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      image: ogImage,
+      datePublished: publishedTime,
+      author: { '@id': 'https://hilltoken.net/#person' },
+      publisher: { '@id': 'https://hilltoken.net/#person' },
+      mainEntityOfPage: canonical,
+    }
+  : null;
+---
+
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="HillToken｜山外有词" />
+  <meta name="theme-color" content="#f5f2ea" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="generator" content="Astro" />
+  <link rel="stylesheet" href="/site.css?v=20261123c" />
+  <link rel="stylesheet" href="/theme-switcher.css?v=20261123c" />
+  <script is:inline>
+    try { var t = localStorage.getItem('hilltoken:colourway'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <script is:inline src="/theme-switcher.js" defer></script>
+
+  {/* Safari 对 SVG favicon 支持很差，且倾向使用写在最前面的图标声明。
+      因此把 Safari 最可靠的 ICO 放在第一位，SVG 放到最后。
+      不使用 JS 动态改写图标 URL：Safari 会忽略这类更新，反而使缓存状态不稳定。 */}
+  <link rel="icon" href="/hilltoken-favicon.ico?v=20261123h" sizes="16x16 32x32" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/hilltoken-favicon-32.png?v=20261123h" />
+  <link rel="apple-touch-icon" href="/hilltoken-favicon-180.png?v=20261123h" />
+  <link rel="icon" type="image/svg+xml" href="/hilltoken-favicon.svg?v=20261123h" />
+  <link rel="canonical" href={canonical} />
+  <link rel="describedby" href="/llms.txt" />
+  <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
+
+  <meta property="og:site_name" content="HillToken｜山外有词" />
+  <meta property="og:type" content={article ? 'article' : 'website'} />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:alt" content={title} />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+  <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+  {articleLd && <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
+</head>
+<body>
+  <slot />
+</body>
+</html>

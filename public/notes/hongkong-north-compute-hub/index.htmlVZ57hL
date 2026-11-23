@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<title>香港北部算力枢纽 · 分析简报 | HillToken｜山外有词</title>
+<link rel="icon" href="/hilltoken-favicon.ico?v=20261123h" sizes="16x16 32x32" />
+<link rel="icon" type="image/png" sizes="32x32" href="/hilltoken-favicon-32.png?v=20261123h" />
+<link rel="apple-touch-icon" href="/hilltoken-favicon-180.png?v=20261123h" />
+<link rel="icon" type="image/svg+xml" href="/hilltoken-favicon.svg?v=20261123h" />
+<link rel="canonical" href="https://hilltoken.net/notes/hongkong-north-compute-hub/">
+<link rel="describedby" href="/llms.txt">
+<link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml">
+<meta property="og:site_name" content="HillToken｜山外有词">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hilltoken.net/notes/hongkong-north-compute-hub/">
+<meta property="og:image" content="https://hilltoken.net/assets/brand-kit/social/hilltoken-og-1200x630.png">
+<meta property="article:published_time" content="2026-11-19T22:35:00+08:00">
+<meta content="香港北部都会区沙岭数据园区分析简报：选址逻辑、电力底座、绿电与成本之辨。" name="description">
+<meta content="#f5f2ea" name="theme-color">
+<style>
+  :root{
+    --paper:#f5f2ea; --paper-2:#eeeae0; --white:#fffdf8;
+    --ink:#141414; --ink-2:#4a4a48; --ink-3:#7b7972;
+    --rule:rgba(20,20,20,.16); --rule-strong:#141414;
+    --signal:#ff4b18; --signal-text:#b8320d; --signal-soft:#f9dfd2;
+    --band:#141414; --band-ink:#f2f0e9; --band-line:rgba(242,240,233,.22);
+    --max:1240px; --gutter:clamp(20px,4vw,48px);
+    --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+    --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","Noto Serif SC","SimSun",Georgia,serif;
+    --latin:"Iowan Old Style","Baskerville",Georgia,"Times New Roman",serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --ease:cubic-bezier(.23,1,.32,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  a{color:inherit;text-decoration:none;text-underline-offset:4px;transition:text-decoration-color .16s var(--ease)}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+  .latin{font-family:var(--latin);font-variant-numeric:lining-nums tabular-nums}
+  .mono{font-family:var(--mono)}
+  ::selection{background:var(--signal);color:#fff}
+  .skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--white);padding:10px 16px;z-index:20}
+  .dot{display:inline-block;width:7px;height:7px;background:var(--signal);flex:none}
+  .accent{color:var(--signal)}
+
+  /* 顶栏 */
+  .mast{border-bottom:1px solid var(--rule)}
+  .mast-top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;padding-top:22px;padding-bottom:16px}
+  .mast-brand{display:flex;align-items:center;gap:14px}
+  .mast-logo{width:52px;height:52px;flex:none;display:block}
+  .mast-wordmark{display:flex;flex-direction:column}
+  .mast-wordmark-name{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.2;letter-spacing:.01em}
+  .mast-wordmark-name .wm-divider{color:var(--ink-3);font-weight:400;margin:0 6px}
+  .mast-wordmark-name .wm-tag{font-size:15px;font-weight:400;color:var(--ink-2)}
+  .mast-meta{font-size:11.5px;line-height:1.6;color:var(--ink-3);letter-spacing:.02em;margin-top:3px}
+  .mast-nav{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:14px;font-size:13.5px;color:var(--ink-2)}
+  .mast-nav nav{display:flex;gap:22px;flex-wrap:wrap}
+  .mast-nav nav a:hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px;font-weight:600;line-height:1.4;border-radius:1px;white-space:nowrap;transition:background .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease)}
+  .btn-dark{background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
+  .btn-dark:hover{background:var(--signal);border-color:var(--signal);color:#fff}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--rule-strong)}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper)}
+
+  /* Hero */
+  .hero{padding:clamp(56px,8vw,96px) 0 clamp(40px,5vw,64px)}
+  .eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:clamp(24px,4vw,44px)}
+  .hero-title{font-family:var(--serif);font-size:clamp(3rem,7.6vw,6.6rem);font-weight:700;line-height:1.14;letter-spacing:-.02em;text-wrap:balance;margin:0}
+  .hero-sub{font-family:var(--serif);font-size:clamp(1.1rem,2vw,1.5rem);color:var(--ink-2);font-weight:400;margin-top:18px;letter-spacing:.01em}
+  .hero-rule{height:2px;background:linear-gradient(to right,var(--signal) 0 64px,var(--rule-strong) 64px 100%);margin:clamp(30px,4.5vw,52px) 0 0}
+  .hero-lower{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,6vw,80px);padding-top:clamp(28px,4vw,44px)}
+  .hero-intro p{color:var(--ink-2);font-size:15.5px;margin:0 0 14px;max-width:38em}
+  .hero-intro .lead{font-family:var(--serif);font-size:19px;color:var(--ink);font-weight:700;line-height:1.6;margin-bottom:16px}
+  .hero-actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+  .stats{display:flex;flex-direction:column}
+  .stat{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--rule)}
+  .stat:first-child{padding-top:0}
+  .stat-num{font-family:var(--latin);font-size:clamp(2.2rem,3.6vw,3.3rem);line-height:1;letter-spacing:-.03em;white-space:nowrap}
+  .stat-num small{font-family:var(--sans);font-size:14px;letter-spacing:0;color:var(--ink-2);margin-left:4px}
+  .stat-label{font-size:12.5px;color:var(--ink-3);text-align:right}
+
+  /* 滚动条 */
+  .ticker{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--paper-2);overflow:hidden}
+  .ticker-track{display:flex;white-space:nowrap;animation:slide 38s linear infinite}
+  .ticker-track span{display:inline-flex;align-items:center;gap:22px;padding:11px 22px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+  .ticker-track i{display:inline-block;width:5px;height:5px;background:var(--signal);transform:rotate(45deg)}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* 区块 */
+  .sec{padding-top:clamp(56px,8vw,96px)}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding-bottom:20px;border-bottom:1px solid var(--rule-strong)}
+  .sec-no{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--signal-text);text-transform:uppercase;margin-bottom:10px}
+  .sec-head h2{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:700;line-height:1.3;margin:0}
+  .sec-aside{font-size:12.5px;color:var(--ink-3);text-align:right;max-width:26em}
+  .prose{max-width:46rem;font-size:15.5px;color:var(--ink-2);margin-top:26px}
+  .prose p{margin:0 0 16px}
+  .prose strong{color:var(--ink)}
+
+  /* 地图 */
+  .map-figure{margin:30px 0 6px}
+  .map-figure img{display:block;width:100%;height:auto;border:1px solid var(--rule);background:var(--white)}
+  .map-figure figcaption{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-3);text-transform:uppercase}
+  .map-figure figcaption .cap-title{color:var(--signal-text)}
+
+  /* 表格 */
+  .tbl-wrap{margin-top:28px;overflow-x:auto}
+  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.tbl th,table.tbl td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+  table.tbl thead th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:400;border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  table.tbl tbody th{font-family:var(--serif);font-weight:700;color:var(--ink);white-space:nowrap;width:150px}
+  table.tbl td{color:var(--ink-2)}
+  table.tbl td b{color:var(--ink)}
+  table.tbl tr:hover td{background:var(--paper-2)}
+  .tbl-note{font-size:12.5px;color:var(--ink-3);margin-top:12px}
+
+  /* 理由列表 */
+  .reasons{list-style:none;padding:0;margin:30px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+  .reasons li{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:20px 0;border-top:1px solid var(--rule)}
+  .reason-no{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--signal-text);padding-top:5px}
+  .reasons h3{font-family:var(--serif);font-size:1.15rem;font-weight:700;line-height:1.4;margin:0 0 5px}
+  .reasons p{font-size:13.5px;color:var(--ink-2);line-height:1.7;margin:0}
+
+  /* 卡片 */
+  .cards{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .card{padding:24px 26px;border:1px solid var(--rule);border-top:2px solid var(--rule-strong);display:flex;flex-direction:column;gap:10px;transition:border-top-color .16s var(--ease)}
+  .card:hover{border-top-color:var(--signal)}
+  .card-top{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase}
+  .card h3{font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.35;margin:0}
+  .card p{font-size:13.5px;color:var(--ink-2);line-height:1.7;margin:0;flex:1}
+  .card .card-k{font-family:var(--latin);font-size:1.9rem;line-height:1;color:var(--signal-text)}
+
+  /* 对照表 */
+  .versus{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .vs-col{border:1px solid var(--rule);padding:24px 26px;background:var(--white)}
+  .vs-col h3{font-family:var(--serif);font-size:1.25rem;margin:0 0 4px}
+  .vs-col .vs-tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--signal-text)}
+  .vs-col ul{list-style:none;padding:0;margin:18px 0 0;font-size:13.5px;color:var(--ink-2)}
+  .vs-col li{padding:8px 0;border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:14px}
+  .vs-col li b{color:var(--ink);text-align:right;white-space:nowrap}
+
+  /* 引用块 */
+  .quote{margin:30px 0 0;padding:20px 24px;border-left:3px solid var(--signal);background:var(--paper-2)}
+  .quote p{font-family:var(--serif);font-size:17px;line-height:1.7;margin:0;color:var(--ink)}
+  .quote cite{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);font-style:normal;margin-top:10px}
+
+  /* 深色区块 */
+  .band{background:var(--band);color:var(--band-ink);margin-top:clamp(64px,9vw,110px);padding:clamp(48px,7vw,80px) 0}
+  .band .eyebrow{color:var(--band-ink);opacity:.72}
+  .band h2{font-family:var(--serif);font-size:clamp(1.8rem,3.6vw,2.8rem);font-weight:700;line-height:1.3;margin:0 0 20px;max-width:22em}
+  .band .band-lead{font-family:var(--serif);font-size:clamp(1.1rem,2vw,1.45rem);line-height:1.65;max-width:34em;margin:0 0 26px}
+  .band-inner{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:clamp(30px,5vw,70px)}
+  .band p{font-size:14.5px;color:var(--band-ink);opacity:.82;max-width:40em;margin:0 0 14px}
+  .band-points{list-style:none;padding:0;margin:0}
+  .band-points li{padding:14px 0;border-top:1px solid var(--band-line);font-size:14px;display:flex;gap:12px}
+  .band-points .n{font-family:var(--mono);color:var(--signal);flex:none}
+  .band-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+  .btn-inv{background:var(--band-ink);color:var(--band);border:1px solid var(--band-ink)}
+  .btn-inv:hover{background:var(--signal);border-color:var(--signal);color:#fff}
+  .btn-inv-ghost{background:transparent;color:var(--band-ink);border:1px solid var(--band-line)}
+  .btn-inv-ghost:hover{background:var(--band-ink);color:var(--band)}
+
+  /* 来源 */
+  .sources{padding-top:clamp(48px,6vw,72px)}
+  .sources h2{font-family:var(--serif);font-size:1.5rem;margin:0 0 6px}
+  .sources .hint{font-size:12.5px;color:var(--ink-3);margin-bottom:22px}
+  .src-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0 32px}
+  .src-grid ol{padding-left:1.5em;margin:0;counter-reset:s}
+  .src-grid li{font-size:12.5px;color:var(--ink-2);padding:6px 0;line-height:1.55;word-break:break-word}
+  .src-grid li a{color:var(--signal-text);text-decoration:underline;text-decoration-color:transparent}
+  .src-grid li a:hover{text-decoration-color:currentColor}
+
+  /* 页脚 */
+  .foot{padding:clamp(48px,6vw,72px) 0 28px}
+  .foot-grid{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(2,minmax(0,1fr));gap:32px;padding-bottom:38px}
+  .wordmark{font-family:var(--latin);font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.02em;line-height:1.2}
+  .foot-brand p{font-size:13px;color:var(--ink-3);margin-top:12px;max-width:24em}
+  .foot-col h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-bottom:12px}
+  .foot-col a{display:block;font-size:13.5px;padding:4px 0;color:var(--ink-2)}
+  .foot-col a:hover{color:var(--signal-text)}
+  .foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--rule);padding-top:18px;font-size:12.5px;color:var(--ink-3)}
+
+  @media(max-width:900px){
+    .mast-top{grid-template-columns:1fr auto;row-gap:14px}
+    .hero-lower,.band-inner{grid-template-columns:1fr}
+    .stats{flex-direction:row;flex-wrap:wrap;gap:18px 28px}
+    .stat{flex:1 1 150px;display:block;border-bottom:0;padding-bottom:0}
+    .stat-label{display:block;margin-top:4px;text-align:left}
+    .reasons,.src-grid{grid-template-columns:1fr}
+    .cards{grid-template-columns:1fr 1fr}
+    .versus{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .foot-brand{grid-column:1/-1}
+  }
+  @media(max-width:600px){
+    body{font-size:15px}
+    .mast-nav{flex-direction:column;align-items:flex-start;gap:14px}
+    .mast-nav nav{gap:16px;font-size:13px}
+    .hero-title{font-size:clamp(2.6rem,12vw,4.4rem)}
+    .eyebrow{display:block;font-size:10.5px;letter-spacing:.08em;white-space:normal}
+    .eyebrow .dot{margin-right:8px}
+    .sec-head{flex-direction:column;gap:8px;align-items:flex-start}
+    .sec-aside{text-align:left}
+    .cards{grid-template-columns:1fr}
+    .stat-num{font-size:2.2rem}
+    table.tbl tbody th{width:auto;display:block}
+  }
+  @media print{
+    :root{--paper:#fff;--paper-2:#fff;--band:#fff;--band-ink:#141414;--band-line:rgba(20,20,20,.3)}
+    html{scroll-behavior:auto}
+    body{font-size:11pt;line-height:1.6}
+    .skip,.mast-nav,.ticker,.hero-actions,.band-actions{display:none!important}
+    .hero-title{font-size:34pt}
+    .sec,.band{padding-top:16px;margin-top:16px;break-inside:avoid}
+    .card,.src-grid li,.reasons li{break-inside:avoid}
+    .band{border-top:1px solid var(--rule)}
+    a{text-decoration:none!important}
+  }
+  .map-note{margin:30px 0 6px;padding:18px 22px;border:1px solid var(--rule);background:var(--paper-2);font-size:13.5px;color:var(--ink-2)}
+  .map-note p{margin:0}
+  .map-note strong{color:var(--signal-text)}
+</style>
+<!-- hilltoken-theme-switcher -->
+<link rel="stylesheet" href="/theme-switcher.css">
+<script>try{var t=localStorage.getItem('hilltoken:colourway');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script src="/theme-switcher.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="mast">
+  <div class="wrap mast-top">
+    <div class="mast-brand">
+      <a class="mast-logo" href="/" aria-label="HillToken｜山外有词 · 返回首页"><img src="../../assets/brand-kit/logo/hilltoken-logo-square-paper.svg" alt="HillToken 方形米纸底字标" width="52" height="52"></a>
+      <div class="mast-wordmark">
+        <div class="mast-wordmark-name">香港北部算力枢纽<span class="wm-divider">｜</span><span class="wm-tag">分析简报</span></div>
+        <div class="mast-meta">HONG KONG NORTH · COMPUTE HUB · RESEARCH BRIEF</div>
+      </div>
+    </div>
+    <div class="mast-meta" style="text-align:right">19 NOV 2026 · THU<br>基于公开资料整理</div>
+  </div>
+  <div class="wrap mast-nav">
+    <nav>
+      <a href="#overview">项目速览</a>
+      <a href="#site">选址逻辑</a>
+      <a href="#power">电力底座</a>
+      <a href="#green">绿电与成本</a>
+      <a href="#verdict">结论</a>
+      <a href="#sources">来源</a>
+    </nav>
+    <a class="btn btn-dark" href="javascript:window.print()">打印 / 存为 PDF <span class="latin">↗</span></a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="wrap hero">
+    <div class="eyebrow"><span class="dot"></span> HILLTOKEN · RESEARCH BRIEF · 19 NOV 2026</div>
+    <h1 class="hero-title">香港北部<br><span class="accent">算力</span>枢纽。</h1>
+    <p class="hero-sub">一枚落在沙岭的棋子，牵动深港两地的算力版图。</p>
+    <div class="hero-rule"></div>
+    <div class="hero-lower">
+      <div class="hero-intro">
+        <p class="lead">算力，是人工智能时代的「水与电」。</p>
+        <p>2026 年，香港在北部都会区沙岭落下迄今规模最大、算力等级最高的一枚棋子——一座定位服务大湾区、算力相当于全港现有 36 倍的超级算力枢纽。</p>
+        <p>本简报回答三个层层递进的问题：<strong>为什么是这里？电力凭什么撑得住？绿电与成本，香港究竟站在哪一边？</strong></p>
+        <div class="hero-actions">
+          <a class="btn btn-dark" href="#site">读分析 <span class="latin">↓</span></a>
+          <a class="btn btn-ghost" href="#sources">查看来源 <span class="latin">↗</span></a>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-num latin">238<small>亿港元</small></div><div class="stat-label">累计投资规模</div></div>
+        <div class="stat"><div class="stat-num latin">36<small>倍</small></div><div class="stat-label">相当于全港现有算力</div></div>
+        <div class="stat"><div class="stat-num latin">180<small>EFLOPS</small></div><div class="stat-label">2032 年全面达产算力</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div aria-hidden="true" class="ticker">
+    <div class="ticker-track">
+      <span>沙岭数据园区 <i></i> 北部都会区 <i></i> 深港协同 <i></i> 大湾区算力枢纽 <i></i> 人工智能+ <i></i> 99.999% 供电可靠度 <i></i> 跨境推理节点 <i></i></span>
+      <span>沙岭数据园区 <i></i> 北部都会区 <i></i> 深港协同 <i></i> 大湾区算力枢纽 <i></i> 人工智能+ <i></i> 99.999% 供电可靠度 <i></i> 跨境推理节点 <i></i></span>
+    </div>
+  </div>
+
+  <!-- 01 项目速览 -->
+  <section class="wrap sec" id="overview">
+    <div class="sec-head">
+      <div><div class="sec-no">01 / Overview</div><h2>项目速览：沙岭数据园区</h2></div>
+      <div class="sec-aside">香港史上规模最大、算力等级最高的算力基础设施项目。</div>
+    </div>
+    <div class="prose">
+      <p>园区位于北部都会区沙岭，一河之隔即是深圳罗湖口岸。它由中标方香港润江智算科技（母公司润泽智算科技集团）开发，2026 年 3 月公布招标结果、4 月启动建设，目标争取 2027 年年中起分阶段投运，较原定 2029 年大幅提前。</p>
+    </div>
+    <div class="map-note">
+      <p><strong>图 01 · 沙岭数据园区区位（底图：高德地图）</strong>　园区位于深圳河南岸，罗湖与文锦渡两口岸之间，与深圳仅一河之隔。原报告中的区位图素材未随页面迁移，此处保留图注与位置描述。</p>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>维度</th><th>关键事实</th><th>意义</th></tr></thead>
+        <tbody>
+          <tr><th>位置</th><td>北部都会区沙岭，<b>紧邻深圳罗湖</b>，处于港深口岸经济带核心</td><td>对接大湾区科创资源的最前沿</td></tr>
+          <tr><th>规模</th><td>占地逾 <b>11 万平方米</b>，总楼面约 25 万平方米，近九成作高端数据中心</td><td>可供大规模连片部署</td></tr>
+          <tr><th>投资</th><td>开发至投运首三年累计 <b>238 亿港元</b>，预计创造约 46 亿港元经济产出</td><td>香港近年最大单体数字基建投资</td></tr>
+          <tr><th>算力</th><td>2032 年达产 <b>180 EFLOPS</b>（每秒 18 万千万亿次），为现有算力 36 倍</td><td>补齐高端算力供给短板</td></tr>
+          <tr><th>进度</th><td>2026 年开工，24 小时轮班施工；<b>2027 年中分阶段投运</b></td><td>「当月开标、当月拿地、当月动工」</td></tr>
+          <tr><th>供电</th><td>中电配套 <b>两座 132 千伏变电站</b>，提前布局北都电网骨干</td><td>算电协同，避免「算热电冷」</td></tr>
+        </tbody>
+      </table>
+      <p class="tbl-note">数据来源见文末来源清单<sup class="latin">[1][2][3]</sup>。</p>
+    </div>
+  </section>
+
+  <!-- 02 选址逻辑 -->
+  <section class="wrap sec" id="site">
+    <div class="sec-head">
+      <div><div class="sec-no">02 / Site Logic</div><h2>为什么是北部？</h2></div>
+      <div class="sec-aside">选址不是偶然，而是地理红利、国家战略与香港独有制度三者叠加的结果。</div>
+    </div>
+    <div class="prose">
+      <p>把算力中心放在沙岭，本质上是让香港用自己最擅长的<strong>稳定性、国际化与连通性</strong>，去补上高端算力这块短板，同时把北部都会区从一片农地鱼塘，变成大湾区的数字基础设施枢纽。</p>
+    </div>
+    <ol class="reasons">
+      <li><span class="reason-no">01</span><div><h3>一河之隔的地理红利</h3><p>紧邻罗湖口岸，与河套深港科技创新合作区功能互补；深圳从物资、人员、通关到数据联动全力支持，园区人员可「刷脸无感通关」。</p></div></li>
+      <li><span class="reason-no">02</span><div><h3>连片土地空间</h3><p>北都过去多为农地、鱼塘与村落，可提供大规模新产业用地，支撑逾 11 万平方米园区与近九成数据中心用途。</p></div></li>
+      <li><span class="reason-no">03</span><div><h3>世界级供电可靠度</h3><p>香港供电可靠度长期高于 99.999%，中电专配两座 132kV 变电站，把稳定供电、高速通讯与城市配套同步规划。</p></div></li>
+      <li><span class="reason-no">04</span><div><h3>人才「蓄水池」</h3><p>香港 5 所世界百强大学 AI 学科均列全球前 50，InnoHK 设有 16 个 AI 与机器人实验室、汇聚 1600 余名顶尖学者；周边大学城瞄准 AI、机器人、微电子。</p></div></li>
+      <li><span class="reason-no">05</span><div><h3>制度与跨境优势</h3><p>一国两制、资金自由流动、普通法体系，加上《大湾区标准合同》个人信息跨境协议，形成「香港研发＋大湾区转化＋全球推广」闭环。</p></div></li>
+      <li><span class="reason-no">06</span><div><h3>审批效率革新</h3><p>创科局牵头 16 个部门组成跨部门专班，把层层审批改为同步审批，在标准不降前提下创造「香港新速度」。</p></div></li>
+      <li><span class="reason-no">07</span><div><h3>国家战略牵引</h3><p>对接「十五五」规划与「人工智能+」战略，北都是香港首份五年规划（2026—2030）承载新产业、新人才、新空间的核心载体。</p></div></li>
+    </ol>
+    <div class="quote">
+      <p>「以后不管是内地企业想要对接国际市场的 AI 业务，还是香港要培育本土的 AI 产业，都可以在沙岭园区实现。」</p>
+      <cite>润泽智算科技集团总裁 李笠 <span class="latin">[1]</span></cite>
+    </div>
+  </section>
+
+  <!-- 03 电力底座 -->
+  <section class="wrap sec" id="power">
+    <div class="sec-head">
+      <div><div class="sec-no">03 / Power Foundation</div><h2>电力底座：99.999% 从何而来</h2></div>
+      <div class="sec-aside">不是靠某个「黑科技」，而是五层系统工程长期打磨的结果。</div>
+    </div>
+    <div class="prose">
+      <p>算力中心最怕断电，而香港能把停电时间压到秒级——港灯 2024、2025 年更达到 <strong>99.9999%（六个九）</strong>，相当于每位客户每年非计划停电少于 30 秒。这背后是五层叠加的体系。</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top"><span>Layer 01</span><span class="latin"> redundancy</span></div>
+        <h3>双网互备</h3>
+        <p>中电供九龙、新界及离岛（约 91% 面积），港灯供港岛及南丫岛。两网独立运营却互相连接，以 3 回 132kV 海底电缆联络，紧急时可相互支援。</p>
+      </div>
+      <div class="card">
+        <div class="card-top"><span>Layer 02</span><span class="latin"> interconnection</span></div>
+        <h3>区域联网</h3>
+        <p>中电通过 4 回 400kV、7 回 132kV 线路接入南方电网，最大输电能力 160 万千瓦；大亚湾核电已供港超 3300 亿千瓦时，满足全港约四分之一用电。</p>
+      </div>
+      <div class="card">
+        <div class="card-top"><span>Layer 03</span><span class="latin"> diversity</span></div>
+        <h3>燃料多元</h3>
+        <p>天然气约占燃料组合一半，叠加核电、堆填沼气与太阳能；两电共建海上 LNG 接收站，可直采国际市场液化天然气，避免依赖单一燃料。</p>
+      </div>
+      <div class="card">
+        <div class="card-top"><span>Layer 04</span><span class="latin"> standard</span></div>
+        <h3>高规格电网</h3>
+        <p>地区电网全电缆化、环形供电，抗台风能力强；大用户 4 回线闭环，频率稳定在 50±0.1Hz；二十年滚动规划纳入城市发展计划。</p>
+      </div>
+      <div class="card">
+        <div class="card-top"><span>Layer 05</span><span class="latin"> intelligence</span></div>
+        <h3>智能运维</h3>
+        <p>24 小时当值控制室与抢修队伍；港灯引入全球首创低压电网管理系统、带专利的故障指示器、AI 识别水浸，2026 年 6 月启用智能应变中心。</p>
+      </div>
+      <div class="card">
+        <div class="card-top"><span>Summary</span><span class="latin"> why it matters</span></div>
+        <div class="card-k latin">30″</div>
+        <p>数据中心停电数分钟的损失，往往远超电费本身。对金融交易、跨境支付、云端与 AI 平台而言，供电稳定本身就是核心竞争力。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 绿电与成本 -->
+  <section class="wrap sec" id="green">
+    <div class="sec-head">
+      <div><div class="sec-no">04 / Green & Cost</div><h2>绿电与成本之辨</h2></div>
+      <div class="sec-aside">「香港没有绿电吗？」「不是拼成本，是拼电网？」「内地岂不是更强？」——三个问题一次说清。</div>
+    </div>
+
+    <div class="prose">
+      <p><strong>其一，香港不是没有绿电，而是本地产不了、靠输入。</strong>香港山多、面积小，难以大规模发展水电、风电与光伏，但通过输入大亚湾核电与内地零碳电力，零碳能源占比已达约 28%，2026 年 3 月强化工程完成后可升至约三成半，2035 年目标为 60%—70%，2050 年实现净零发电。政府还在将军澳第 132 区预留土地，建设接收内地零碳电力的战略设施，并探索大湾区绿证互认。</p>
+    </div>
+
+    <div class="versus">
+      <div class="vs-col">
+        <div class="vs-tag">维度 A · 便宜</div>
+        <h3>训练算力看电价</h3>
+        <ul>
+          <li>香港工业电价 <b>1.2–1.5 港元/度</b></li>
+          <li>内地西部算力节点 <b>约 0.32–0.35 元/度</b></li>
+          <li>马来西亚柔佛 <b>约 0.3 元/度</b></li>
+          <li>结论：香港在成本上<b>无优势</b></li>
+        </ul>
+      </div>
+      <div class="vs-col">
+        <div class="vs-tag">维度 B · 可靠</div>
+        <h3>推理算力看稳定</h3>
+        <ul>
+          <li>香港供电可靠度 <b>99.999%</b></li>
+          <li>港灯实测 <b>99.9999%（六个九）</b></li>
+          <li>面向用户的推理一旦断电<b>直接业务停摆</b></li>
+          <li>结论：客户愿为稳定、合规、低延迟<b>付溢价</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:30px">
+      <p><strong>其二，更精确的理解是：并非「成本 vs 电网」二选一，而是电力存在两个相互独立的维度。</strong>训练环节可以接受偶发波动，以低成本完成模型计算，因而天然向西部集聚；跨境推理则优先追求稳定连续，成本只是权衡因素之一。香港放弃了单纯的「成本牌」，打的是「可靠＋制度＋跨境」这张牌。</p>
+      <p><strong>其三，比较需要区分维度。</strong>论电网规模、发电能力与绿电价格，内地当然更强；但算力选址并非单一指标竞赛，而是市场分层——训练算力去西部，图便宜绿电与天然降温；推理算力来香港，图供电零容忍稳定、数据跨境协议、国际光纤出海、普通法体系与优质金融数据。IDC 预测到 2027 年，中国 AI 智能算力中推理占比将超过 70%——这正是香港「跨境推理枢纽」定位的市场空间。</p>
+    </div>
+    <div class="quote">
+      <p>香港算力产业的敌人不是高电价本身，而是「高电价叠加没有差异化价值」。如果复制东南亚廉价机房模式去拼训练，一定全面落败。</p>
+      <cite>大公网《香港算力产业的能源成本挑战》 <span class="latin">[9]</span></cite>
+    </div>
+  </section>
+
+  <!-- 05 结论 -->
+  <section class="band" id="verdict">
+    <div class="wrap band-inner">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> 05 / Verdict</div>
+        <h2>论「硬实力」内地更强，论「合适性」香港不可替代。</h2>
+        <p class="band-lead">两地是互补协同，不是谁替代谁——河套的「香港研发＋大湾区转化」模式，就是这套分工的缩影。</p>
+        <p>沙岭的意义，不在于再造一个廉价机房集群，而在于让香港用供电可靠度、国际化法制、跨境数据联通与专业服务这些「软实力」，接住内地大模型走向国际市场的需求。</p>
+        <div class="band-actions">
+          <a class="btn btn-inv" href="#sources">数据来源 <span class="latin">↗</span></a>
+          <a class="btn btn-inv-ghost" href="javascript:window.scrollTo({top:0,behavior:'smooth'})">回到顶部 <span class="latin">↑</span></a>
+        </div>
+      </div>
+      <ul class="band-points">
+        <li><span class="n">01</span><span>选址是深港协同的地理红利，不是孤立的基建决策。</span></li>
+        <li><span class="n">02</span><span>电力是隐性门槛，香港的可靠度本身就是竞争优势。</span></li>
+        <li><span class="n">03</span><span>绿电靠区域输入补足，成本劣势由高增值定位对冲。</span></li>
+        <li><span class="n">04</span><span>训练在西部、推理在香港，是市场分层而非零和竞争。</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 来源 -->
+  <section class="wrap sources" id="sources">
+    <h2>数据来源</h2>
+    <p class="hint">本简报基于以下公开报道与官方资料整理，检索日期 2026 年 11 月 19 日。</p>
+    <div class="src-grid">
+      <ol>
+        <li>[1] <a href="https://news.youth.cn/jsxw/202611/t20261115_16967016.htm" rel="noopener" target="_blank">中国青年网：昼夜轮班抢工，香港打造大湾区超级算力枢纽</a></li>
+        <li>[2] <a href="https://www.bastillepost.com/hongkong/article/17190595" rel="noopener" target="_blank">巴士的报：香港最大算力基建及 AI 数据中心全面动工</a></li>
+        <li>[3] <a href="https://www.dtdata.cn/news/show/4967.html" rel="noopener" target="_blank">DT 数据网：总投资 238 亿港元，沙岭数据园区建设有序推进</a></li>
+        <li>[4] <a href="https://www.cpcnews.cn/n1/2026/0614/c64387-40739827.html" rel="noopener" target="_blank">中国共产党新闻网：把握机遇，建设国际创新科技中心</a></li>
+        <li>[5] <a href="https://baike.baidu.com/item/%E6%B6%A6%E6%B3%BD%EF%BC%88%E9%A6%99%E6%B8%AF%EF%BC%89%E6%B2%99%E5%B2%AD%E6%95%B0%E6%8D%AE%E5%9B%AD%E5%8C%BA/67549943" rel="noopener" target="_blank">百度百科：沙岭数据园区</a></li>
+        <li>[6] <a href="https://www.datacentre.gov.hk/sc/accommodating_data_centres/power_supply.html" rel="noopener" target="_blank">香港数据中心官网：电力供应</a></li>
+        <li>[7] <a href="https://finance.people.com.cn/n1/2026/0724/c1004-40767057.html" rel="noopener" target="_blank">人民网：中电控股蒋东强——百年港企的「中国坐标」</a></li>
+        <li>[8] <a href="http://www.tkww.hk/epaper/view/newsDetail/2085053434238734336.html" rel="noopener" target="_blank">大公文汇网：两电打造韧性电网，智能联通速应万变</a></li>
+      </ol>
+      <ol start="9">
+        <li>[9] <a href="https://hk.takungpao.cn/finance/2026/09/01M1YVMGD62J9EJ6QSTTHMSD46.html" rel="noopener" target="_blank">大公网：香港算力产业的能源成本挑战</a></li>
+        <li>[10] <a href="https://www.bbd.com.hk/article/8294/" rel="noopener" target="_blank">蓝莓日报：数据中心选址，香港整体优势——便宜与可靠同样重要</a></li>
+        <li>[11] <a href="https://news.mingpao.com/pns/%e8%a7%80%e9%bb%9e/article/20261030/s00012/1793289648006/" rel="noopener" target="_blank">明报：成本竞争之外——香港如何走出自己的人工智能产业道路</a></li>
+        <li>[12] <a href="https://www.info.gov.hk/gia/general/202606/24/P2026062400382.htm" rel="noopener" target="_blank">香港政府：立法会二题——加强区域合作以推动能源结构转型</a></li>
+        <li>[13] <a href="https://www.hkcna.hk/cn/content/s6aa23aeae4b01eaa9ec6a038.html" rel="noopener" target="_blank">香港新闻网：五年规划强调绿色低碳转型，增强电力供应韧性</a></li>
+        <li>[14] <a href="https://global.hk01.com/%E6%B7%B1%E5%BA%A6%E6%8A%A5%E9%81%93/60378971/" rel="noopener" target="_blank">香港 01：中国算力崛起——算多还是少？算强还是弱？</a></li>
+        <li>[15] <a href="https://www.hmo.gov.cn/2026/11/04/ARTIAY2z0dUAzsDKVPu0JHYv261104.shtml" rel="noopener" target="_blank">国务院港澳办：北部都会区的国家战略定位与央企发展机遇</a></li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="wordmark">Compute beyond the hill.</div>
+        <p>本简报采用 HillToken｜山外有词 的视觉风格制作，内容基于公开资料独立整理，仅供研究参考。</p>
+      </div>
+      <div class="foot-col">
+        <h3>报告结构</h3>
+        <a href="#overview">01 项目速览</a>
+        <a href="#site">02 选址逻辑</a>
+        <a href="#power">03 电力底座</a>
+        <a href="#green">04 绿电与成本</a>
+      </div>
+      <div class="foot-col">
+        <h3>更多</h3>
+        <a href="#verdict">05 结论</a>
+        <a href="#sources">数据来源</a>
+        <a href="https://hilltoken.net" rel="noopener" target="_blank">HillToken 原站 ↗</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 分析简报 · Tokens beyond the hill.</span>
+      <span>检索日期 2026.11.19 · 以原始来源为准</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
