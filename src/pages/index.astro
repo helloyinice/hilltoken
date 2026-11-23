@@ -96,9 +96,9 @@ const fmtEntryDate = (value: string) => {
           <a class="sec-aside" href="/rss.xml">全部更新 · RSS ↗</a>
         </div>
         <ul class="entries">
-          {notes.map((n) => (
+          {notes.map((n, i) => (
             <li class="entry">
-              <span class="entry-meta">{fmtEntryDate(n.data.publishedTime)}</span>
+              <span class="entry-meta">{fmtEntryDate(n.data.publishedTime)}{i === 0 && <span class="entry-new">最新</span>}</span>
               <a class="entry-title" href={n.data.external || `/notes/${n.id}/`}>{n.data.title}<span class="entry-note">{n.data.description}</span></a>
               <span class="entry-arrow" aria-hidden="true">→</span>
             </li>
