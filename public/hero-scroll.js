@@ -12,6 +12,7 @@
   var sun      = document.getElementById('sun');
   var cue      = document.getElementById('cue');
   var stage    = document.getElementById('stage');
+  var stickyEl = stage.querySelector('.sticky') || stage;
   var mast     = document.getElementById('mast');
   var vids     = Array.prototype.slice.call(document.querySelectorAll('.vid'));
   if (!screenEl || !stage || !mast) return;
@@ -112,11 +113,23 @@
     }
   }
 
+  // 滚动距离 = 舞台高 - 粘性层实际高（不是 innerHeight），滚完即交棒
+  function travel() {
+    return Math.max(stage.offsetHeight - stickyEl.offsetHeight - stage.offsetTop, 1);
+  }
+
+  // 文案已接近一屏高时 sticky 会失灵：直接降级为落定版式
+  function fitMode() {
+    var flat = stickyEl.offsetHeight > innerHeight - 8;
+    document.body.classList.toggle('flat', flat);
+    return flat;
+  }
+
   function progress() {
-    var range = stage.offsetHeight - innerHeight;
+    var range = travel();
     var y = window.scrollY - stage.offsetTop;
     document.body.classList.toggle('past', y > range - 2);
-    return clamp(y / Math.max(range, 1), 0, 1);
+    return clamp(y / range, 0, 1);
   }
 
   var target = 0, cur = 0, raf = null;
@@ -126,20 +139,32 @@
     render(cur);
     raf = requestAnimationFrame(tick);
   }
-  function kick() { target = progress(); if (!raf) raf = requestAnimationFrame(tick); }
+  function kick() {
+    if (document.body.classList.contains('flat')) return;
+    target = progress();
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
 
   window.addEventListener('scroll', kick, { passive: true });
   window.addEventListener('resize', function () {
+    if (fitMode()) return;
     target = progress(); cur = target; render(cur);
   });
+
+  // 字体加载完高度会变，重新判定一次降级
+  window.addEventListener('load', function () {
+    if (fitMode()) vids.forEach(function (v) { v.pause(); });
+    else { target = cur = progress(); render(cur); }
+  });
+
+  if (fitMode()) { vids.forEach(function (v) { v.pause(); }); return; }
 
   // 调试定格：#static&p=0.45 / #p=1
   var m = location.hash.match(/p=([\d.]+)/);
   if (m) {
     var p = clamp(parseFloat(m[1]), 0, 1);
     if (location.hash.indexOf('static') > -1) document.body.classList.add('static');
-    var range = stage.offsetHeight - innerHeight;
-    if (location.hash.indexOf('static') === -1) window.scrollTo(0, p * range);
+    if (location.hash.indexOf('static') === -1) window.scrollTo(0, p * travel());
     cur = target = p;
     render(p);
   } else {

@@ -8,13 +8,15 @@
 html.home{overflow-x:visible;scroll-behavior:auto;scroll-padding-top:130px}
 body.home{overflow-x:visible}
 
-/* ---------------- 滚动舞台 ---------------- */
-body.home .stage{position:relative;height:230vh}
-body.home .sticky{position:sticky;top:0;height:100vh;overflow:hidden}
+/* ---------------- 滚动舞台 ----------------
+ * 粘性层不再锁定 100vh：只占文案实际高度，滚完立即交棒给下一节，
+ * 避免落定后视频退场、底下 400 多像素变成空白。 */
+body.home .stage{position:relative;height:calc(100vh + 900px)}
+body.home .sticky{position:sticky;top:0;overflow:hidden}
 
 /* 视频层：终态完全透明，不留底色与边框 */
 body.home .screen{
-  position:absolute;left:0;top:0;width:100%;height:100vh;
+  position:absolute;left:0;top:0;width:100%;height:100vh;z-index:0;
   overflow:hidden;background:transparent;
   will-change:width,height,left,top;
 }
@@ -42,7 +44,7 @@ body.home .sym .sun{fill:var(--signal);opacity:0}
 
 /* ---------------- 首屏文案：沿用原站 .wrap 版心 ---------------- */
 body.home .hero-copy{
-  position:absolute;left:0;right:0;top:0;
+  position:relative;z-index:1;
   padding-top:clamp(180px,20vh,220px);
   pointer-events:none;
 }
@@ -114,7 +116,7 @@ body.home .mast .mast-logo{
 
 /* ---------------- 首屏底部细线提示 ---------------- */
 body.home .cue{
-  position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:2;
   width:1px;height:38px;background:rgba(255,255,255,.78);
   opacity:var(--cue,1);
   animation:hill-cue 2.4s ease-in-out infinite;
@@ -123,6 +125,35 @@ body.home .cue{
   0%,100%{transform:translateX(-50%) scaleY(.35);opacity:.35}
   50%{transform:translateX(-50%) scaleY(1);opacity:.9}
 }
+
+/* ---------------- 矮视口降级 ----------------
+ * 文案高度接近/超过一屏时 sticky 会失效、动画变成半截滚动，
+ * 此时直接静态呈现落定版式（视频层隐藏），避免空白与错位。 */
+body.home.flat .stage{height:auto}
+body.home.flat .sticky{position:static;overflow:visible}
+body.home.flat .screen,body.home.flat .cue{display:none}
+body.home.flat .hero-copy{pointer-events:auto}
+body.home.flat .hero-copy .hero-title,
+body.home.flat .hero-copy .eyebrow,
+body.home.flat .hero-copy .hero-rule,
+body.home.flat .hero-copy .hero-lower{
+  opacity:1!important;transform:none!important;clip-path:none!important;
+}
+body.home.flat .mast{
+  background:var(--paper);
+  color:var(--ink);
+  border-bottom:1px solid var(--rule);
+}
+body.home.flat .mast::before{opacity:0}
+body.home.flat .mast .mast-wordmark,body.home.flat .mast .wm-en{color:var(--ink)}
+body.home.flat .mast .wm-cn{color:var(--ink-2)}
+body.home.flat .mast .wm-divider{color:var(--ink-3)}
+body.home.flat .mast .mast-nav-link{color:var(--ink-2)}
+body.home.flat .mast .mast-logo{width:80px;opacity:1}
+/* 纸色底上不需要视频期的描边晕 */
+body.home.flat .mast .mast-wordmark,body.home.flat .mast .mast-nav-link{text-shadow:none}
+/* 纸色底上不需要视频期的描边晕 */
+body.home.flat .mast .mast-wordmark,body.home.flat .mast .mast-nav-link{text-shadow:none}
 
 /* 调试用：URL #static&p=0.45 可定格逐帧校验 */
 body.home.static .stage{height:100vh}
@@ -133,7 +164,7 @@ body.home.static .sticky{position:relative}
   body.home .hero-copy .hero-kicker{font-size:18px!important}
 }
 @media (max-width:900px){
-  body.home .stage{height:190vh}
+  body.home .stage{height:calc(100vh + 820px)}
   body.home .hero-copy{padding-top:150px}
   body.home .hero-copy .hero-title{font-size:clamp(2.2rem,9vw,3rem)}
   body.home .hero-copy .hero-lower{grid-template-columns:minmax(0,1fr);gap:18px}
