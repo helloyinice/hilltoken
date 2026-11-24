@@ -15,6 +15,9 @@ const {
   publishedTime,
 } = Astro.props;
 
+// 首页才挂滚动首屏的样式与脚本；其余页面保持原有版式
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
 const personLd = {
@@ -55,7 +58,7 @@ const articleLd = article
 ---
 
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-Hans" class={isHome ? 'home' : ''}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -78,11 +81,7 @@ const articleLd = article
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="generator" content="Astro" />
   <link rel="stylesheet" href="/site.css?v=20261123d" />
-  <link rel="stylesheet" href="/theme-switcher.css?v=20261123d" />
-  <script is:inline>
-    try { var t = localStorage.getItem('hilltoken:colourway'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
-  </script>
-  <script is:inline src="/theme-switcher.js" defer></script>
+  {isHome && <link rel="stylesheet" href="/hero-scroll.css?v=20261124a" />}
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
   <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
@@ -109,7 +108,8 @@ const articleLd = article
   <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
   {articleLd && <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
 </head>
-<body>
+<body class={isHome ? 'home' : ''}>
   <slot />
+  {isHome && <script is:inline src="/hero-scroll.js?v=20261124a"></script>}
 </body>
 </html>

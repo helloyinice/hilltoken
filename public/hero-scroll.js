@@ -1,0 +1,170 @@
+/* HillToken 首页 · 滚动收缩首屏驱动 · 2026-11-24
+ * 依赖 DOM：#stage #screen #copy #title #ridge #sun #cue #mast .vid
+ * 纯原生 JS，无构建、无依赖；由 BaseLayout 仅在首页引入。
+ */
+(function () {
+  'use strict';
+
+  var screenEl = document.getElementById('screen');
+  var copyEl   = document.getElementById('copy');
+  var titleEl  = document.getElementById('title');
+  var ridge    = document.getElementById('ridge');
+  var sun      = document.getElementById('sun');
+  var cue      = document.getElementById('cue');
+  var stage    = document.getElementById('stage');
+  var mast     = document.getElementById('mast');
+  var vids     = Array.prototype.slice.call(document.querySelectorAll('.vid'));
+  if (!screenEl || !stage || !mast) return;
+
+  var vi = 0, vidsPaused = false;
+
+  var LEN = ridge.getTotalLength();
+  ridge.style.strokeDasharray = LEN;
+  ridge.style.strokeDashoffset = LEN;
+
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+  var lerp  = function (a, b, t) { return a + (b - a) * t; };
+  var smooth = function (e0, e1, v) {
+    var t = clamp((v - e0) / (e1 - e0), 0, 1);
+    return t * t * (3 - 2 * t);
+  };
+  var easeInOut = function (t) {
+    return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+  var mix = function (a, b, t) {
+    return 'rgb(' + Math.round(lerp(a[0], b[0], t)) + ',' +
+                    Math.round(lerp(a[1], b[1], t)) + ',' +
+                    Math.round(lerp(a[2], b[2], t)) + ')';
+  };
+
+  // 开场（压在视频上）：米白字；落定（回到纸色页）：墨色字
+  var L1 = [247, 244, 236], L2 = [226, 223, 214], L3 = [196, 193, 184];
+  var D1 = [20, 20, 20],    D2 = [74, 74, 72],    D3 = [123, 121, 114];
+
+  function render(p) {
+    var W = innerWidth, H = innerHeight;
+    var narrow = W < 900;
+
+    // 顶部导航：开场全透明（视频顶到页沿），滚动后纸色聚拢、字色同步转墨
+    var mbg = smooth(.03, .20, p);
+    var mt  = mbg;
+    var mlg = smooth(.12, .30, p);
+    mast.style.setProperty('--mast-bg', mbg.toFixed(3));
+    mast.style.setProperty('--mast-ink', mix(L1, D1, mt));
+    mast.style.setProperty('--mast-ink2', mix(L2, D2, mt));
+    mast.style.setProperty('--mast-ink3', mix(L3, D3, mt));
+    mast.style.setProperty('--mast-line', 'rgba(20,20,20,' + (.16 * mt).toFixed(3) + ')');
+    mast.style.setProperty('--mast-scrim', (1 - smooth(.03, .20, p)).toFixed(3));
+    mast.style.setProperty('--mast-shA', (1 - mt).toFixed(2));
+    mast.style.setProperty('--mast-shB', (mt * .9).toFixed(2));
+    mast.style.setProperty('--mast-gap', lerp(0, 16, mlg).toFixed(1) + 'px');
+    mast.style.setProperty('--mast-logo-w', lerp(0, narrow ? 56 : 80, mlg).toFixed(1) + 'px');
+    mast.style.setProperty('--mast-logo-op', mlg.toFixed(3));
+
+    var maxW = 1240;
+    var gutter = Math.min(Math.max(W * .04, 20), 48);
+    var wrapW = Math.min(W - gutter * 2, maxW);
+    var wrapLeft = (W - wrapW) / 2;
+    var copyTop = narrow ? 150 : Math.min(Math.max(H * .2, 180), 220);
+
+    // 终态：右上正方形位置，只托住 logo 本身，无边框无底色
+    var finalW = narrow ? Math.min(wrapW * .7, 320) : Math.min(wrapW * .30, 340);
+    var finalH = finalW;
+    var finalL = wrapLeft + wrapW - finalW;
+    var finalT = narrow ? H * .05 : copyTop;
+
+    var e = easeInOut(clamp(p / .88, 0, 1));
+    // 一开滚就让视频上沿退到导航下方：顶部始终干净，字色才能转黑
+    var navH = mast.offsetHeight || 116;
+    var baseTop = lerp(0, finalT, e);
+    var lift = Math.max(0, navH * smooth(.02, .16, p) - baseTop);
+    screenEl.style.width  = lerp(W, finalW, e) + 'px';
+    screenEl.style.height = (lerp(H, finalH, e) - lift) + 'px';
+    screenEl.style.left   = lerp(0, finalL, e) + 'px';
+    screenEl.style.top    = (baseTop + lift) + 'px';
+
+    screenEl.style.setProperty('--symh', lerp(46, 100, smooth(.68, 1, p)).toFixed(2) + '%');
+    screenEl.style.setProperty('--vidop', String(1 - smooth(.83, .88, p)));
+
+    // 标题：视频让开左半区之后才显影
+    titleEl.style.setProperty('--op', smooth(.56, .64, p));
+    titleEl.style.setProperty('--ty', lerp(26, 0, smooth(.56, .72, p)) + 'px');
+    copyEl.style.setProperty('--op2', smooth(.60, .70, p));
+    copyEl.style.setProperty('--ty2', lerp(10, 0, smooth(.60, .74, p)) + 'px');
+    copyEl.style.setProperty('--lowop', smooth(.68, .82, p));
+    copyEl.style.setProperty('--cut', (100 - 100 * smooth(.68, .84, p)).toFixed(1) + '%');
+    copyEl.style.setProperty('--lowop2', smooth(.70, .86, p));
+    copyEl.style.setProperty('--lowty', lerp(24, 0, smooth(.70, .88, p)) + 'px');
+
+    // 山脊线：全程墨色，随滚动一笔写出
+    ridge.style.strokeDashoffset = LEN * (1 - smooth(.34, .8, p));
+    ridge.setAttribute('stroke-width', lerp(24, 34, smooth(.78, .92, p)).toFixed(1));
+    sun.style.opacity = smooth(.84, .92, p);
+
+    cue.style.setProperty('--cue', String(1 - smooth(0, .1, p)));
+    document.body.classList.toggle('pinned', p > .92);
+
+    var shouldPause = p > .9;
+    if (shouldPause !== vidsPaused) {
+      vidsPaused = shouldPause;
+      if (shouldPause) vids.forEach(function (v) { v.pause(); });
+      else vids[vi].play().catch(function () {});
+    }
+  }
+
+  function progress() {
+    var range = stage.offsetHeight - innerHeight;
+    var y = window.scrollY - stage.offsetTop;
+    document.body.classList.toggle('past', y > range - 2);
+    return clamp(y / Math.max(range, 1), 0, 1);
+  }
+
+  var target = 0, cur = 0, raf = null;
+  function tick() {
+    cur = lerp(cur, target, .16);
+    if (Math.abs(cur - target) < .0005) { cur = target; render(cur); raf = null; return; }
+    render(cur);
+    raf = requestAnimationFrame(tick);
+  }
+  function kick() { target = progress(); if (!raf) raf = requestAnimationFrame(tick); }
+
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', function () {
+    target = progress(); cur = target; render(cur);
+  });
+
+  // 调试定格：#static&p=0.45 / #p=1
+  var m = location.hash.match(/p=([\d.]+)/);
+  if (m) {
+    var p = clamp(parseFloat(m[1]), 0, 1);
+    if (location.hash.indexOf('static') > -1) document.body.classList.add('static');
+    var range = stage.offsetHeight - innerHeight;
+    if (location.hash.indexOf('static') === -1) window.scrollTo(0, p * range);
+    cur = target = p;
+    render(p);
+  } else {
+    cur = target = progress();
+    render(cur);
+  }
+
+  // 四段山川：一段播完交叉淡入下一段，无限循环
+  function activate(i) {
+    vi = i;
+    vids.forEach(function (v, k) { v.classList.toggle('on', k === i); });
+    var v = vids[i];
+    if (v.readyState === 0) v.load();
+    try { v.currentTime = 0; } catch (err) {}
+    v.play().catch(function () {});
+  }
+
+  vids.forEach(function (v, i) {
+    v.addEventListener('timeupdate', function () {
+      if (i !== vi || vidsPaused) return;
+      if (v.duration && v.currentTime > v.duration - 0.9) {
+        activate((vi + 1) % vids.length);
+      }
+    });
+  });
+
+  activate(0);
+})();

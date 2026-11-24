@@ -1,0 +1,162 @@
+/* HillToken 首页 · 滚动收缩首屏 · 2026-11-24
+ * 只由 BaseLayout 在首页（html.home / body.home）加载，文章页不受影响。
+ * 颜色跟随 site.css 的 :root 变量；配色切换已移除，固定为「暖纸 · 朱红」。
+ */
+
+/* sticky 前置条件：site.css 的 overflow-x:clip 会让 position:sticky 失效；
+   原生 scroll-behavior:smooth 会与脚本的滚动插值打架，首页关掉。 */
+html.home{overflow-x:visible;scroll-behavior:auto;scroll-padding-top:130px}
+body.home{overflow-x:visible}
+
+/* ---------------- 滚动舞台 ---------------- */
+body.home .stage{position:relative;height:230vh}
+body.home .sticky{position:sticky;top:0;height:100vh;overflow:hidden}
+
+/* 视频层：终态完全透明，不留底色与边框 */
+body.home .screen{
+  position:absolute;left:0;top:0;width:100%;height:100vh;
+  overflow:hidden;background:transparent;
+  will-change:width,height,left,top;
+}
+body.home .vidstack{position:absolute;inset:0;opacity:var(--vidop,1)}
+body.home .vid{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+  opacity:0;transition:opacity .85s cubic-bezier(.22,.61,.36,1);
+  transform:translateZ(0);
+}
+body.home .vid.on{opacity:1}
+
+/* 山形符号：全程墨色（--ink），随滚动一笔写出，落定即 logo 本体 */
+body.home .sym{
+  position:absolute;left:50%;top:50%;
+  height:var(--symh,46%);aspect-ratio:1/1;width:auto;
+  transform:translate(-50%,-50%);
+  pointer-events:none;overflow:visible;
+}
+body.home .sym .ridge{
+  fill:none;stroke:var(--ink);stroke-width:26;
+  stroke-linejoin:miter;stroke-linecap:butt;
+}
+body.home .sym .sun{fill:var(--signal);opacity:0}
+
+/* ---------------- 首屏文案：沿用原站 .wrap 版心 ---------------- */
+body.home .hero-copy{
+  position:absolute;left:0;right:0;top:0;
+  padding-top:clamp(180px,20vh,220px);
+  pointer-events:none;
+}
+body.home .hero-copy .hero-title{
+  font-size:clamp(3.1rem,8.6vw,7.4rem);
+  line-height:1.18;
+  opacity:var(--op,0);
+  transform:translateY(var(--ty,26px));
+}
+body.home .hero-copy .eyebrow{
+  opacity:var(--op2,0);
+  transform:translateY(var(--ty2,10px));
+}
+body.home .hero-copy .hero-rule{
+  margin-top:clamp(30px,4.2vw,50px);
+  opacity:var(--lowop,0);
+  clip-path:inset(0 var(--cut,100%) 0 0);
+}
+body.home .hero-copy .hero-lower{
+  padding-top:clamp(20px,2.8vw,32px);
+  padding-bottom:0;
+  opacity:var(--lowop2,0);
+  transform:translateY(var(--lowty,26px));
+}
+body.home .hero-copy .hero-intro p{font-size:14.5px;line-height:1.7}
+body.home .hero-copy .hero-kicker{font-size:20px!important;margin-bottom:12px!important}
+body.home .hero-copy .hero-actions{margin:18px 0 14px}
+body.home .hero-copy .hero-meta{font-size:12px!important}
+body.home .hero-copy .stat{padding-bottom:10px}
+body.home .hero-copy .stat-num{font-size:clamp(2.2rem,3.6vw,3.3rem)}
+body.home.pinned .hero-copy{pointer-events:auto}
+
+/* ---------------- 固定顶栏：开场全透明，落定与纸色同底 ---------------- */
+body.home .mast{
+  position:fixed;left:0;right:0;top:0;z-index:30;
+  background:linear-gradient(to bottom,
+    rgba(245,242,234,var(--mast-bg,0)) 0%,
+    rgba(245,242,234,var(--mast-bg,0)) 76%,
+    rgba(245,242,234,calc(var(--mast-bg,0)*.5)) 100%);
+  border-bottom:1px solid var(--mast-line,transparent);
+  color:var(--mast-ink,#f7f4ec);
+}
+/* 开场极淡的顶部压暗，浅色字压在云海/雪脊上仍可读；落定时完全消失 */
+body.home .mast::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:190%;
+  pointer-events:none;z-index:-1;
+  background:linear-gradient(to bottom,rgba(9,11,14,.44),rgba(9,11,14,.14) 48%,rgba(9,11,14,0));
+  opacity:var(--mast-scrim,1);
+}
+/* 离开首屏后恢复纸色底，避免正文穿过导航 */
+body.home.past .mast{background:var(--paper)}
+
+body.home .mast .mast-wordmark,body.home .mast .wm-en{color:var(--mast-ink,#f7f4ec)}
+body.home .mast .wm-cn{color:var(--mast-ink2,#e2dfd6)}
+body.home .mast .wm-divider{color:var(--mast-ink3,#c4c1b8)}
+body.home .mast .mast-nav-link{color:var(--mast-ink2,#e2dfd6)}
+body.home .mast .mast-nav-link:is(:hover,:focus-visible){color:var(--signal)}
+/* 双阶段描边：浅字配暗晕，墨字配亮晕，任何背景都压得住 */
+body.home .mast .mast-wordmark,body.home .mast .mast-nav-link{
+  text-shadow:0 1px 16px rgba(9,11,14,var(--mast-shA,.5)),0 0 12px rgba(247,244,236,var(--mast-shB,0));
+}
+/* 方形米纸底字标：开场收起，落定展开；米纸底与页面同色，看不出方框 */
+body.home .mast .mast-brand{gap:var(--mast-gap,16px)}
+body.home .mast .mast-logo{
+  width:var(--mast-logo-w,80px);
+  opacity:var(--mast-logo-op,1);
+  background:transparent;
+}
+
+/* ---------------- 首屏底部细线提示 ---------------- */
+body.home .cue{
+  position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+  width:1px;height:38px;background:rgba(255,255,255,.78);
+  opacity:var(--cue,1);
+  animation:hill-cue 2.4s ease-in-out infinite;
+}
+@keyframes hill-cue{
+  0%,100%{transform:translateX(-50%) scaleY(.35);opacity:.35}
+  50%{transform:translateX(-50%) scaleY(1);opacity:.9}
+}
+
+/* 调试用：URL #static&p=0.45 可定格逐帧校验 */
+body.home.static .stage{height:100vh}
+body.home.static .sticky{position:relative}
+
+@media (max-width:1100px){
+  body.home .hero-copy .hero-intro p{font-size:13.5px}
+  body.home .hero-copy .hero-kicker{font-size:18px!important}
+}
+@media (max-width:900px){
+  body.home .stage{height:190vh}
+  body.home .hero-copy{padding-top:150px}
+  body.home .hero-copy .hero-title{font-size:clamp(2.2rem,9vw,3rem)}
+  body.home .hero-copy .hero-lower{grid-template-columns:minmax(0,1fr);gap:18px}
+  body.home .hero-copy .stats,body.home .hero-copy .hero-meta{display:none}
+  body.home .mast-top{padding:12px var(--gutter);gap:12px}
+  body.home .mast-logo{width:56px;height:56px}
+  body.home .mast-nav,body.home .mast-subscribe{display:none}
+  body.home .wm-en{font-size:24px}
+  body.home .wm-cn,body.home .wm-divider{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){body.home .cue{animation:none}}
+
+/* 打印：不制造 230vh 空白页，直接呈现落定后的文字版首屏 */
+@media print{
+  body.home .stage{height:auto}
+  body.home .sticky{position:static;height:auto;overflow:visible}
+  body.home .screen,body.home .cue{display:none}
+  body.home .mast{position:static;background:var(--paper)}
+  body.home .hero-copy{position:static;padding-top:18px;pointer-events:auto}
+  body.home .hero-copy .hero-title,
+  body.home .hero-copy .eyebrow,
+  body.home .hero-copy .hero-rule,
+  body.home .hero-copy .hero-lower{
+    opacity:1!important;transform:none!important;clip-path:none!important;
+  }
+}

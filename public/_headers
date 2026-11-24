@@ -9,7 +9,10 @@
 /site.css
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
-/theme-switcher.css
+/hero-scroll.css
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+/hero-scroll.js
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
 
@@ -58,3 +61,7 @@
   Cache-Control: public, max-age=0, must-revalidate
 /hilltoken-favicon-180.png
   Cache-Control: public, max-age=0, must-revalidate
+
+# 首页四段山川视频：文件名固定，可长缓存
+/media/hills/*
+  Cache-Control: public, max-age=31536000, immutable

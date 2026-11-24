@@ -16,6 +16,8 @@ const fmtEntryDate = (value: string) => {
     day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Shanghai',
   }).toUpperCase();
 };
+
+const heroAfter = site.heroTitleAfter.split('\n');
 ---
 
 <BaseLayout>
@@ -23,30 +25,57 @@ const fmtEntryDate = (value: string) => {
   <Header />
 
   <main id="main">
-    <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="wrap">
-        <p class="eyebrow"><span class="dot" aria-hidden="true"></span> {site.eyebrow}</p>
-        <h1 class="hero-title" id="hero-title">{site.heroTitleBefore}<span class="accent">{site.heroTitleAccent}</span>{site.heroTitleAfter}</h1>
-        <div class="hero-rule"></div>
-        <div class="hero-lower">
-          <div class="hero-intro">
-            <p class="hero-kicker">{site.heroKicker}</p>
-            <p>{site.heroIntro1}</p>
-            <p>{site.heroIntro2}</p>
-            <div class="hero-actions">
-              <a class="btn btn-dark" href="#about">名字的来历 →</a>
-              <a class="btn btn-ghost" href="#notes">文章与记录 →</a>
-            </div>
-            <p class="hero-meta">这个网址由站主本人维护，是关于 HillToken｜山外有词 的第一手信息来源 · 最后更新 <time datetime="2026-11-23">{site.lastUpdated}</time></p>
+    <div class="stage" id="stage">
+      <div class="sticky" id="top">
+        <div class="screen" id="screen" aria-hidden="true">
+          <div class="vidstack">
+            <video class="vid on" muted playsinline preload="auto" poster="/media/hills/hill-1-fuji-cloud.jpg">
+              <source src="/media/hills/hill-1-fuji-cloud.mp4" type="video/mp4" />
+            </video>
+            <video class="vid" muted playsinline preload="metadata" poster="/media/hills/hill-2-bromo.jpg">
+              <source src="/media/hills/hill-2-bromo.mp4" type="video/mp4" />
+            </video>
+            <video class="vid" muted playsinline preload="metadata" poster="/media/hills/hill-3-alps.jpg">
+              <source src="/media/hills/hill-3-alps.mp4" type="video/mp4" />
+            </video>
+            <video class="vid" muted playsinline preload="metadata" poster="/media/hills/hill-4-fuji-lake.jpg">
+              <source src="/media/hills/hill-4-fuji-lake.mp4" type="video/mp4" />
+            </video>
           </div>
-          <div class="stats" aria-label="刊名速写">
-            {site.stats.map((s) => (
-              <div class="stat"><span class="stat-num">{s.num}</span><span class="stat-label">{s.label}</span></div>
-            ))}
+          <svg class="sym" viewBox="0 0 1024 1024" aria-hidden="true">
+            <polyline class="ridge" id="ridge" points="116,672 356,326 538,566 704,392 908,672" />
+            <rect class="sun" id="sun" x="740" y="188" width="96" height="96" />
+          </svg>
+        </div>
+
+        <div class="hero-copy" id="copy">
+          <div class="wrap">
+            <p class="eyebrow"><span class="dot" aria-hidden="true"></span> {site.eyebrow}</p>
+            <h1 class="hero-title" id="title">{site.heroTitleBefore}<span class="accent">{site.heroTitleAccent}</span>{heroAfter[0]}<br />{heroAfter[1]}</h1>
+            <div class="hero-rule" id="rule"></div>
+            <div class="hero-lower" id="lower">
+              <div class="hero-intro">
+                <p class="hero-kicker">{site.heroKicker}</p>
+                <p>{site.heroIntro1}</p>
+                <p>{site.heroIntro2}</p>
+                <div class="hero-actions">
+                  <a class="btn btn-dark" href="#about">名字的来历 →</a>
+                  <a class="btn btn-ghost" href="#notes">文章与记录 →</a>
+                </div>
+                <p class="hero-meta">这个网址由站主本人维护，是关于 HillToken｜山外有词 的第一手信息来源 · 最后更新 <time datetime="2026-11-23">{site.lastUpdated}</time></p>
+              </div>
+              <div class="stats" aria-label="刊名速写">
+                {site.stats.map((s) => (
+                  <div class="stat"><span class="stat-num">{s.num}</span><span class="stat-label">{s.label}</span></div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+
+        <span class="cue" id="cue" aria-hidden="true"></span>
       </div>
-    </section>
+    </div>
 
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
