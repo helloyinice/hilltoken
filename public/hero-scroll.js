@@ -17,6 +17,34 @@
   var vids     = Array.prototype.slice.call(document.querySelectorAll('.vid'));
   if (!screenEl || !stage || !mast) return;
 
+  var BP = 900;                       // 与 CSS 断点一致
+  var narrowMode = innerWidth < BP;
+
+  // 竖屏用竖版素材（9:16），横屏用横版；只在跨断点时重载
+  function syncSources() {
+    var dir = narrowMode ? '/media/hills/v/' : '/media/hills/';
+    vids.forEach(function (v) {
+      var s = v.querySelector('source');
+      if (s) {
+        var base = s.getAttribute('data-src');
+        if (!base) { base = s.getAttribute('src'); s.setAttribute('data-src', base); }
+        if (!base) return;
+        var url = base.split('/media/hills/')[1];
+        if (!url) return;
+        url = dir + url;
+        if (s.getAttribute('src') !== url) { s.setAttribute('src', url); v.load(); }
+      }
+      var po = v.getAttribute('data-poster');
+      if (po === null) { po = v.getAttribute('poster') || ''; v.setAttribute('data-poster', po); }
+      var pn = po.split('/media/hills/')[1];
+      if (pn) {
+        var purl = dir + pn;
+        if (v.getAttribute('poster') !== purl) v.setAttribute('poster', purl);
+      }
+    });
+  }
+  syncSources();
+
   var vi = 0, vidsPaused = false;
 
   var LEN = ridge.getTotalLength();
@@ -74,33 +102,69 @@
     var finalL = wrapLeft + wrapW - finalW;
     var finalT = narrow ? H * .05 : copyTop;
 
-    var e = easeInOut(clamp(p / .88, 0, 1));
-    // 一开滚就让视频上沿退到导航下方：顶部始终干净，字色才能转黑
     var navH = mast.offsetHeight || 116;
-    var baseTop = lerp(0, finalT, e);
-    var lift = Math.max(0, navH * smooth(.02, .16, p) - baseTop);
-    screenEl.style.width  = lerp(W, finalW, e) + 'px';
-    screenEl.style.height = (lerp(H, finalH, e) - lift) + 'px';
-    screenEl.style.left   = lerp(0, finalL, e) + 'px';
-    screenEl.style.top    = (baseTop + lift) + 'px';
 
-    screenEl.style.setProperty('--symh', lerp(46, 100, smooth(.68, 1, p)).toFixed(2) + '%');
-    screenEl.style.setProperty('--vidop', String(1 - smooth(.83, .88, p)));
+    if (narrow) {
+      // ---- 手机：整屏视频 → 向上收成 16:9 横幅 ----
+      var g  = Math.min(Math.max(W * .045, 16), 26);
+      var bw = W - g * 2;
+      var bh = Math.round(bw * 9 / 16);
+      var bt = navH + 14;
+      copyEl.style.setProperty('--copytop', Math.round(bt + bh + 26) + 'px');
 
-    // 标题：视频让开左半区之后才显影
-    titleEl.style.setProperty('--op', smooth(.56, .64, p));
-    titleEl.style.setProperty('--ty', lerp(26, 0, smooth(.56, .72, p)) + 'px');
-    copyEl.style.setProperty('--op2', smooth(.60, .70, p));
-    copyEl.style.setProperty('--ty2', lerp(10, 0, smooth(.60, .74, p)) + 'px');
-    copyEl.style.setProperty('--lowop', smooth(.68, .82, p));
-    copyEl.style.setProperty('--cut', (100 - 100 * smooth(.68, .84, p)).toFixed(1) + '%');
-    copyEl.style.setProperty('--lowop2', smooth(.70, .86, p));
-    copyEl.style.setProperty('--lowty', lerp(24, 0, smooth(.70, .88, p)) + 'px');
+      var e2 = easeInOut(clamp((p - .02) / .48, 0, 1));
+      screenEl.style.width  = lerp(W, bw, e2) + 'px';
+      screenEl.style.height = lerp(H, bh, e2) + 'px';
+      screenEl.style.left   = lerp(0, g, e2) + 'px';
+      screenEl.style.top    = lerp(0, bt, e2) + 'px';
+      screenEl.style.setProperty('--symh', '100%');
+      screenEl.style.setProperty('--vidop', String(1 - smooth(.90, .96, p)));
 
-    // 山脊线：全程墨色，随滚动一笔写出
-    ridge.style.strokeDashoffset = LEN * (1 - smooth(.34, .8, p));
-    ridge.setAttribute('stroke-width', lerp(24, 34, smooth(.78, .92, p)).toFixed(1));
-    sun.style.opacity = smooth(.84, .92, p);
+      // 文案跟着视频一起从视口下方推上来，避免收缩过程中间留一段空屏
+      var pushUp = Math.max(0, H - (bt + bh + 26));
+      copyEl.style.setProperty('--copyty', Math.round(lerp(pushUp, 0, smooth(.05, .58, p))) + 'px');
+
+      titleEl.style.setProperty('--op', smooth(.30, .46, p));
+      titleEl.style.setProperty('--ty', lerp(20, 0, smooth(.30, .52, p)) + 'px');
+      copyEl.style.setProperty('--op2', smooth(.34, .48, p));
+      copyEl.style.setProperty('--ty2', lerp(8, 0, smooth(.34, .52, p)) + 'px');
+      copyEl.style.setProperty('--lowop', smooth(.42, .56, p));
+      copyEl.style.setProperty('--cut', (100 - 100 * smooth(.42, .60, p)).toFixed(1) + '%');
+      copyEl.style.setProperty('--lowop2', smooth(.46, .62, p));
+      copyEl.style.setProperty('--lowty', lerp(18, 0, smooth(.46, .66, p)) + 'px');
+
+      ridge.style.strokeDashoffset = LEN * (1 - smooth(.54, .82, p));
+      ridge.setAttribute('stroke-width', lerp(42, 46, smooth(.72, .86, p)).toFixed(1));
+      sun.style.opacity = smooth(.76, .86, p);
+    } else {
+      // ---- 桌面：整屏视频 → 收缩到右上，山脊成 logo ----
+      var e = easeInOut(clamp(p / .88, 0, 1));
+      // 一开滚就让视频上沿退到导航下方：顶部始终干净，字色才能转黑
+      var baseTop = lerp(0, finalT, e);
+      var lift = Math.max(0, navH * smooth(.02, .16, p) - baseTop);
+      screenEl.style.width  = lerp(W, finalW, e) + 'px';
+      screenEl.style.height = (lerp(H, finalH, e) - lift) + 'px';
+      screenEl.style.left   = lerp(0, finalL, e) + 'px';
+      screenEl.style.top    = (baseTop + lift) + 'px';
+
+      screenEl.style.setProperty('--symh', lerp(46, 100, smooth(.68, 1, p)).toFixed(2) + '%');
+      screenEl.style.setProperty('--vidop', String(1 - smooth(.83, .88, p)));
+
+      // 标题：视频让开左半区之后才显影
+      titleEl.style.setProperty('--op', smooth(.56, .64, p));
+      titleEl.style.setProperty('--ty', lerp(26, 0, smooth(.56, .72, p)) + 'px');
+      copyEl.style.setProperty('--op2', smooth(.60, .70, p));
+      copyEl.style.setProperty('--ty2', lerp(10, 0, smooth(.60, .74, p)) + 'px');
+      copyEl.style.setProperty('--lowop', smooth(.68, .82, p));
+      copyEl.style.setProperty('--cut', (100 - 100 * smooth(.68, .84, p)).toFixed(1) + '%');
+      copyEl.style.setProperty('--lowop2', smooth(.70, .86, p));
+      copyEl.style.setProperty('--lowty', lerp(24, 0, smooth(.70, .88, p)) + 'px');
+
+      // 山脊线：全程墨色，随滚动一笔写出
+      ridge.style.strokeDashoffset = LEN * (1 - smooth(.34, .8, p));
+      ridge.setAttribute('stroke-width', lerp(24, 34, smooth(.78, .92, p)).toFixed(1));
+      sun.style.opacity = smooth(.84, .92, p);
+    }
 
     cue.style.setProperty('--cue', String(1 - smooth(0, .1, p)));
     document.body.classList.toggle('pinned', p > .92);
@@ -118,9 +182,12 @@
     return Math.max(stage.offsetHeight - stickyEl.offsetHeight - stage.offsetTop, 1);
   }
 
-  // 文案已接近一屏高时 sticky 会失灵：直接降级为落定版式
+  // 文案已接近一屏高时 sticky 会失灵：直接降级为落定版式。
+  // 必须先摘掉 flat 再量，否则降级态本身更矮，会造成来回翻转。
   function fitMode() {
-    var flat = stickyEl.offsetHeight > innerHeight - 8;
+    document.body.classList.remove('flat');
+    var h = stickyEl.offsetHeight;
+    var flat = h > innerHeight - 8;
     document.body.classList.toggle('flat', flat);
     return flat;
   }
@@ -147,6 +214,8 @@
 
   window.addEventListener('scroll', kick, { passive: true });
   window.addEventListener('resize', function () {
+    var n = innerWidth < BP;
+    if (n !== narrowMode) { narrowMode = n; syncSources(); activate(vi); }
     if (fitMode()) return;
     target = progress(); cur = target; render(cur);
   });

@@ -80,8 +80,8 @@ const articleLd = article
   <meta name="theme-color" content="#f5f2ea" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="generator" content="Astro" />
-  <link rel="stylesheet" href="/site.css?v=20261123d" />
-  {isHome && <link rel="stylesheet" href="/hero-scroll.css?v=20261124a" />}
+  <link rel="stylesheet" href="/site.css?v=20261125a" />
+  {isHome && <link rel="stylesheet" href="/hero-scroll.css?v=20261125b" />}
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
   <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
@@ -110,6 +110,7 @@ const articleLd = article
 </head>
 <body class={isHome ? 'home' : ''}>
   <slot />
-  {isHome && <script is:inline src="/hero-scroll.js?v=20261124a"></script>}
+  <script is:inline src="/mast-menu.js?v=20261125a"></script>
+  {isHome && <script is:inline src="/hero-scroll.js?v=20261125b"></script>}
 </body>
 </html>

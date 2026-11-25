@@ -15,6 +15,9 @@
 /hero-scroll.js
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
+/mast-menu.js
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
 
 # 根目录站点图标：每次重新校验，避免标签栏/主屏长期显示旧图标
 # 注意：必须覆盖当前实际引用的 2026 版文件名，否则会走 Pages 默认 4 小时缓存，
@@ -64,4 +67,8 @@
 
 # 首页四段山川视频：文件名固定，可长缓存
 /media/hills/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 手机竖版素材（子目录，独立规则）
+/media/hills/v/*
   Cache-Control: public, max-age=31536000, immutable

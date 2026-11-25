@@ -11,12 +11,14 @@ body.home{overflow-x:visible}
 /* ---------------- 滚动舞台 ----------------
  * 粘性层不再锁定 100vh：只占文案实际高度，滚完立即交棒给下一节，
  * 避免落定后视频退场、底下 400 多像素变成空白。 */
-body.home .stage{position:relative;height:calc(100vh + 900px)}
-body.home .sticky{position:sticky;top:0;overflow:hidden}
+body.home .stage{position:relative;height:calc(100vh + 900px);height:calc(100dvh + 900px)}
+/* 粘性层高度按文案撑开，通常短于视口；视频开场是整屏，必须允许溢出，
+   否则会被裁掉一截、首屏下半露出纸色底。 */
+body.home .sticky{position:sticky;top:0;overflow:visible}
 
 /* 视频层：终态完全透明，不留底色与边框 */
 body.home .screen{
-  position:absolute;left:0;top:0;width:100%;height:100vh;z-index:0;
+  position:absolute;left:0;top:0;width:100%;height:100vh;height:100dvh;z-index:0;
   overflow:hidden;background:transparent;
   will-change:width,height,left,top;
 }
@@ -132,7 +134,7 @@ body.home .cue{
 body.home.flat .stage{height:auto}
 body.home.flat .sticky{position:static;overflow:visible}
 body.home.flat .screen,body.home.flat .cue{display:none}
-body.home.flat .hero-copy{pointer-events:auto}
+body.home.flat .hero-copy{pointer-events:auto;padding-top:clamp(88px,11vh,132px)}
 body.home.flat .hero-copy .hero-title,
 body.home.flat .hero-copy .eyebrow,
 body.home.flat .hero-copy .hero-rule,
@@ -163,17 +165,39 @@ body.home.static .sticky{position:relative}
   body.home .hero-copy .hero-intro p{font-size:13.5px}
   body.home .hero-copy .hero-kicker{font-size:18px!important}
 }
+/* ---------------- 手机端：竖向叙事 ----------------
+ * 竖屏没有横向余量做「左文右图」，改成：整屏视频 → 向上收成 16:9 横幅
+ * 停在导航下方 → 文案固定从横幅下方渐显。文案位置由脚本写入 --copytop，
+ * 全程不动，避免撑高粘性层导致滚动距离抖动。 */
 @media (max-width:900px){
-  body.home .stage{height:calc(100vh + 820px)}
-  body.home .hero-copy{padding-top:150px}
-  body.home .hero-copy .hero-title{font-size:clamp(2.2rem,9vw,3rem)}
-  body.home .hero-copy .hero-lower{grid-template-columns:minmax(0,1fr);gap:18px}
+  body.home .stage{height:calc(100vh + 780px);height:calc(100dvh + 780px)}
+  body.home .hero-copy{
+    padding-top:var(--copytop,320px);
+    transform:translate3d(0,var(--copyty,0),0);
+    will-change:transform;
+  }
+  body.home .hero-copy .hero-title{font-size:clamp(2.05rem,8.2vw,2.85rem);line-height:1.22}
+  body.home .hero-copy .hero-rule{margin-top:clamp(22px,3vw,32px)}
+  body.home .hero-copy .hero-lower{grid-template-columns:minmax(0,1fr);gap:0;padding-top:18px}
   body.home .hero-copy .stats,body.home .hero-copy .hero-meta{display:none}
+  body.home .hero-copy .hero-intro p{font-size:13.5px;line-height:1.72}
+  body.home .hero-copy .hero-kicker{font-size:17px!important;margin-bottom:9px!important}
+  body.home .hero-copy .hero-actions{margin:16px 0 0;gap:10px;flex-wrap:wrap}
+  body.home .hero-copy .hero-actions .btn{flex:1 1 auto;justify-content:center;font-size:13.5px}
+
   body.home .mast-top{padding:12px var(--gutter);gap:12px}
-  body.home .mast-logo{width:56px;height:56px}
+  body.home .mast-logo{width:52px;height:52px}
   body.home .mast-nav,body.home .mast-subscribe{display:none}
-  body.home .wm-en{font-size:24px}
-  body.home .wm-cn,body.home .wm-divider{font-size:18px}
+  body.home .wm-en{font-size:22px}
+  body.home .wm-cn,body.home .wm-divider{font-size:17px}
+
+  /* 菜单展开时，固定导航回到纸色墨字并浮在面板之上，X 才点得到 */
+  body.home.menu-open .mast{background:var(--paper);z-index:45;color:var(--ink)}
+  body.home.menu-open .mast .mast-wordmark,
+  body.home.menu-open .mast .wm-en{color:var(--ink);text-shadow:none}
+  body.home.menu-open .mast .wm-cn{color:var(--ink-2)}
+  body.home.menu-open .mast .wm-divider{color:var(--ink-3)}
+  body.home.menu-open .mast .mast-logo{opacity:1}
 }
 @media (prefers-reduced-motion:reduce){body.home .cue{animation:none}}
 

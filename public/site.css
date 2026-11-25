@@ -224,3 +224,75 @@
   .article-body a{text-decoration:underline;text-decoration-color:var(--rule-strong);color:var(--signal-text)}
   .article-body code{font-family:var(--mono);font-size:13px;background:var(--paper-2);padding:2px 6px}
   .article-back{margin-top:48px;font-size:14px}
+
+  /* ---------------- 移动端菜单（≤900px） ----------------
+   * 桌面沿用横向导航；小屏换成「菜单」按钮 + 纸色全屏面板。
+   * 面板由 /mast-menu.js 控制 body.menu-open 与 aria 状态。 */
+  .mast-toggle{display:none}
+  .mast-menu{display:none}
+
+  @media(max-width:900px){
+    .mast-nav,.mast-subscribe{display:none}
+    .mast-top{justify-content:space-between}
+
+    .mast-toggle{
+      display:inline-flex;align-items:center;gap:9px;margin-left:auto;
+      padding:10px 0 10px 12px;background:none;border:0;color:inherit;
+      font-family:var(--sans);font-size:13.5px;font-weight:500;letter-spacing:.08em;
+      cursor:pointer;-webkit-tap-highlight-color:transparent;
+    }
+    .mast-toggle-text{line-height:1}
+    .mast-toggle-box{position:relative;display:block;width:22px;height:13px;flex:none}
+    .mast-toggle-box>span{
+      position:absolute;left:0;width:22px;height:0;
+      border-top:1.5px solid currentColor;
+      transition:top .3s var(--ease),transform .3s var(--ease);
+    }
+    .mast-toggle-box>span:first-child{top:3px}
+    .mast-toggle-box>span:last-child{top:10px}
+    body.menu-open .mast-toggle-box>span:first-child{top:6px;transform:rotate(45deg)}
+    body.menu-open .mast-toggle-box>span:last-child{top:6px;transform:rotate(-45deg)}
+
+    .mast-menu{
+      display:block;position:fixed;left:0;right:0;top:0;bottom:0;z-index:40;
+      background:var(--paper);
+      padding:calc(92px + env(safe-area-inset-top)) var(--gutter) calc(28px + env(safe-area-inset-bottom));
+      opacity:0;visibility:hidden;transform:translateY(-12px);
+      transition:opacity .3s var(--ease),transform .36s var(--ease),visibility .36s;
+      overflow-y:auto;overscroll-behavior:contain;
+    }
+    body.menu-open .mast-menu{opacity:1;visibility:visible;transform:none}
+    body.menu-open{overflow:hidden}
+    body.menu-open .mast{background:var(--paper);border-bottom-color:transparent;color:var(--ink);z-index:45}
+    body.menu-open .mast::before{opacity:0}
+    /* 面板是导航的子元素，顶部这一行要单独提层，关闭按钮才露得出来 */
+    body.menu-open .mast-top{position:relative;z-index:46}
+
+    .mast-menu-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+    .mast-menu-list li{border-bottom:1px solid var(--rule)}
+    .mast-menu-link{
+      display:flex;align-items:baseline;gap:14px;padding:17px 2px;
+      font-family:var(--serif);font-size:22px;font-weight:700;line-height:1.3;
+      color:var(--ink);text-decoration:none;
+      transition:color .24s var(--ease),padding-left .24s var(--ease);
+    }
+    .mast-menu-link:is(:active,:hover){color:var(--signal);padding-left:8px}
+    .mast-menu-no{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.1em;color:var(--ink-3)}
+    .mast-menu-arrow{margin-left:auto;font-size:15px;color:var(--ink-3)}
+    .mast-menu-foot{
+      display:flex;flex-direction:column;align-items:stretch;gap:16px;margin-top:30px;
+    }
+    .mast-menu-foot .btn{justify-content:center;width:100%}
+    .mast-menu-note{margin:0;font-size:12px;line-height:1.75;color:var(--ink-3)}
+  }
+  @media(max-width:900px) and (prefers-reduced-motion:reduce){
+    .mast-menu,.mast-toggle-box>span,.mast-menu-link{transition:none!important}
+  }
+
+  /* 极窄屏：字标只留英文与菜单图标，避免和按钮挤在一起 */
+  @media(max-width:480px){
+    .mast-wordmark .wm-divider,
+    .mast-wordmark .wm-cn{display:none}
+    .mast-toggle-text{display:none}
+    .mast-toggle{padding-left:14px}
+  }

@@ -25,5 +25,28 @@ const nav = [
     </nav>
 
     <a class="btn btn-dark btn-sm mast-subscribe" href="/rss.xml" aria-label="订阅 HillToken｜山外有词的 RSS 更新">订阅 RSS <span class="sub-arrow" aria-hidden="true">→</span></a>
+
+    <button class="mast-toggle" id="mast-toggle" type="button" aria-expanded="false" aria-controls="mast-menu" aria-label="打开导航菜单">
+      <span class="mast-toggle-text" aria-hidden="true">菜单</span>
+      <span class="mast-toggle-box" aria-hidden="true"><span></span><span></span></span>
+    </button>
   </div>
+
+  <nav class="mast-menu" id="mast-menu" aria-label="移动端站内导航" aria-hidden="true">
+    <ul class="mast-menu-list">
+      {nav.map((item, i) => (
+        <li>
+          <a class="mast-menu-link" href={item.href}>
+            <span class="mast-menu-no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span>{item.label}</span>
+            <span class="mast-menu-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="mast-menu-foot">
+      <a class="btn btn-dark" href="/rss.xml">订阅 RSS <span class="sub-arrow" aria-hidden="true">→</span></a>
+      <p class="mast-menu-note">HillToken｜山外有词<br />一个关于 AI、词语与创作的个人网站</p>
+    </div>
+  </nav>
 </header>
