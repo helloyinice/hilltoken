@@ -147,15 +147,26 @@ const articleLd = article
           d.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:9999;margin:0;padding:8px 10px;' +
             'background:#111;color:#7dff9a;font:11px/1.5 ui-monospace,SFMono-Regular,monospace;' +
             'white-space:pre-wrap;max-width:92vw;border-radius:6px;opacity:.94';
-          d.textContent = 'mode=' + (marked() ? 'desktop-forced' : 'native')
-            + '\ninnerW=' + innerWidth + ' h=' + innerHeight
-            + ' mq900=' + matchMedia('(max-width:900px)').matches
-            + '\nmeta=' + mv.getAttribute('content')
-            + '\nscreen=' + screen.width + 'x' + screen.height
-            + ' uadMobile=' + (uad ? uad.mobile : 'n/a')
-            + '\nwant=' + want() + ' ua=' + uaDesktop() + ' geo=' + geoDesktop()
-            + '\nua=' + ua.slice(0, 100);
           document.body.appendChild(d);
+          function draw() {
+            var v = document.querySelector('.vid.on') || document.querySelector('.vid');
+            var vs = v ? ('video: ' + (v.paused ? 'PAUSED' : 'playing') +
+              ' ct=' + (v.currentTime || 0).toFixed(2) + ' rs=' + v.readyState +
+              ' ns=' + v.networkState + ' muted=' + v.muted +
+              ' err=' + (v.error ? v.error.code + ':' + v.error.message : 'none') +
+              '\n       ' + (v.currentSrc || '').split('/').slice(-2).join('/')) : 'video: none';
+            d.textContent = 'mode=' + (marked() ? 'desktop-forced' : 'native')
+              + '\ninnerW=' + innerWidth + ' h=' + innerHeight
+              + ' mq900=' + matchMedia('(max-width:900px)').matches
+              + '\nmeta=' + mv.getAttribute('content')
+              + '\nscreen=' + screen.width + 'x' + screen.height
+              + ' uadMobile=' + (uad ? uad.mobile : 'n/a')
+              + '\nwant=' + want() + ' ua=' + uaDesktop() + ' geo=' + geoDesktop()
+              + '\nua=' + ua.slice(0, 100)
+              + '\n' + vs;
+          }
+          draw();
+          setInterval(draw, 1000);   // ct 每秒刷新，可判断画面是否真在推进
         });
       }
     } catch (e) {}
@@ -180,7 +191,7 @@ const articleLd = article
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="generator" content="Astro" />
   <link rel="stylesheet" href="/site.css?v=20261125a" />
-  {isHome && <link rel="stylesheet" href="/hero-scroll.css?v=20261126b" />}
+  {isHome && <link rel="stylesheet" href="/hero-scroll.css?v=20261126d" />}
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
   <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
@@ -210,6 +221,6 @@ const articleLd = article
 <body class={isHome ? 'home' : ''}>
   <slot />
   <script is:inline src="/mast-menu.js?v=20261125a"></script>
-  {isHome && <script is:inline src="/hero-scroll.js?v=20261126c"></script>}
+  {isHome && <script is:inline src="/hero-scroll.js?v=20261126d"></script>}
 </body>
 </html>

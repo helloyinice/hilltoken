@@ -52,29 +52,42 @@
   }
   syncSources();
 
-  var vi = 0, vidsPaused = false;
+  var vi = 0, vidsPaused = false, switchLock = false;
+  var wantPlay = null, retryTimers = [], lastCt = -1, stalled = 0;
 
-  // 统一播放入口。原来直接 v.play().catch(()=>{}) 会把 Chrome 的
-  // NotAllowedError / AbortError 静默吞掉，视频便永久停在 poster。
-  function playVid(v) {
-    if (!v) return;
+  function clearRetries() {
+    retryTimers.forEach(function (t) { clearTimeout(t); });
+    retryTimers = [];
+  }
+
+  // 单次起播：只做一次 play()，失败交给调度重试。真机上 play() 可能返回
+  // NotAllowedError（自动播放策略）、AbortError（syncSources 的 load() 打断），
+  // 或干脆卡在解码；静默吞掉就会永远停在 poster 那一帧。
+  function tryPlay(v) {
+    if (!v || v !== wantPlay) return;
+    if (vidsPaused || document.body.classList.contains('flat') || !v.paused) return;
     v.muted = true;
     v.playsInline = true;
-    var p;
-    try { p = v.play(); } catch (err) { p = Promise.reject(err); }
-    if (p && p.catch) p.catch(function () {
-      var retry = function () {
-        v.removeEventListener('loadeddata', retry);
-        v.removeEventListener('canplay', retry);
-        if (!vidsPaused && !document.body.classList.contains('flat')) {
-          v.muted = true;
-          v.play().catch(function () {});
-        }
-      };
-      v.addEventListener('loadeddata', retry);
-      v.addEventListener('canplay', retry);
+    try { var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (err) {}
+  }
+
+  // 统一播放入口：立即一次 + 资源就绪事件（全局只绑一次）+ 多次定时重试。
+  // 不再只依赖 loadeddata/canplay 这两个「可能已经错过」的未来事件。
+  function playVid(v) {
+    wantPlay = v;
+    clearRetries();
+    tryPlay(v);
+    [150, 450, 1000, 2000, 3600, 6000].forEach(function (d) {
+      retryTimers.push(setTimeout(function () { tryPlay(v); }, d));
     });
   }
+
+  // 全局只绑定一次：资源就绪时补一次起播（load() 之后尤其需要）
+  vids.forEach(function (v, i) {
+    ['loadedmetadata', 'loadeddata', 'canplay'].forEach(function (name) {
+      v.addEventListener(name, function () { if (i === vi) tryPlay(v); });
+    });
+  });
 
   // 兜底：任何一次真实手势都再试一次（应对严格的自动播放策略）
   function armGestureRetry() {
@@ -91,6 +104,32 @@
     document.addEventListener('pointerdown', onGesture, true);
     document.addEventListener('click', onGesture, true);
   }
+
+  // 看门狗：paused=false 但 currentTime 长时间不动 = 解码卡在某一帧。
+  // 先轻推播放位置，仍不动就重载当前段，避免整屏永远停在一张静帧。
+  setInterval(function () {
+    if (document.hidden || vidsPaused || document.body.classList.contains('flat')) return;
+    var v = vids[vi];
+    if (!v || v.paused || v.readyState < 2) return;
+    if (v.currentTime === lastCt) {
+      stalled++;
+      if (stalled === 1) { try { v.currentTime = v.currentTime + 0.02; } catch (err) {} }
+      else if (stalled >= 3) {
+        stalled = 0;
+        try { v.load(); } catch (err) {}
+        playVid(v);
+      }
+    } else { stalled = 0; }
+    lastCt = v.currentTime;
+  }, 1600);
+
+  // 切后台 / bfcache 回来，Android Chrome 常把视频停在某一帧
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && !vidsPaused && !document.body.classList.contains('flat')) playVid(vids[vi]);
+  });
+  window.addEventListener('pageshow', function () {
+    if (!vidsPaused && !document.body.classList.contains('flat')) playVid(vids[vi]);
+  });
 
   var LEN = ridge.getTotalLength();
   ridge.style.strokeDasharray = LEN;
@@ -272,11 +311,14 @@
     var n = innerWidth < BP;
     if (n !== narrowMode) {
       narrowMode = n;
-      syncSources();
-      setTimeout(function () { activate(vi); }, 60);
+      syncSources();            // 改 <source> 后 load()，不再用固定 60ms 赌加载完成
+      lastCt = -1; stalled = 0;
+      playVid(vids[vi]);        // 重试调度会覆盖 load() 的 AbortError 竞态
     }
     if (fitMode()) return;
     target = progress(); cur = target; render(cur);
+    // 若首屏曾因矮视口降级而提前 return，恢复后补一次起播
+    if (!vidsPaused && !wantPlay) playVid(vids[vi]);
   });
 
   // 字体加载完高度会变，重新判定一次降级
@@ -305,18 +347,30 @@
 
   // 四段山川：一段播完交叉淡入下一段，无限循环
   function activate(i) {
+    if (switchLock) return;
+    switchLock = true;
     vi = i;
-    vids.forEach(function (v, k) { v.classList.toggle('on', k === i); });
+    clearRetries();
+    lastCt = -1; stalled = 0;
+    vids.forEach(function (v, k) {
+      var on = k === i;
+      v.classList.toggle('on', on);
+      // 只播当前段：其余段暂停，省解码开销，也避免多段 timeupdate 抢切换
+      if (!on && !v.paused) { try { v.pause(); } catch (err) {} }
+    });
     var v = vids[i];
-    // syncSources() 已经 load()；这里再 load() 会打断刚发起的 play()，
-    // 在 Chrome 上表现为「视频不动」，因此不再重复加载。
-    try { v.currentTime = 0; } catch (err) {}
+    // load() 之后 readyState=0 时赋值会抛错，归零交给 loadedmetadata
+    try { if (v.readyState >= 1) v.currentTime = 0; } catch (err) {}
     playVid(v);
+    setTimeout(function () { switchLock = false; }, 350);
   }
 
   vids.forEach(function (v, i) {
+    v.addEventListener('loadedmetadata', function () {
+      if (i === vi) { try { v.currentTime = 0; } catch (err) {} }
+    });
     v.addEventListener('timeupdate', function () {
-      if (i !== vi || vidsPaused) return;
+      if (i !== vi || vidsPaused || switchLock) return;
       if (v.duration && v.currentTime > v.duration - 0.9) {
         activate((vi + 1) % vids.length);
       }
@@ -325,8 +379,4 @@
 
   activate(0);
   armGestureRetry();
-  // 首屏若因自动播放策略被拒，等资源就绪后再补一次
-  setTimeout(function () {
-    if (!vidsPaused && !document.body.classList.contains('flat') && vids[vi].paused) playVid(vids[vi]);
-  }, 1200);
 })();

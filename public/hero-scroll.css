@@ -27,7 +27,9 @@ body.home .vid{
   position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;display:block;
   opacity:0;transition:opacity .85s cubic-bezier(.22,.61,.36,1);
-  transform:translateZ(0);
+  /* 切勿给 <video> 加 transform / will-change / filter：部分 Android Chrome
+     会把视频提升为独立合成层后只渲染第一帧，真机上表现为「画面静止」。
+     滚动动画需要的合成优化放在父层 .screen，且只用布局属性。 */
 }
 body.home .vid.on{opacity:1}
 
