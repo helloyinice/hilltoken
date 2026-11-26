@@ -52,8 +52,31 @@
   }
   syncSources();
 
-  var vi = 0, vidsPaused = false, switchLock = false;
+  var vi = 0, vidsPaused = false;
   var wantPlay = null, retryTimers = [], lastCt = -1, stalled = 0;
+
+  // 轮播不能只依赖 timeupdate：Android Chrome 在省电 / 硬解状态下会节流甚至
+  // 漏发该事件，视频 ended 后 paused=true，而旧看门狗遇到 paused 直接 return，
+  // 结果就是「第一段播完停住、四段不轮」。改为三重保险：
+  //   1) 300ms 轮询直接读 currentTime（完全不依赖媒体事件）
+  //   2) ended 事件（浏览器一定会发）
+  //   3) 单段超时（duration/ended 都失效时也能轮起来）
+  // 切换节流改用时间戳，不用 setTimeout 解锁——后台定时器被延迟时不会把锁卡死。
+  var lastSwitch = 0, segStart = Date.now();
+  var SWITCH_GAP = 400, SEG_MAX_MS = 12000;
+
+  function nearEnd(v) {
+    if (!v) return false;
+    if (v.ended) return true;
+    var d = v.duration;
+    return isFinite(d) && d > 0 && v.currentTime >= d - 0.85;
+  }
+  function advance() {
+    var now = Date.now();
+    if (now - lastSwitch < SWITCH_GAP) return;
+    if (vidsPaused || document.body.classList.contains('flat')) return;
+    activate((vi + 1) % vids.length);
+  }
 
   function clearRetries() {
     retryTimers.forEach(function (t) { clearTimeout(t); });
@@ -105,12 +128,24 @@
     document.addEventListener('click', onGesture, true);
   }
 
-  // 看门狗：paused=false 但 currentTime 长时间不动 = 解码卡在某一帧。
-  // 先轻推播放位置，仍不动就重载当前段，避免整屏永远停在一张静帧。
+  // 主保险：直接读 currentTime 推进轮播，不依赖 timeupdate / ended 是否派发
   setInterval(function () {
     if (document.hidden || vidsPaused || document.body.classList.contains('flat')) return;
     var v = vids[vi];
-    if (!v || v.paused || v.readyState < 2) return;
+    if (!v) return;
+    if (nearEnd(v) || Date.now() - segStart > SEG_MAX_MS) advance();
+  }, 300);
+
+  // 看门狗：paused=false 但 currentTime 长时间不动 = 解码卡在某一帧。
+  // 先轻推播放位置，仍不动就重载当前段，避免整屏永远停在一张静帧。
+  // 注意 ended / paused 不能在这里直接 return——那正是「播完停住」的成因。
+  setInterval(function () {
+    if (document.hidden || vidsPaused || document.body.classList.contains('flat')) return;
+    var v = vids[vi];
+    if (!v) return;
+    if (nearEnd(v) || Date.now() - segStart > SEG_MAX_MS) { advance(); return; }
+    if (v.paused) { playVid(v); return; }   // 播放中被意外暂停，补播
+    if (v.readyState < 2) return;
     if (v.currentTime === lastCt) {
       stalled++;
       if (stalled === 1) { try { v.currentTime = v.currentTime + 0.02; } catch (err) {} }
@@ -312,7 +347,7 @@
     if (n !== narrowMode) {
       narrowMode = n;
       syncSources();            // 改 <source> 后 load()，不再用固定 60ms 赌加载完成
-      lastCt = -1; stalled = 0;
+      lastCt = -1; stalled = 0; segStart = Date.now();
       playVid(vids[vi]);        // 重试调度会覆盖 load() 的 AbortError 竞态
     }
     if (fitMode()) return;
@@ -347,33 +382,36 @@
 
   // 四段山川：一段播完交叉淡入下一段，无限循环
   function activate(i) {
-    if (switchLock) return;
-    switchLock = true;
     vi = i;
+    lastSwitch = Date.now();
+    segStart = Date.now();
     clearRetries();
     lastCt = -1; stalled = 0;
     vids.forEach(function (v, k) {
       var on = k === i;
       v.classList.toggle('on', on);
-      // 只播当前段：其余段暂停，省解码开销，也避免多段 timeupdate 抢切换
+      // 只播当前段：其余段暂停，省解码开销，也避免多段事件抢切换
       if (!on && !v.paused) { try { v.pause(); } catch (err) {} }
     });
     var v = vids[i];
     // load() 之后 readyState=0 时赋值会抛错，归零交给 loadedmetadata
     try { if (v.readyState >= 1) v.currentTime = 0; } catch (err) {}
     playVid(v);
-    setTimeout(function () { switchLock = false; }, 350);
   }
 
   vids.forEach(function (v, i) {
     v.addEventListener('loadedmetadata', function () {
       if (i === vi) { try { v.currentTime = 0; } catch (err) {} }
     });
+    // timeupdate 只作为快速通道；真机上被节流也不影响轮询兜底
     v.addEventListener('timeupdate', function () {
-      if (i !== vi || vidsPaused || switchLock) return;
-      if (v.duration && v.currentTime > v.duration - 0.9) {
-        activate((vi + 1) % vids.length);
-      }
+      if (i !== vi || vidsPaused) return;
+      if (nearEnd(v)) advance();
+    });
+    // ended 一定会触发，是 timeupdate 漏发时最可靠的信号
+    v.addEventListener('ended', function () {
+      if (i !== vi || vidsPaused) return;
+      advance();
     });
   });
 
