@@ -23,7 +23,14 @@
   // 竖屏用竖版素材（9:16），横屏用横版；只在跨断点时重载
   function syncSources() {
     var dir = narrowMode ? '/media/hills/v/' : '/media/hills/';
+    // 竖版素材已重新封装（SAR 归 1:1、去掉 tmcd 轨），文件名没变，
+    // 必须换 URL 才能绕开浏览器/CDN 的 immutable 长缓存。
+    var ver = narrowMode ? '?v=20261126b' : '';
     vids.forEach(function (v) {
+      // Chrome 在 JS 重写 <source> 并 load() 后可能丢掉 muted 状态；
+      // 一旦 unmuted，自动播放会被策略拦下，画面就永远停在封面。
+      v.muted = true;
+      v.playsInline = true;
       var s = v.querySelector('source');
       if (s) {
         var base = s.getAttribute('data-src');
@@ -31,7 +38,7 @@
         if (!base) return;
         var url = base.split('/media/hills/')[1];
         if (!url) return;
-        url = dir + url;
+        url = dir + url + ver;
         if (s.getAttribute('src') !== url) { s.setAttribute('src', url); v.load(); }
       }
       var po = v.getAttribute('data-poster');
@@ -46,6 +53,44 @@
   syncSources();
 
   var vi = 0, vidsPaused = false;
+
+  // 统一播放入口。原来直接 v.play().catch(()=>{}) 会把 Chrome 的
+  // NotAllowedError / AbortError 静默吞掉，视频便永久停在 poster。
+  function playVid(v) {
+    if (!v) return;
+    v.muted = true;
+    v.playsInline = true;
+    var p;
+    try { p = v.play(); } catch (err) { p = Promise.reject(err); }
+    if (p && p.catch) p.catch(function () {
+      var retry = function () {
+        v.removeEventListener('loadeddata', retry);
+        v.removeEventListener('canplay', retry);
+        if (!vidsPaused && !document.body.classList.contains('flat')) {
+          v.muted = true;
+          v.play().catch(function () {});
+        }
+      };
+      v.addEventListener('loadeddata', retry);
+      v.addEventListener('canplay', retry);
+    });
+  }
+
+  // 兜底：任何一次真实手势都再试一次（应对严格的自动播放策略）
+  function armGestureRetry() {
+    if (armGestureRetry.bound) return;
+    armGestureRetry.bound = true;
+    var onGesture = function () {
+      document.removeEventListener('touchend', onGesture, true);
+      document.removeEventListener('pointerdown', onGesture, true);
+      document.removeEventListener('click', onGesture, true);
+      armGestureRetry.bound = false;
+      if (!vidsPaused && !document.body.classList.contains('flat')) playVid(vids[vi]);
+    };
+    document.addEventListener('touchend', onGesture, true);
+    document.addEventListener('pointerdown', onGesture, true);
+    document.addEventListener('click', onGesture, true);
+  }
 
   var LEN = ridge.getTotalLength();
   ridge.style.strokeDasharray = LEN;
@@ -173,7 +218,7 @@
     if (shouldPause !== vidsPaused) {
       vidsPaused = shouldPause;
       if (shouldPause) vids.forEach(function (v) { v.pause(); });
-      else vids[vi].play().catch(function () {});
+      else playVid(vids[vi]);
     }
   }
 
@@ -185,9 +230,17 @@
   // 文案已接近一屏高时 sticky 会失灵：直接降级为落定版式。
   // 必须先摘掉 flat 再量，否则降级态本身更矮，会造成来回翻转。
   function fitMode() {
+    var wasFlat = document.body.classList.contains('flat');
     document.body.classList.remove('flat');
     var h = stickyEl.offsetHeight;
-    var flat = h > innerHeight - 8;
+    // Chrome 的地址栏 / 底部工具栏会把 innerHeight 压低约 100px；若只拿
+    // innerHeight 比较，正常手机会被误判成「矮视口」，进而 display:none
+    // 整个视频层——这正是移动端 Chrome 看不到视频的原因。用屏幕高度兜底，
+    // 并给窄屏的竖向叙事留出余量；再加一点滞后避免地址栏收缩时反复翻转。
+    var vh = Math.max(innerHeight, (screen.height || 0) * .9, 560);
+    var slack = innerWidth < BP ? 140 : 8;
+    var flat = h > vh + slack;
+    if (wasFlat && h > vh + slack - 40) flat = true;
     document.body.classList.toggle('flat', flat);
     return flat;
   }
@@ -215,7 +268,11 @@
   window.addEventListener('scroll', kick, { passive: true });
   window.addEventListener('resize', function () {
     var n = innerWidth < BP;
-    if (n !== narrowMode) { narrowMode = n; syncSources(); activate(vi); }
+    if (n !== narrowMode) {
+      narrowMode = n;
+      syncSources();
+      setTimeout(function () { activate(vi); }, 60);
+    }
     if (fitMode()) return;
     target = progress(); cur = target; render(cur);
   });
@@ -223,7 +280,10 @@
   // 字体加载完高度会变，重新判定一次降级
   window.addEventListener('load', function () {
     if (fitMode()) vids.forEach(function (v) { v.pause(); });
-    else { target = cur = progress(); render(cur); }
+    else {
+      target = cur = progress(); render(cur);
+      if (vids[vi].paused) playVid(vids[vi]);
+    }
   });
 
   if (fitMode()) { vids.forEach(function (v) { v.pause(); }); return; }
@@ -246,9 +306,10 @@
     vi = i;
     vids.forEach(function (v, k) { v.classList.toggle('on', k === i); });
     var v = vids[i];
-    if (v.readyState === 0) v.load();
+    // syncSources() 已经 load()；这里再 load() 会打断刚发起的 play()，
+    // 在 Chrome 上表现为「视频不动」，因此不再重复加载。
     try { v.currentTime = 0; } catch (err) {}
-    v.play().catch(function () {});
+    playVid(v);
   }
 
   vids.forEach(function (v, i) {
@@ -261,4 +322,9 @@
   });
 
   activate(0);
+  armGestureRetry();
+  // 首屏若因自动播放策略被拒，等资源就绪后再补一次
+  setTimeout(function () {
+    if (!vidsPaused && !document.body.classList.contains('flat') && vids[vi].paused) playVid(vids[vi]);
+  }, 1200);
 })();
