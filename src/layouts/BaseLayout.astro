@@ -62,6 +62,26 @@ const articleLd = article
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script is:inline>
+  /* 折叠屏 / 平板：Chrome「桌面版网站」只把 UA 换成桌面字符串，并不保证
+     把 CSS 视口抬到 900px 以上。本站响应式只看视口宽度，所以展开内屏横屏
+     （约 800px）即便勾选桌面版仍会渲染手机版。识别到「桌面版请求」时把
+     layout viewport 抬到 1024px 并等比缩放，让全站媒体查询与首屏脚本
+     自然走桌面分支；已经是桌面视口则不干预。
+     手动兜底：网址后加 ?desktop=1（个别浏览器不改 UA 时可用）。 */
+  (function () {
+    try {
+      var desktopUA = !/(Android|iPhone|iPad|iPod|Mobile|Windows Phone)/i.test(navigator.userAgent);
+      var forced = /[?&]desktop=1(?:&|$)/.test(location.search);
+      if (!(desktopUA || forced) || window.innerWidth >= 940) return;
+      var mv = document.querySelector('meta[name="viewport"]');
+      var sw = (window.screen && screen.width) || window.innerWidth;
+      var target = 1024, scale = Math.min(1, sw / target);
+      if (!mv || !scale || !isFinite(scale)) return;
+      mv.setAttribute('content', 'width=' + target + ', initial-scale=' + scale.toFixed(4));
+    } catch (e) {}
+  })();
+  </script>
   <title>{title}</title>
 
   {/* favicon 声明放在 head 最前面、任何 <script> 之前。
