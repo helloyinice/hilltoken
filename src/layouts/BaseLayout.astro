@@ -63,22 +63,101 @@ const articleLd = article
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script is:inline>
-  /* 折叠屏 / 平板：Chrome「桌面版网站」只把 UA 换成桌面字符串，并不保证
-     把 CSS 视口抬到 900px 以上。本站响应式只看视口宽度，所以展开内屏横屏
-     （约 800px）即便勾选桌面版仍会渲染手机版。识别到「桌面版请求」时把
-     layout viewport 抬到 1024px 并等比缩放，让全站媒体查询与首屏脚本
-     自然走桌面分支；已经是桌面视口则不干预。
-     手动兜底：网址后加 ?desktop=1（个别浏览器不改 UA 时可用）。 */
+  /* 折叠屏 / 平板：让「桌面版」这个意图真正落到布局上。
+     本站响应式只看视口宽度（900 断点），而 Chrome「桌面版网站」在各 ROM 上
+     行为不一致：有的换 UA，有的保留 Android 字样只改默认宽度（还会被页面
+     meta 的 width=device-width 覆盖）。只靠 UA 判断会漏，所以用三个独立信号：
+       1) navigator.userAgentData.mobile === false（桌面版模式会置 false）
+       2) UA 里没有 Mobile / iPhone / iPad（不再排除 Android——桌面版模式可能保留）
+       3) 设备本身够宽：横屏、短边 ≥700 且长边 <1280（折叠屏内屏、小平板）
+     命中且布局宽度不足 940 时，把 layout viewport 抬到 1024 并等比缩放，
+     全站媒体查询与首屏脚本自然走桌面分支；已是桌面视口则不干预。
+     折叠屏展开内屏时页面通常不重新加载，只触发 resize，所以判断做成可重入：
+     每次尺寸变化重新评估，不再需要桌面版时把 viewport 还原。
+     开关：?desktop=1 强制桌面版，?mobile=1 强制手机版，选择记进 localStorage。
+     诊断：?dk=1 会在右下角打印实际生效的参数。 */
   (function () {
     try {
-      var desktopUA = !/(Android|iPhone|iPad|iPod|Mobile|Windows Phone)/i.test(navigator.userAgent);
-      var forced = /[?&]desktop=1(?:&|$)/.test(location.search);
-      if (!(desktopUA || forced) || window.innerWidth >= 940) return;
       var mv = document.querySelector('meta[name="viewport"]');
-      var sw = (window.screen && screen.width) || window.innerWidth;
-      var target = 1024, scale = Math.min(1, sw / target);
-      if (!mv || !scale || !isFinite(scale)) return;
-      mv.setAttribute('content', 'width=' + target + ', initial-scale=' + scale.toFixed(4));
+      if (!mv) return;
+      var TARGET = 1024, BP = 940;
+      var q = location.search, pref = null;
+      try { pref = localStorage.getItem('ht-view'); } catch (e) {}
+      if (/[?&]desktop=1(?:&|$)/.test(q)) pref = 'desktop';
+      else if (/[?&]mobile=1(?:&|$)/.test(q)) pref = 'mobile';
+      if (pref) { try { localStorage.setItem('ht-view', pref); } catch (e) {} }
+
+      var ua = navigator.userAgent || '';
+      var uad = navigator.userAgentData;
+
+      function uaDesktop() {
+        return (uad && uad.mobile === false) ? true
+          : !/Mobile|iPhone|iPad|iPod|Windows Phone/i.test(ua);
+      }
+      function geoDesktop() {
+        var sw = screen.width || innerWidth || 0, sh = screen.height || innerHeight || 0;
+        var shortSide = Math.min(sw, sh), longSide = Math.max(sw, sh);
+        return innerWidth > innerHeight && shortSide >= 700 && longSide < 1280;
+      }
+      function want() {
+        if (pref === 'mobile') return false;
+        if (pref === 'desktop') return true;
+        return uaDesktop() || geoDesktop();
+      }
+      function availWidth() {
+        var sw = screen.width || innerWidth || 0, sh = screen.height || innerHeight || 0;
+        var longSide = Math.max(sw, sh), shortSide = Math.min(sw, sh);
+        var w = innerWidth || shortSide;
+        return w > longSide ? shortSide : w;
+      }
+      function marked() { return document.documentElement.getAttribute('data-dk') === '1'; }
+
+      function apply() {
+        if (!want()) {
+          if (marked()) {
+            mv.setAttribute('content', 'width=device-width, initial-scale=1');
+            document.documentElement.removeAttribute('data-dk');
+          }
+          return;
+        }
+        var w = availWidth();
+        if (w >= BP) return;
+        var scale = Math.min(1, w / TARGET);
+        if (!(scale > 0) || !isFinite(scale)) return;
+        var next = 'width=' + TARGET + ', initial-scale=' + scale.toFixed(4);
+        if (mv.getAttribute('content') !== next) {
+          mv.setAttribute('content', next);
+          document.documentElement.setAttribute('data-dk', '1');
+        }
+      }
+
+      apply();
+
+      var timer = null;
+      function resync() {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(apply, 350);
+      }
+      window.addEventListener('resize', resync, { passive: true });
+      window.addEventListener('orientationchange', resync);
+
+      if (/[?&]dk=1(?:&|$)/.test(q)) {
+        document.addEventListener('DOMContentLoaded', function () {
+          var d = document.createElement('pre');
+          d.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:9999;margin:0;padding:8px 10px;' +
+            'background:#111;color:#7dff9a;font:11px/1.5 ui-monospace,SFMono-Regular,monospace;' +
+            'white-space:pre-wrap;max-width:92vw;border-radius:6px;opacity:.94';
+          d.textContent = 'mode=' + (marked() ? 'desktop-forced' : 'native')
+            + '\ninnerW=' + innerWidth + ' h=' + innerHeight
+            + ' mq900=' + matchMedia('(max-width:900px)').matches
+            + '\nmeta=' + mv.getAttribute('content')
+            + '\nscreen=' + screen.width + 'x' + screen.height
+            + ' uadMobile=' + (uad ? uad.mobile : 'n/a')
+            + '\nwant=' + want() + ' ua=' + uaDesktop() + ' geo=' + geoDesktop()
+            + '\nua=' + ua.slice(0, 100);
+          document.body.appendChild(d);
+        });
+      }
     } catch (e) {}
   })();
   </script>
@@ -101,7 +180,7 @@ const articleLd = article
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="generator" content="Astro" />
   <link rel="stylesheet" href="/site.css?v=20261125a" />
-  {isHome && <link rel="stylesheet" href="/hero-scroll.css?v=20261125b" />}
+  {isHome && <link rel="stylesheet" href="/hero-scroll.css?v=20261126b" />}
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
   <link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml" />
@@ -131,6 +210,6 @@ const articleLd = article
 <body class={isHome ? 'home' : ''}>
   <slot />
   <script is:inline src="/mast-menu.js?v=20261125a"></script>
-  {isHome && <script is:inline src="/hero-scroll.js?v=20261126a"></script>}
+  {isHome && <script is:inline src="/hero-scroll.js?v=20261126c"></script>}
 </body>
 </html>

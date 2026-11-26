@@ -165,6 +165,25 @@ body.home.static .sticky{position:relative}
   body.home .hero-copy .hero-intro p{font-size:13.5px}
   body.home .hero-copy .hero-kicker{font-size:18px!important}
 }
+/* ---------------- 矮视口桌面版：收紧首屏文案 ----------------
+ * 折叠屏内屏横屏（1024×721 这类）与笔记本小窗口：桌面文案按常规尺寸会超过
+ * 一屏高，触发 flat 降级把视频层隐藏。这里把标题、留白、正文一起收紧，
+ * 让内容落在一屏内，保留「视频收右 + 落定 Logo」的滚动叙事。 */
+@media (min-width:901px) and (max-height:840px){
+  /* 固定在顶部的导航约 160px，留白必须让过它，否则 eyebrow 会被压在导航下沿 */
+  body.home .hero-copy{padding-top:clamp(176px,23vh,208px)}
+  body.home .hero-copy .hero-title{font-size:clamp(2.6rem,5.9vw,4.4rem);line-height:1.14}
+  body.home .hero-copy .hero-rule{margin-top:20px}
+  body.home .hero-copy .hero-lower{padding-top:14px}
+  body.home .hero-copy .hero-kicker{font-size:16px!important;margin-bottom:8px!important}
+  body.home .hero-copy .hero-intro p{font-size:13px;line-height:1.58}
+  body.home .hero-copy .hero-actions{margin:12px 0 10px}
+  body.home .hero-copy .hero-meta{display:none}
+  /* 矮视口下右侧落定 Logo 会与这一列数字压在一起，收起装饰列 */
+  body.home .hero-copy .stats{display:none}
+  body.home .hero-copy .stat{padding-bottom:6px}
+  body.home .hero-copy .stat-num{font-size:1.9rem}
+}
 /* ---------------- 手机端：竖向叙事 ----------------
  * 竖屏没有横向余量做「左文右图」，改成：整屏视频 → 向上收成 16:9 横幅
  * 停在导航下方 → 文案固定从横幅下方渐显。文案位置由脚本写入 --copytop，

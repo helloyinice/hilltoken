@@ -240,7 +240,9 @@
     var vh = Math.max(innerHeight, (screen.height || 0) * .9, 560);
     var slack = innerWidth < BP ? 140 : 8;
     var flat = h > vh + slack;
-    if (wasFlat && h > vh + slack - 40) flat = true;
+    // 滞后只用于「已经降级、且内容确实还超出视口」的情况；
+    // 内容装得下（h <= vh）必须立刻恢复，否则滞后阈值会把降级态锁死。
+    if (wasFlat && h > vh + slack - 40 && h > vh) flat = true;
     document.body.classList.toggle('flat', flat);
     return flat;
   }
