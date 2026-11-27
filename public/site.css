@@ -296,3 +296,47 @@
     .mast-toggle-text{display:none}
     .mast-toggle{padding-left:14px}
   }
+
+
+  /* WORK-FIGURE — 02 / Work 交互图解 */
+  .work-figure{border:1px solid var(--rule);background:var(--paper-2);margin-bottom:26px}
+  .fig-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 16px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
+  .fig-which b{color:var(--signal-text);font-weight:600}
+  .fig-tip{font-family:var(--sans);font-size:12px;letter-spacing:0;text-transform:none}
+  .fig-stage{position:relative;padding:10px 14px 0}
+  .fig-svg{display:none;width:100%;height:auto}
+  .fig-svg.is-on{display:block;animation:figIn .3s var(--ease)}
+  @keyframes figIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+  .fig-note{margin:0;padding:10px 16px 14px;font-size:13px;line-height:1.6;color:var(--ink-2);min-height:2.7em;border-top:1px dashed var(--rule)}
+  .fig-note b{color:var(--signal-text);font-family:var(--mono);font-size:11px;letter-spacing:.08em;margin-right:10px}
+  .fk-box{fill:var(--white);stroke:var(--ink-3);stroke-width:1.2}
+  .fk-line{fill:none;stroke:var(--ink-3);stroke-width:1.2}
+  .fk-dash{fill:none;stroke:var(--ink-3);stroke-width:1;stroke-dasharray:4 4;opacity:.7}
+  .fk-head{fill:var(--ink-3)}
+  .fk-seal{fill:var(--signal)}
+  .fk-dot{fill:var(--signal-soft);stroke:var(--signal);stroke-width:1.2}
+  .fk-txt{font-family:var(--sans);font-size:12px;fill:var(--ink-2)}
+  .fk-small{font-family:var(--mono);font-size:10px;fill:var(--ink-3);letter-spacing:.04em}
+  .fk-node{cursor:pointer;outline:none}
+  .fk-node .fk-box,.fk-node .fk-line,.fk-node .fk-dash,.fk-node .fk-dot,.fk-node .fk-txt{transition:stroke .18s var(--ease),fill .18s var(--ease)}
+  .fk-node:hover .fk-box,.fk-node.is-lit .fk-box,.fk-node:focus-visible .fk-box{fill:var(--signal-soft);stroke:var(--signal)}
+  .fk-node:hover .fk-line,.fk-node.is-lit .fk-line,.fk-node:hover .fk-dash,.fk-node.is-lit .fk-dash{stroke:var(--signal)}
+  .fk-node:hover .fk-txt,.fk-node.is-lit .fk-txt,.fk-node:focus-visible .fk-txt{fill:var(--signal-text)}
+  .fk-node:hover .fk-dot,.fk-node.is-lit .fk-dot{fill:var(--signal)}
+  .cards .card{cursor:pointer;transition:border-color .16s var(--ease),background .16s var(--ease)}
+  .card.is-active{border-top-color:var(--signal);background:linear-gradient(to bottom,rgba(255,75,24,.05),transparent 62%)}
+  .card:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){.fig-svg.is-on{animation:none}}
+  @media(max-width:600px){
+    .fig-stage{overflow-x:auto}
+    .fig-svg{min-width:600px}
+    .fig-tip{font-size:11px}
+  }
+  @media print{
+    .work-figure{border-color:#999;background:#fff;break-inside:avoid}
+    .fig-bar,.fig-tip,.fig-note{display:none}
+    .fig-stage{display:block;padding:6px 0}
+    .fig-svg{display:block!important;min-width:0;animation:none!important;margin-bottom:4px}
+    .cards .card{background:none}
+    .fk-box{fill:#fff;stroke:#333}
+  }

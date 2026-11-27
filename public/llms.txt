@@ -12,6 +12,8 @@
 ## 内容入口
 - 关于这个名字：https://hilltoken.net/#about
 - 在做的事：https://hilltoken.net/#work
+  三个位置留给在读、在看、在写：读规则和合同，看算力调度与供给，写计费、结算和第一单怎么跑。
+  #work 区另配三张可切换的示意图，点图上的小块会补一句说明。
 - 文章与记录：https://hilltoken.net/#notes
 - 友情链接：https://hilltoken.net/#friends
 - 给 AI Agent 的说明：https://hilltoken.net/#for-agents

@@ -62,7 +62,7 @@ const heroAfter = site.heroTitleAfter.split('\n');
                   <a class="btn btn-dark" href="#about">名字的来历 →</a>
                   <a class="btn btn-ghost" href="#notes">文章与记录 →</a>
                 </div>
-                <p class="hero-meta">这个网址由站主本人维护，是关于 HillToken｜山外有词 的第一手信息来源 · 最后更新 <time datetime="2026-11-23">{site.lastUpdated}</time></p>
+                <p class="hero-meta">这个网址由站主本人维护，是关于 HillToken｜山外有词 的第一手信息来源 · 最后更新 <time datetime="2026-11-27">{site.lastUpdated}</time></p>
               </div>
               <div class="stats" aria-label="刊名速写">
                 {site.stats.map((s) => (
@@ -107,14 +107,112 @@ const heroAfter = site.heroTitleAfter.split('\n');
       <div class="wrap">
         <div class="sec-head">
           <div class="sec-head-left"><span class="sec-no">02 / Work</span><h2 id="work-h">在做的事</h2></div>
-          <span class="sec-aside">在做、在读、在攒的，都放这里</span>
+          <span class="sec-aside">点一下卡片，看对应的那张图</span>
         </div>
-        <div class="cards">
-          {site.picks.map((p) => (
-            <article class="card"><div class="card-top"><span>{p.no}</span><span>Pick</span></div><h3>{p.title}</h3><p>{p.text}</p></article>
+        <div class="work-figure" id="work-figure">
+          <div class="fig-bar">
+            <span class="fig-which"><b id="fig-no">01</b> / <span id="fig-name">在读</span></span>
+            <span class="fig-tip">图里的小块可以点</span>
+          </div>
+          <div class="fig-stage">
+                        <svg class="fig-svg is-on" data-fig="0" viewBox="0 0 680 180" role="img" aria-label="在读：一台设备拆成时间片，变成一笔笔账，最后落到一份合同">
+  <g class="fk-node" data-node="device" data-label="设备" data-note="一台机器，先拆成能按小时、按用量卖的一格格。" tabindex="0" role="button" aria-label="设备：点开说明">
+    <text class="fk-small" x="24" y="20">01 / 拆成时间片</text>
+    <rect class="fk-box" x="24" y="34" width="140" height="88" rx="2"/>
+    <path class="fk-line" d="M59 34V122 M94 34V122 M129 34V122 M24 63H164 M24 92H164"/>
+    <text class="fk-txt" x="24" y="146">一台设备</text>
+  </g>
+  <path class="fk-line" d="M172 78H202"/><polygon class="fk-head" points="202,73 210,78 202,83"/>
+  <g class="fk-node" data-node="bill" data-label="账单" data-note="拆完才有一笔笔账；按什么算钱，得先定下来。" tabindex="0" role="button" aria-label="账单：点开说明">
+    <text class="fk-small" x="216" y="20">02 / 按小时、按用量</text>
+    <rect class="fk-box" x="216" y="34" width="150" height="26" rx="2"/>
+    <rect class="fk-box" x="216" y="65" width="150" height="26" rx="2"/>
+    <rect class="fk-box" x="216" y="96" width="150" height="26" rx="2"/>
+    <path class="fk-line" d="M228 45H262 M228 53H248 M228 76H262 M228 84H248 M228 107H262 M228 115H248"/>
+    <text class="fk-txt" x="216" y="146">一笔笔账</text>
+  </g>
+  <path class="fk-line" d="M374 78H404"/><polygon class="fk-head" points="404,73 412,78 404,83"/>
+  <g class="fk-node" data-node="contract" data-label="合同" data-note="账怎么算、合同怎么写，两边才都敢签字。" tabindex="0" role="button" aria-label="合同：点开说明">
+    <text class="fk-small" x="420" y="20">03 / 两边敢签字</text>
+    <rect class="fk-box" x="420" y="34" width="156" height="88" rx="2"/>
+    <path class="fk-line" d="M434 54H562 M434 70H562 M434 86H540 M434 102H556"/>
+    <rect class="fk-seal" x="548" y="104" width="14" height="14"/>
+    <text class="fk-txt" x="420" y="146">一份合同</text>
+  </g>
+  <text class="fk-small" x="592" y="72">读的是</text>
+  <text class="fk-txt" x="592" y="94">账怎么算</text>
+</svg>
+            <svg class="fig-svg" data-fig="1" viewBox="0 0 680 180" role="img" aria-label="在看：不同型号的设备汇进同一个池子，再统一派活、算钱">
+  <g class="fk-node" data-node="supply" data-label="供给" data-note="先看谁有机器闲着，谁能长期稳定供。" tabindex="0" role="button" aria-label="供给：点开说明">
+    <text class="fk-small" x="24" y="20">01 / 谁有机器</text>
+    <rect class="fk-box" x="24" y="36" width="48" height="24" rx="2"/>
+    <rect class="fk-box" x="24" y="70" width="66" height="24" rx="2"/>
+    <rect class="fk-box" x="24" y="104" width="56" height="24" rx="2"/>
+    <text class="fk-small" x="32" y="52">A</text><text class="fk-small" x="32" y="86">B</text><text class="fk-small" x="32" y="120">C</text>
+    <text class="fk-txt" x="24" y="150">不同型号</text>
+  </g>
+  <path class="fk-line" d="M100 82H132"/><polygon class="fk-head" points="132,77 140,82 132,87"/>
+  <g class="fk-node" data-node="pool" data-label="池子" data-note="型号不一样，得能丢进同一个池子一起派活。" tabindex="0" role="button" aria-label="池子：点开说明">
+    <text class="fk-small" x="148" y="20">02 / 一起派活</text>
+    <rect class="fk-box" x="148" y="34" width="198" height="100" rx="10"/>
+    <path class="fk-dash" d="M214 34V134 M280 34V134 M148 67H346 M148 100H346"/>
+    <text class="fk-txt" x="148" y="150">同一个池子</text>
+  </g>
+  <path class="fk-line" d="M354 82H386"/><polygon class="fk-head" points="386,77 394,82 386,87"/>
+  <g class="fk-node" data-node="dispatch" data-label="派活" data-note="派完活还得算钱，账单长什么样也得看。" tabindex="0" role="button" aria-label="派活：点开说明">
+    <text class="fk-small" x="402" y="20">03 / 派活、算钱</text>
+    <rect class="fk-box" x="402" y="40" width="150" height="26" rx="2"/>
+    <rect class="fk-box" x="402" y="72" width="150" height="26" rx="2"/>
+    <rect class="fk-box" x="402" y="104" width="150" height="26" rx="2"/>
+    <path class="fk-line" d="M414 53H446 M414 85H446 M414 117H446"/>
+    <text class="fk-txt" x="402" y="150">派活、算钱</text>
+  </g>
+  <g class="fk-node" data-node="asset" data-label="设备谁出" data-note="还有谁肯先出设备——这行重的东西太多，得想办法做轻。" tabindex="0" role="button" aria-label="设备谁出：点开说明">
+    <circle class="fk-dot" cx="152" cy="166" r="4"/>
+    <text class="fk-small" x="164" y="170">还有：谁肯先出设备，谁能长期稳定供</text>
+  </g>
+  <text class="fk-small" x="572" y="72">看的是</text>
+  <text class="fk-txt" x="572" y="94">怎么把重的做轻</text>
+</svg>
+            <svg class="fig-svg" data-fig="2" viewBox="0 0 680 180" role="img" aria-label="在写：几条规则汇成一版规则，再落到第一单，从头跑一遍">
+  <g class="fk-node" data-node="unit" data-label="计量" data-note="算力按什么计量，这一条定不下来，后面都白搭。" tabindex="0" role="button" aria-label="计量：点开说明">
+    <text class="fk-small" x="24" y="20">01 / 先定口径</text>
+    <rect class="fk-box" x="24" y="34" width="180" height="26" rx="2"/>
+    <text class="fk-txt" x="34" y="52">算力按什么计量</text>
+  </g>
+  <g class="fk-node" data-node="bill2" data-label="账单" data-note="账单多久出一次、先充多少，写死了才好执行。" tabindex="0" role="button" aria-label="账单：点开说明">
+    <rect class="fk-box" x="24" y="70" width="180" height="26" rx="2"/>
+    <text class="fk-txt" x="34" y="88">账单、先充多少</text>
+  </g>
+  <g class="fk-node" data-node="liability" data-label="责任" data-note="设备坏了算谁的、一单亏了谁兜，也得先说清楚。" tabindex="0" role="button" aria-label="责任：点开说明">
+    <rect class="fk-box" x="24" y="106" width="180" height="26" rx="2"/>
+    <text class="fk-txt" x="34" y="124">坏了算谁的、亏了谁兜</text>
+  </g>
+  <path class="fk-line" d="M212 82H242"/><polygon class="fk-head" points="242,77 250,82 242,87"/>
+  <g class="fk-node" data-node="rules" data-label="一版规则" data-note="把这些写成一版规则，才算从想法落到纸上。" tabindex="0" role="button" aria-label="一版规则：点开说明">
+    <rect class="fk-box" x="258" y="44" width="150" height="88" rx="2"/>
+    <path class="fk-line" d="M272 66H394 M272 88H394 M272 110H356"/>
+    <text class="fk-txt" x="258" y="150">一版规则</text>
+  </g>
+  <path class="fk-line" d="M416 82H446"/><polygon class="fk-head" points="446,77 454,82 446,87"/>
+  <g class="fk-node" data-node="first" data-label="第一单" data-note="先找一个愿意试的客户，把流程从头跑到尾。" tabindex="0" role="button" aria-label="第一单：点开说明">
+    <text class="fk-small" x="462" y="20">02 / 跑一遍</text>
+    <path class="fk-dash" d="M462 88H540"/>
+    <circle class="fk-dot" cx="556" cy="88" r="14"/>
+    <text class="fk-txt" x="462" y="150">第一单</text>
+  </g>
+  <text class="fk-txt" x="590" y="84">先找一个</text>
+  <text class="fk-txt" x="590" y="104">愿意试的</text>
+</svg>
+          </div>
+          <p class="fig-note" id="fig-note">图里的小块可以点，点一下这里会补一句。</p>
+        </div>
+        <div class="cards" id="work-cards">
+          {site.picks.map((p, i) => (
+            <article class:list={['card', i === 0 && 'is-active']} data-fig={i} role="button" tabindex="0" aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`看${p.title}对应的图`}><div class="card-top"><span>{p.no}</span><span>Pick</span></div><h3>{p.title}</h3><p>{p.text}</p></article>
           ))}
         </div>
-        <p class="hint">这里留了三个位置；没有内容时，就空着。</p>
+        <p class="hint">三张图对应三段话；点卡片换图，点图上的小块，这里会补一句。</p>
       </div>
     </section>
 
@@ -170,4 +268,50 @@ const heroAfter = site.heroTitleAfter.split('\n');
   </main>
 
   <Footer note={site.footerNote} />
+<script id="work-fig-js">
+(function(){
+  var cards = [].slice.call(document.querySelectorAll('#work-cards .card'));
+  var figs  = [].slice.call(document.querySelectorAll('#work-figure .fig-svg'));
+  var noEl  = document.getElementById('fig-no');
+  var nameEl= document.getElementById('fig-name');
+  var noteEl= document.getElementById('fig-note');
+  if(!cards.length || !figs.length || !noteEl) return;
+  var labels = ['在读','在看','在写'];
+  var nos = ['01','02','03'];
+  var hint = '图里的小块可以点，点一下这里会补一句。';
+
+  function clearLit(){ figs.forEach(function(f){ [].slice.call(f.querySelectorAll('.fk-node')).forEach(function(n){ n.classList.remove('is-lit'); }); }); }
+  function lightNode(node){
+    clearLit();
+    if(!node) return;
+    node.classList.add('is-lit');
+    noteEl.innerHTML = '<b>' + (node.getAttribute('data-label') || '') + '</b>' + (node.getAttribute('data-note') || '');
+  }
+  function setActive(i, doFocus){
+    cards.forEach(function(c,j){ var on = (j===i); c.classList.toggle('is-active',on); c.setAttribute('aria-pressed',on?'true':'false'); });
+    figs.forEach(function(f,j){ f.classList.toggle('is-on', j===i); });
+    if(noEl) noEl.textContent = nos[i];
+    if(nameEl) nameEl.textContent = labels[i];
+    clearLit();
+    noteEl.textContent = hint;
+    if(doFocus) cards[i].focus();
+  }
+  cards.forEach(function(c,i){
+    c.addEventListener('click', function(){ setActive(i); });
+    c.addEventListener('mouseenter', function(){ if(window.matchMedia && window.matchMedia('(hover:hover)').matches) setActive(i); });
+    c.addEventListener('focus', function(){ setActive(i); });
+    c.addEventListener('keydown', function(e){
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); setActive(i); }
+      else if(e.key==='ArrowRight' || e.key==='ArrowDown'){ e.preventDefault(); setActive((i+1)%cards.length,true); }
+      else if(e.key==='ArrowLeft' || e.key==='ArrowUp'){ e.preventDefault(); setActive((i-1+cards.length)%cards.length,true); }
+    });
+  });
+  figs.forEach(function(f){
+    [].slice.call(f.querySelectorAll('.fk-node')).forEach(function(n){
+      n.addEventListener('click', function(e){ e.stopPropagation(); lightNode(n); });
+      n.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); e.stopPropagation(); lightNode(n); } });
+    });
+  });
+})();
+</script>
 </BaseLayout>
