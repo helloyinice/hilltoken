@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Infra 产业链全景 · 从一块芯片到一句话的工作流 | HillToken｜山外有词</title>
+<meta name="description" content="沿算力到 Token 再到智能体的价值链，拆解 AI 基础设施七层结构、利润流向与资本化浪潮；以硅基流动招股书拆解 Token 工厂的负毛利悖论，并回答 Token 贸易能否做、怎么做、红线在哪。">
+<meta name="theme-color" content="#f5f2ea">
+<style>
+:root{
+  --paper:#f5f2ea;--paper-2:#eeeae0;--white:#fffdf8;
+  --ink:#141414;--ink-2:#4a4a48;--ink-3:#7b7972;
+  --rule:rgba(20,20,20,.16);--rule-strong:#141414;
+  --signal:#ff4b18;--signal-text:#b8320d;--signal-soft:#f9dfd2;
+  --max:1240px;--gutter:clamp(20px,4vw,48px);
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --latin:"Iowan Old Style","Baskerville",Georgia,"Times New Roman",serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none;text-underline-offset:4px}
+a:hover{text-decoration:underline;text-decoration-thickness:1px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.mono{font-family:var(--mono)}
+.dot{display:inline-block;width:7px;height:7px;background:var(--signal);flex:none}
+::selection{background:var(--signal);color:#fff}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.mast{border-bottom:1px solid var(--rule)}
+.mast-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:22px 0 16px}
+.mast-brand{display:flex;align-items:center;gap:13px}
+.mast-logo{width:52px;height:52px;flex:none;display:block}
+.mast-logo:hover{text-decoration:none;opacity:.82}
+.mast-logo img{display:block;width:100%;height:100%}
+.mast-wordmark{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.2}
+.mast-wordmark span{font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--ink-3);letter-spacing:.12em;display:block;margin-top:4px;text-transform:uppercase}
+.mast-meta{text-align:right;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);line-height:1.7;text-transform:uppercase}
+.mast-nav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--rule);padding:12px 0}
+.mast-nav nav{display:flex;flex-wrap:wrap;gap:20px;font-size:13px;color:var(--ink-2)}
+.mast-nav a:hover{color:var(--signal-text);text-decoration:none}
+.hero{padding:clamp(38px,6vw,64px) 0 0}
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:20px;flex-wrap:wrap}
+.hero-title{font-family:var(--serif);font-size:clamp(2.3rem,6vw,4.4rem);font-weight:700;line-height:1.16;letter-spacing:-.01em;margin:0}
+.hero-title em{font-style:normal;color:var(--signal-text)}
+.hero-rule{height:2px;background:linear-gradient(to right,var(--signal) 0 64px,var(--rule-strong) 64px 100%);margin:26px 0 0}
+.hero-lower{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,5vw,72px);padding:28px 0 clamp(40px,5vw,60px)}
+.hero-intro p{color:var(--ink-2);font-size:15px;max-width:44em}
+.hero-intro p+p{margin-top:10px}
+.hero-kicker{font-family:var(--serif)!important;font-size:20px!important;color:var(--ink)!important;font-weight:700;margin-bottom:12px!important}
+.stats{display:flex;flex-direction:column;justify-content:center}
+.stat{display:grid;grid-template-columns:minmax(96px,.5fr) 1fr;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);padding:11px 0}
+.stat:last-child{border-bottom:0}
+.stat-num{font-family:var(--latin);font-size:clamp(1.7rem,3vw,2.6rem);line-height:1;letter-spacing:-.03em;color:var(--signal-text)}
+.stat-label{font-size:12.5px;color:var(--ink-3)}
+.sec{padding-bottom:clamp(44px,6vw,72px)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-top:2px solid var(--rule-strong);padding-top:15px;margin-bottom:26px;flex-wrap:wrap}
+.sec-head-left{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.sec-no{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--signal-text);text-transform:uppercase}
+.sec-head h2{font-family:var(--serif);font-size:clamp(1.35rem,2.4vw,1.85rem);font-weight:700;line-height:1.3;margin:0}
+.sec-aside{font-size:12.5px;color:var(--ink-3)}
+.prose{max-width:56em}
+.prose p{font-size:15.5px;color:var(--ink-2);margin:0 0 14px}
+.prose p strong{color:var(--ink)}
+.prose h3{font-family:var(--serif);font-size:1.15rem;font-weight:700;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--signal)}
+.lead{font-family:var(--serif);font-size:clamp(1.1rem,2vw,1.4rem);color:var(--ink)!important;line-height:1.6}
+.figure{border:1px solid var(--rule);background:var(--white);padding:16px 14px 10px;margin:20px 0 8px}
+.figure .chart{width:100%;height:auto;display:block}
+.fig-cap{font-size:12px;color:var(--ink-3);line-height:1.6;padding-top:10px;margin-top:8px;border-top:1px solid var(--rule)}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{border-top:2px solid var(--rule-strong);border-bottom:1px solid var(--rule);padding:16px 20px 20px 0;min-width:0}
+.card+.card{padding-left:20px;border-left:1px solid var(--rule)}
+.card-top{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--signal-text);text-transform:uppercase}
+.card h3{font-family:var(--serif);font-size:1.1rem;font-weight:700;margin:9px 0 7px;line-height:1.35}
+.card p{font-size:13px;color:var(--ink-2);line-height:1.65;margin:0}
+.versus{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);background:var(--white)}
+.vcol{padding:22px 24px}
+.vcol+.vcol{border-left:1px solid var(--rule)}
+.vtag{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal-text)}
+.vcol.calm .vtag{color:var(--ink-3)}
+.vcol h3{font-family:var(--serif);font-size:1.15rem;margin:8px 0 12px}
+.vcol ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-2)}
+.vcol li{margin-bottom:9px;line-height:1.6}
+.quote{border-left:3px solid var(--signal);background:var(--white);padding:16px 20px;font-family:var(--serif);font-size:1.02rem;color:var(--ink);margin:0 0 18px}
+.quote cite{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);font-style:normal;letter-spacing:.06em;margin-top:8px}
+.tbl-wrap{overflow-x:auto;margin:18px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+th{background:var(--ink);color:var(--paper);font-weight:600;text-align:left;padding:10px 12px;font-size:12px;letter-spacing:.02em;white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--rule);color:var(--ink-2);vertical-align:top;line-height:1.55}
+tbody tr:nth-child(even){background:rgba(20,20,20,.025)}
+td strong{color:var(--ink)}
+.map-note{font-size:12px;color:var(--ink-3);line-height:1.7;border-top:1px solid var(--rule);padding-top:10px;margin-top:14px}
+.foot{border-top:1px solid var(--rule);padding:18px 0 40px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+.foot a:hover{color:var(--signal-text)}
+@media(max-width:860px){.cards,.cards.three{grid-template-columns:1fr 1fr}.card+.card{padding-left:0;border-left:0}}
+@media(max-width:760px){
+  .hero-lower{grid-template-columns:1fr}
+  .cards,.cards.three{grid-template-columns:1fr}
+  .versus{grid-template-columns:1fr}
+  .vcol+.vcol{border-left:0;border-top:1px solid var(--rule)}
+}
+@media print{.mast-nav{display:none}body{background:#fff}}
+</style>
+<link rel="icon" href="../../assets/brand-kit/favicon/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="../../assets/brand-kit/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../../assets/brand-kit/favicon/apple-touch-icon-180.png">
+<link rel="canonical" href="https://hilltoken.net/notes/ai-infra-token-industry/">
+<link rel="describedby" href="/llms.txt">
+<link rel="alternate" type="application/rss+xml" title="HillToken｜山外有词的更新" href="/rss.xml">
+<meta property="og:site_name" content="HillToken｜山外有词">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hilltoken.net/notes/ai-infra-token-industry/">
+<meta property="og:image" content="https://hilltoken.net/assets/brand-kit/social/hilltoken-og-1200x630.png">
+<meta property="article:published_time" content="2026-11-27T13:30:00+08:00">
+</head>
+<body>
+<div class="wrap" id="top">
+ <header class="mast">
+  <div class="mast-top">
+   <div class="mast-brand">
+    <a class="mast-logo" href="/" aria-label="HillToken｜山外有词 · 返回首页"><img src="../../assets/brand-kit/logo/hilltoken-logo-square-paper.svg" alt="HillToken 方形米纸底字标" width="52" height="52"></a>
+    <div class="mast-wordmark">HillToken<span>山外有词 · 技术与观察</span></div>
+   </div>
+   <div class="mast-meta">Field Note / 024<br>AI Infrastructure · Industry Map</div>
+  </div>
+  <div class="mast-nav">
+    <nav><a href="#profit">01 / 利润流向</a><a href="#stack">02 / 七层全景</a><a href="#token">03 / Token 经济</a><a href="#capital">04 / 资本图谱</a><a href="#cases">05 / 公司样本</a><a href="#harness">06 / Harness 闭环</a><a href="#trade">07 / 贸易研判</a><a href="#blueprint">08 / 落地蓝图</a></nav>
+    <span class="mono" style="font-size:11px;letter-spacing:.1em;color:var(--ink-3)">COMPUTE → TOKEN → AGENT</span>
+  </div>
+ </header>
+
+ <section class="hero">
+  <div class="eyebrow"><span class="dot"></span>01 / AI Infrastructure</div>
+  <h1 class="hero-title">从一块芯片，<br>到一句话的<em>工作流</em></h1>
+  <div class="hero-rule"></div>
+  <div class="hero-lower">
+   <div class="hero-intro">
+    <p class="hero-kicker">一条产业链，三段生意：上游卖稀缺，中游卖规模，下游卖习惯。</p>
+    <p>沿着「算力 → Token → 智能体」的价值链，AI 基础设施被拆成七层。2026 年产业投资的全球大盘约 4,850 亿美元，但利润高度不均衡：芯片与光模块拿走最厚的一段，模型与 Token 工厂在价格战里爬坡，应用层的毛利从 3% 到 85% 极端分化。</p>
+    <p>本文以硅基流动港交所招股书为一手证据，拆解 Token 工厂的负毛利悖论，并把智能体工作台放进同一张闭环图里，最后回答一个具体问题：Token 贸易到底能不能做，红线在哪。</p>
+   </div>
+   <div class="stats">
+    <div class="stat"><span class="stat-num">$4,850<small>亿</small></span><span class="stat-label">2026E 全球 AI 硬件基建投资，同比 +38%</span></div>
+    <div class="stat"><span class="stat-num">−119%</span><span class="stat-label">硅基流动公有云业务毛损率（招股书 2025）</span></div>
+    <div class="stat"><span class="stat-num">2,426<small>万亿</small></span><span class="stat-label">2025 年中国词元调用量，同比 +1,602.6%</span></div>
+    <div class="stat"><span class="stat-num">22.1<small>pp</small></span><span class="stat-label">仅更换 Harness 带来的复杂任务通过率提升</span></div>
+   </div>
+  </div>
+ </section>
+
+ <section class="sec" id="profit">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">01 / Profit Gradient</span><h2>钱在哪一层沉淀</h2></div>
+   <span class="sec-aside">典型毛利率区间</span>
+  </div>
+  <div class="prose">
+   <p class="lead">理解这条链，三句话足够：上游卖稀缺、中游卖规模、下游卖习惯；重心正从训练转向推理；Token 工厂与 Agent Harness 是当下两端最热的资本与产品战场。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 900 300" role="img" aria-label="产业链各环节毛利率对比">
+      <text x="20" y="20" font-size="13" font-weight="700" fill="#141414">典型毛利率区间（%）</text>
+      <!-- axis: 0% at x=200, 90% at x=870 => 7.444px per % -->
+      <line x1="200" y1="40" x2="200" y2="278" stroke="rgba(20,20,20,.14)"/>
+      <g font-size="11" fill="#7b7972">
+        <line x1="200" y1="278" x2="870" y2="278" stroke="rgba(20,20,20,.18)"/>
+        <text x="200" y="294">0</text><text x="349" y="294">20</text><text x="498" y="294">40</text><text x="647" y="294">60</text><text x="796" y="294">80</text><text x="863" y="294">90</text>
+      </g>
+      <g font-size="12.5">
+        <!-- 芯片 55-75 -->
+        <text x="192" y="62" text-anchor="end" fill="#4a4a48" font-weight="600">算力芯片</text>
+        <rect x="609.4" y="50" width="148.9" height="17" rx="3" fill="#b8320d" opacity=".9"/>
+        <text x="766" y="63" fill="#b8320d" font-weight="700">55–75%</text>
+        <!-- 光模块 46-50 -->
+        <text x="192" y="96" text-anchor="end" fill="#4a4a48" font-weight="600">光模块</text>
+        <rect x="542.4" y="84" width="29.8" height="17" rx="3" fill="#7b7972" opacity=".9"/>
+        <text x="580" y="97" fill="#7b7972" font-weight="700">46–50%</text>
+        <!-- MaaS 50%+ -->
+        <text x="192" y="130" text-anchor="end" fill="#4a4a48" font-weight="600">MaaS 平台</text>
+        <rect x="572.2" y="118" width="223.3" height="17" rx="3" fill="#ff4b18" opacity=".55"/>
+        <text x="588" y="115" fill="#ff4b18" font-weight="700">理论 50%+（现实承压）</text>
+        <!-- 服务器 5-10 -->
+        <text x="192" y="164" text-anchor="end" fill="#4a4a48" font-weight="600">AI 服务器</text>
+        <rect x="237.2" y="152" width="37.2" height="17" rx="3" fill="#141414" opacity=".9"/>
+        <text x="282" y="165" fill="#141414" font-weight="700">5–10%</text>
+        <!-- 应用 3-85 -->
+        <text x="192" y="198" text-anchor="end" fill="#4a4a48" font-weight="600">AI 应用</text>
+        <rect x="222.3" y="186" width="610.4" height="17" rx="3" fill="#ff4b18" opacity=".55"/>
+        <text x="527" y="199" fill="#fffdf8" font-weight="700" text-anchor="middle">3%–85%（分化最剧烈）</text>
+        <!-- 独立Token工厂负毛利：0刻度左侧单独标注（左向三角 = 负向，长度示意） -->
+        <text x="140" y="232" text-anchor="end" fill="#4a4a48" font-weight="600">独立 Token 工厂</text>
+        <path d="M196 220 L152 228.5 L196 237 Z" fill="#ff4b18"/>
+        <text x="216" y="233" fill="#ff4b18" font-weight="700">硅基流动 2025 年 −24%（左向为负毛利，每卖 1 元倒贴 0.24 元）</text>
+      </g>
+      <g font-size="11" fill="#7b7972">
+        <text x="200" y="262">注：各口径不可直接相加；负毛利以左向箭头示意（非等比）；示意图用于呈现相对梯度</text>
+      </g>
+    </svg>
+   <figcaption class="fig-cap">图 01 · 产业链各环节典型毛利率区间。算力芯片 55–75%、光模块 46–50% 占据价值高点；独立 Token 工厂的负毛利以左向箭头示意（非等比）。纵轴口径不统一，仅用于呈现相对梯度。</figcaption>
+  </figure>
+  <div class="tbl-wrap"><table>
+   <thead><tr><th>环节</th><th>毛利区间</th><th>代表企业</th><th>2026 关键数据</th></tr></thead>
+   <tbody>
+    <tr><td><strong>算力芯片</strong></td><td>55–75%</td><td>英伟达、博通、寒武纪、海光</td><td>全球市场约 1,650 亿美元；HBM 自给率 &lt;5%</td></tr>
+    <tr><td><strong>光模块 / 网络</strong></td><td>46–50%</td><td>中际旭创、新易盛、天孚通信</td><td>中国光模块全球份额 60–65%</td></tr>
+    <tr><td><strong>MaaS 平台</strong></td><td>理论 50%+，现实承压</td><td>火山引擎、阿里云百炼、百度千帆</td><td>26H1 中国规模 106.3 亿元，同比 +889%</td></tr>
+    <tr><td><strong>AI 服务器</strong></td><td>5–10%</td><td>工业富联、浪潮信息、超微</td><td>工业富联约占全球 40%；存储已成第一成本项</td></tr>
+    <tr><td><strong>AI 应用</strong></td><td>3–85%</td><td>金山办公、WorkBuddy、Oinone</td><td>分化最剧烈：项目制净利率低至 3%，标准化订阅毛利达 84.9%</td></tr>
+   </tbody>
+  </table></div>
+  <p class="map-note">口径提醒：4,850 亿美元为纯 AI 硬件基建口径；四大云厂 7,200–7,450 亿美元 capex 为含土建与通用服务器的全口径；233/190 亿美元为 AI 服务器口径下的推理与训练支出。三套数字不可互相比较或相加。</p>
+ </section>
+
+ <section class="sec" id="stack">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">02 / Seven Layers</span><h2>七层产业链全景</h2></div>
+   <span class="sec-aside">从「卖铲子」到「卖工作流」</span>
+  </div>
+  <div class="prose">
+   <p>七层结构自上而下是：算力芯片 → AI 服务器 → 网络互联 → IDC / 智算 → 推理引擎与 Token 工厂 → MaaS → 应用与 Agent。三条主线贯穿全链：资本开支的融资化、训练向推理的重心迁移、国产非 GPU 路线的崛起。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 980 560" role="img" aria-label="AI Infra 七层产业链全景图">
+      <defs>
+        <linearGradient id="flow" x1="0" x2="1"><stop offset="0" stop-color="#b8320d"/><stop offset="1" stop-color="#ff4b18"/></linearGradient>
+        <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b7972"/></marker>
+      </defs>
+      <!-- title -->
+      <text x="20" y="24" font-size="13" font-weight="700" fill="#141414">价值流向：算力资源 → 可计量 Token → 智能体生产力</text>
+      <!-- 7 layers: each y, color, name, desc, companies -->
+      <g font-family="-apple-system,PingFang SC,sans-serif">
+        <!-- L1 -->
+        <g><rect x="20" y="40" width="620" height="62" rx="10" fill="#eeeae0" stroke="#b8320d"/>
+          <rect x="20" y="40" width="7" height="62" rx="3" fill="#b8320d"/>
+          <text x="40" y="64" font-size="14" font-weight="800" fill="#b8320d">① 算力芯片</text>
+          <text x="40" y="85" font-size="11" fill="#b8320d">GPU / ASIC / HBM · 全球 $1,650 亿 · 毛利率 55–75%</text>
+          <text x="420" y="62" font-size="11" fill="#4a4a48">英伟达 · AMD · 博通(ASIC)</text>
+          <text x="420" y="80" font-size="11" fill="#4a4a48">华为昇腾 · 寒武纪 · 海光 · 平头哥</text>
+          <text x="420" y="96" font-size="10" fill="#7b7972">中国：非 GPU 出货首超 GPU</text></g>
+        <!-- L2 -->
+        <g><rect x="20" y="110" width="620" height="62" rx="10" fill="#eeeae0" stroke="#141414"/>
+          <rect x="20" y="110" width="7" height="62" rx="3" fill="#141414"/>
+          <text x="40" y="134" font-size="14" font-weight="800" fill="#141414">② AI 服务器</text>
+          <text x="40" y="155" font-size="11" fill="#141414">整机集成 · 全球出货约 280 万台（+30%）</text>
+          <text x="420" y="132" font-size="11" fill="#4a4a48">工业富联(全球~40%) · 戴尔 · 超微</text>
+          <text x="420" y="150" font-size="11" fill="#4a4a48">浪潮信息 · 新华三 · 中科曙光 · 华为</text>
+          <text x="420" y="166" font-size="10" fill="#7b7972">存储已反超 GPU 成第一成本项</text></g>
+        <!-- L3 -->
+        <g><rect x="20" y="180" width="620" height="62" rx="10" fill="#eeeae0" stroke="#7b7972"/>
+          <rect x="20" y="180" width="7" height="62" rx="3" fill="#7b7972"/>
+          <text x="40" y="204" font-size="14" font-weight="800" fill="#5a5852">③ 网络互联</text>
+          <text x="40" y="225" font-size="11" fill="#7b7972">光模块/交换机/铜缆 · $720 亿（+45%）</text>
+          <text x="420" y="202" font-size="11" fill="#4a4a48">中际旭创 · 新易盛 · 天孚通信</text>
+          <text x="420" y="220" font-size="11" fill="#4a4a48">博通(交换芯片) · 英伟达 · 中兴 · 锐捷</text>
+          <text x="420" y="236" font-size="10" fill="#7b7972">中国光模块全球份额 60–65%</text></g>
+        <!-- L4 -->
+        <g><rect x="20" y="250" width="620" height="62" rx="10" fill="#eeeae0" stroke="#7b7972"/>
+          <rect x="20" y="250" width="7" height="62" rx="3" fill="#7b7972"/>
+          <text x="40" y="274" font-size="14" font-weight="800" fill="#5a5852">④ IDC / 智算中心</text>
+          <text x="40" y="295" font-size="11" fill="#7b7972">机房·供电·液冷 · 中国 AIDC 1,778 亿元</text>
+          <text x="420" y="272" font-size="11" fill="#4a4a48">润泽科技 · 万国数据 · 世纪互联</text>
+          <text x="420" y="290" font-size="11" fill="#4a4a48">三大运营商 · 英维克(液冷42%+)</text>
+          <text x="420" y="306" font-size="10" fill="#7b7972">矛盾：中国智算中心平均利用率仅 36.8%</text></g>
+        <!-- L5 -->
+        <g><rect x="20" y="320" width="620" height="62" rx="10" fill="#eeeae0" stroke="#5a5852"/>
+          <rect x="20" y="320" width="7" height="62" rx="3" fill="#5a5852"/>
+          <text x="40" y="344" font-size="14" font-weight="800" fill="#4a4a48">⑤ 推理引擎 / Token 工厂</text>
+          <text x="40" y="365" font-size="11" fill="#5a5852">把算力转成 Token 的"转换层" · 决胜单位成本</text>
+          <text x="420" y="342" font-size="11" fill="#4a4a48">硅基流动 · 无问芯穹 · 趋境科技</text>
+          <text x="420" y="360" font-size="11" fill="#4a4a48">PPIO · 清程极智 · vLLM / SGLang</text>
+          <text x="420" y="376" font-size="10" fill="#7b7972">国外：Fireworks · Together · Baseten</text></g>
+        <!-- L6 -->
+        <g><rect x="20" y="390" width="620" height="62" rx="10" fill="#eeeae0" stroke="#ff4b18"/>
+          <rect x="20" y="390" width="7" height="62" rx="3" fill="#ff4b18"/>
+          <text x="40" y="414" font-size="14" font-weight="800" fill="#b8320d">⑥ MaaS / 模型服务</text>
+          <text x="40" y="435" font-size="11" fill="#ff4b18">模型 API · 中国 26H1 达 106.3 亿元（+889%）</text>
+          <text x="420" y="412" font-size="11" fill="#4a4a48">火山引擎 · 阿里云百炼 · 百度千帆</text>
+          <text x="420" y="430" font-size="11" fill="#4a4a48">腾讯云 TokenHub · 智谱 · DeepSeek</text>
+          <text x="420" y="446" font-size="10" fill="#7b7972">计价单位：文本 Token → 多模态任务</text></g>
+        <!-- L7 -->
+        <g><rect x="20" y="460" width="620" height="72" rx="10" fill="#eeeae0" stroke="#ff4b18"/>
+          <rect x="20" y="460" width="7" height="72" rx="3" fill="#ff4b18"/>
+          <text x="40" y="485" font-size="14" font-weight="800" fill="#b8320d">⑦ AI 应用 / Agent Harness</text>
+          <text x="40" y="505" font-size="11" fill="#ff4b18">办公·编码·通用智能体 · 企业级 Agent 449 亿元</text>
+          <text x="40" y="522" font-size="10.5" fill="#ff4b18">WorkBuddy · 豆包工作 · DeepSeek Harness</text>
+          <text x="420" y="484" font-size="11" fill="#4a4a48">Claude Code · Cursor · Manus</text>
+          <text x="420" y="502" font-size="11" fill="#4a4a48">金山办公 · 科大讯飞 · 数式 Oinone</text>
+          <text x="420" y="520" font-size="10" fill="#7b7972">卖席位 + 卖 Token，收入按用量放大</text></g>
+
+        <!-- right column: cross-cutting -->
+        <rect x="690" y="40" width="266" height="492" rx="12" fill="#fffdf8df8" stroke="rgba(20,20,20,.14)"/>
+        <text x="708" y="66" font-size="13" font-weight="800" fill="#141414">贯穿全链的三条主线</text>
+        <text x="708" y="96" font-size="11.5" font-weight="700" fill="#b8320d">◆ 资本开支融资化</text>
+        <text x="708" y="116" font-size="10.5" fill="#4a4a48">四大云厂 2026 全口径 capex</text>
+        <text x="708" y="132" font-size="10.5" fill="#4a4a48">指引 7,200–7,450 亿美元（含土建）</text>
+        <text x="708" y="152" font-size="10.5" fill="#4a4a48">前 9 月五大厂 capex 已超</text>
+        <text x="708" y="168" font-size="10.5" fill="#4a4a48">同期经营现金流（FCF转负）</text>
+
+        <text x="708" y="204" font-size="11.5" font-weight="700" fill="#5a5852">◆ 训练转向推理</text>
+        <text x="708" y="224" font-size="10.5" fill="#4a4a48">AI 服务器口径：推理 233 亿</text>
+        <text x="708" y="240" font-size="10.5" fill="#4a4a48">首超训练 190 亿美元</text>
+        <text x="708" y="260" font-size="10.5" fill="#4a4a48">（仅服务器，非全部算力支出）</text>
+        <text x="708" y="276" font-size="10.5" fill="#4a4a48">利好光互联/存储/液冷/MaaS</text>
+
+        <text x="708" y="312" font-size="11.5" font-weight="700" fill="#b8320d">◆ 国产替代走非 GPU 路线</text>
+        <text x="708" y="332" font-size="10.5" fill="#4a4a48">英伟达中国份额 55%→34%</text>
+        <text x="708" y="348" font-size="10.5" fill="#4a4a48">华为昇腾升至 28%</text>
+        <text x="708" y="364" font-size="10.5" fill="#4a4a48">"非 GPU"四厂占 95% 份额</text>
+        <text x="708" y="380" font-size="10.5" fill="#4a4a48">2026 = 国产超节点落地元年</text>
+
+        <text x="708" y="416" font-size="11.5" font-weight="700" fill="#b8320d">◆ 中国的位置</text>
+        <text x="708" y="436" font-size="10.5" fill="#4a4a48">强：整机/光模块/液冷/PCB</text>
+        <text x="708" y="452" font-size="10.5" fill="#4a4a48">弱：AI芯片生态/HBM(&lt;5%)</text>
+        <text x="708" y="468" font-size="10.5" fill="#4a4a48">高端光芯片/交换芯片</text>
+        <text x="708" y="492" font-size="10" fill="#7b7972">注：市场规模为不同机构口径</text>
+        <text x="708" y="507" font-size="10" fill="#7b7972">不可跨口径相加</text>
+      </g>
+      <!-- flow arrow -->
+      <path d="M656 71 Q674 285 656 496" fill="none" stroke="rgba(20,20,20,.18)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#ar)"/>
+      <text x="632" y="290" font-size="10" fill="#7b7972" transform="rotate(-90 632 290)">价值沉淀方向</text>
+    </svg>
+   <figcaption class="fig-cap">图 02 · AI Infra 七层产业链全景。左列为每层定位、代表企业与关键数据，右侧为三条贯穿主线；中间箭头示意价值沉淀方向。</figcaption>
+  </figure>
+  <div class="prose">
+   <p><strong>上游吃肉</strong>：芯片与光模块掌握定价权，中国在整机、光模块、液冷、PCB 已全球主导，短板在芯片生态、HBM 与高端交换芯片。<strong>中游爬坡</strong>：Token 工厂的胜负手是单位算力产出 Token 数乘以大规模稳定交付能力，价格战下毛利能否转正仍待验证。<strong>下游分化</strong>：应用层的天花板最高，但只有把 Token 嵌进真实工作流、形成迁移成本，才能越过 3% 净利率的低谷。</p>
+  </div>
+ </section>
+
+ <section class="sec" id="token">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">03 / Token Economy</span><h2>全链的计量单位，正在重构估值</h2></div>
+   <span class="sec-aside">国家数据局 / IDC 口径</span>
+  </div>
+  <div class="prose">
+   <p>Token 正在从技术术语变成产业的价值尺度。中国日均 Token 调用量从 2024 年初的约 1,000 亿，跃升至 2026 年 6 月的约 500 万亿，较期初放大约五千倍。调用量的爆发把「单位 Token 成本」推到了所有商业模式的核心位置。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 900 300" role="img" aria-label="中国日均Token调用量增长">
+      <!-- log-ish stepped bars -->
+      <g font-size="12" fill="#4a4a48">
+        <line x1="80" y1="250" x2="880" y2="250" stroke="rgba(20,20,20,.18)"/>
+        <!-- bar1 1000亿 -->
+        <rect x="120" y="238" width="120" height="12" rx="3" fill="#e8b8aa"/>
+        <text x="180" y="230" text-anchor="middle" font-weight="700" fill="#b8320d">1,000 亿</text>
+        <text x="180" y="270" text-anchor="middle" font-size="11" fill="#7b7972">2024 年初</text>
+        <!-- bar2 100万亿 -->
+        <rect x="300" y="150" width="120" height="100" rx="3" fill="#d9765a"/>
+        <text x="360" y="142" text-anchor="middle" font-weight="700" fill="#b8320d">100 万亿</text>
+        <text x="360" y="270" text-anchor="middle" font-size="11" fill="#7b7972">2025 年底</text>
+        <!-- bar3 140万亿 -->
+        <rect x="480" y="110" width="120" height="140" rx="3" fill="#8a8880"/>
+        <text x="540" y="102" text-anchor="middle" font-weight="700" fill="#141414">140 万亿</text>
+        <text x="540" y="270" text-anchor="middle" font-size="11" fill="#7b7972">2026 / 3</text>
+        <!-- bar4 500万亿 -->
+        <rect x="660" y="30" width="120" height="220" rx="3" fill="#ff8b6b"/>
+        <text x="720" y="22" text-anchor="middle" font-weight="700" fill="#b8320d">~500 万亿</text>
+        <text x="720" y="270" text-anchor="middle" font-size="11" fill="#7b7972">2026 / 6</text>
+      </g>
+      <text x="812" y="150" font-size="11" fill="#ff4b18" font-weight="700">较期初约 5000×</text>
+      <text x="812" y="168" font-size="10" fill="#7b7972">口径：日均 Token</text>
+      <text x="812" y="182" font-size="10" fill="#7b7972">来源：国家数据局</text>
+    </svg>
+   <figcaption class="fig-cap">图 03 · 中国日均 Token 调用量增长（口径：日均 Token，来源：国家数据局）。纵轴为示意图，量级差异以标注为准。</figcaption>
+  </figure>
+  <div class="prose">
+   <p>市场份额的统计存在「两个第一」的口径之争：按整体 MaaS 平台口径，火山引擎占 45.1% 居首；按语言模型口径，阿里云百炼占 46.6% 居首。同一市场，口径不同，冠军不同。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 900 210" role="img" aria-label="MaaS市场份额两个口径">
+      <text x="20" y="22" font-size="12.5" font-weight="700" fill="#141414">整体 MaaS 营收口径（火山第一）</text>
+      <g font-size="11.5">
+        <rect x="20" y="34" width="406" height="30" fill="#ff8b6b"/><text x="223" y="54" text-anchor="middle" fill="#fffdf8" font-weight="700">火山 45.1%</text>
+        <rect x="426" y="34" width="227" height="30" fill="#8a8880"/><text x="539" y="54" text-anchor="middle" fill="#fffdf8" font-weight="700">阿里 25.2%</text>
+        <rect x="653" y="34" width="45" height="30" fill="#d9765a"/><text x="676" y="54" text-anchor="middle" fill="#fffdf8" font-size="10">智谱5%</text>
+        <rect x="698" y="34" width="40" height="30" fill="#7b7972"/><text x="718" y="54" text-anchor="middle" fill="#fffdf8" font-size="10">百度</text>
+        <rect x="738" y="34" width="142" height="30" fill="rgba(20,20,20,.14)"/><text x="809" y="54" text-anchor="middle" fill="#7b7972" font-size="10">其他 20%+</text>
+      </g>
+      <text x="20" y="104" font-size="12.5" font-weight="700" fill="#141414">大语言模型 MaaS 口径（阿里第一）</text>
+      <g font-size="11.5">
+        <rect x="20" y="116" width="419" height="30" fill="#8a8880"/><text x="229" y="136" text-anchor="middle" fill="#fffdf8" font-weight="700">阿里 46.6%</text>
+        <rect x="439" y="116" width="95" height="30" fill="#d9765a"/><text x="486" y="136" text-anchor="middle" fill="#fffdf8" font-weight="700">智谱10.6%</text>
+        <rect x="534" y="116" width="92" height="30" fill="#ff8b6b"/><text x="580" y="136" text-anchor="middle" fill="#fffdf8" font-weight="700">火山10.2%</text>
+        <rect x="626" y="116" width="60" height="30" fill="#7b7972"/><text x="656" y="136" text-anchor="middle" fill="#fffdf8" font-size="10">百度6.7%</text>
+        <rect x="686" y="116" width="194" height="30" fill="rgba(20,20,20,.14)"/><text x="783" y="136" text-anchor="middle" fill="#7b7972" font-size="10">其他 25%+</text>
+      </g>
+      <text x="20" y="180" font-size="11.5" fill="#7b7972">两个数字都有第三方背书，分母不同：一个含图像/视频等多模态，一个仅文本。本质是"谁在定义企业级 AI 的计价单位"。</text>
+    </svg>
+   <figcaption class="fig-cap">图 04 · MaaS 市场份额的两种统计口径。比较市场份额前，必须先对齐统计边界。</figcaption>
+  </figure>
+ </section>
+
+ <section class="sec" id="capital">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">04 / Capital Map</span><h2>一条赛道，两种命运</h2></div>
+   <span class="sec-aside">2026 融资与估值</span>
+  </div>
+  <div class="prose">
+   <p>2026 年是 Token 工厂从概念走向资本市场的元年：硅基流动冲刺「Token 工厂第一股」，无问芯穹刷新国内 AI Infra 融资纪录，趋境科技年内融资 24 亿元；海外 Fireworks 估值已达 175 亿美元。热闹之下，负毛利与估值工程的质疑如影随形。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 900 270" role="img" aria-label="国内Token工厂融资对比">
+      <text x="20" y="20" font-size="12.5" font-weight="700" fill="#141414">代表企业累计 / 年度融资额（人民币亿元）</text>
+      <g font-size="12" fill="#4a4a48">
+        <!-- scale: 1亿=14px -->
+        <text x="150" y="58" text-anchor="end" font-weight="600">无问芯穹</text>
+        <rect x="160" y="44" width="602" height="20" rx="3" fill="#b8320d"/>
+        <text x="772" y="59" font-weight="700" fill="#b8320d">43 亿（累计）</text>
+
+        <text x="150" y="102" text-anchor="end" font-weight="600">硅基流动</text>
+        <rect x="160" y="88" width="406" height="20" rx="3" fill="#141414"/>
+        <text x="576" y="103" font-weight="700" fill="#141414">~29 亿（2026 年度）</text>
+
+        <text x="150" y="146" text-anchor="end" font-weight="600">趋境科技</text>
+        <rect x="160" y="132" width="336" height="20" rx="3" fill="#7b7972"/>
+        <text x="506" y="147" font-weight="700" fill="#5a5852">24 亿（2026 年度）</text>
+
+        <text x="150" y="190" text-anchor="end" font-weight="600">PPIO 派欧云</text>
+        <rect x="160" y="176" width="70" height="20" rx="3" fill="#7b7972"/>
+        <text x="240" y="191" font-weight="700" fill="#4a4a48">>5 亿（累计）</text>
+
+        <text x="150" y="234" text-anchor="end" font-weight="600">清程极智</text>
+        <rect x="160" y="220" width="18" height="20" rx="3" fill="#7b7972"/>
+        <text x="188" y="235" font-weight="700" fill="#7b7972">A 轮过亿元</text>
+      </g>
+    </svg>
+   <figcaption class="fig-cap">图 05 · 国内独立 Token 工厂与 AI Infra 代表企业融资额（据公司官宣与媒体报道，口径不完全一致）。</figcaption>
+  </figure>
+  <div class="prose">
+   <h3>估值锚点：中国倍数更高，毛利却为负</h3>
+   <p>海外 Fireworks 以 175 亿美元估值对应 10 亿美元 ARR，PS 约 17.5 倍，毛利率约 50%；硅基流动 77.4 亿元估值对应 0.55 亿元收入，PS 约 140 倍，毛利率为负。中国独立 Token 工厂的规模比海外小一到两个数量级，一级市场给出的倍数反而更高——这是定价最大的争议点。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 420 230" role="img" aria-label="硅基流动营收与毛利率">
+          <!-- 毛利率纵轴：83% 最高、39% 居中、−24% 在基线下；映射 y = 145 − value×1.2 -->
+          <g font-size="10.5" text-anchor="middle">
+            <line x1="40" y1="145" x2="400" y2="145" stroke="rgba(20,20,20,.18)"/>
+            <!-- 营收柱：基线 y=145 -->
+            <rect x="70" y="141" width="60" height="4" fill="#b8b6b0"/>
+            <text x="100" y="136" fill="#141414" font-weight="700">0.6万</text>
+            <rect x="180" y="133" width="60" height="12" fill="#8a8880"/>
+            <text x="210" y="128" fill="#141414" font-weight="700">735万</text>
+            <rect x="290" y="45" width="60" height="100" fill="#141414"/>
+            <text x="320" y="39" fill="#141414" font-weight="700">5,533万</text>
+            <text x="100" y="161" fill="#7b7972">2023</text><text x="210" y="161" fill="#7b7972">2024</text><text x="320" y="161" fill="#7b7972">2025</text>
+          </g>
+          <!-- 毛利率线：83%=45.4, 39%=98.2, −24%=173.8（严格按数值） -->
+          <polyline points="100,45.4 210,98.2 320,173.8" fill="none" stroke="#ff4b18" stroke-width="2.5"/>
+          <text x="100" y="38" font-size="10" text-anchor="middle" fill="#ff4b18">83%</text>
+          <text x="210" y="91" font-size="10" text-anchor="middle" fill="#ff4b18">39%</text>
+          <text x="320" y="188" font-size="10" text-anchor="middle" fill="#ff4b18">−24%</text>
+          <text x="20" y="20" font-size="11" fill="#141414" font-weight="700">营收（柱）与毛利率（红线）</text>
+        </svg>
+   <figcaption class="fig-cap">图 06 · 硅基流动营收（柱）与整体毛利率（红线）。收入快速放大，毛利率却从 83% 一路跌至 −24%。</figcaption>
+  </figure>
+  <figure class="figure"><svg class="chart" viewBox="0 0 420 200" role="img" aria-label="硅基流动估值曲线">
+          <g font-size="10.5">
+            <line x1="40" y1="175" x2="410" y2="175" stroke="rgba(20,20,20,.18)"/>
+            <polyline points="55,168 115,160 175,145 235,130 295,105 355,50 400,25" fill="none" stroke="#ff4b18" stroke-width="2.5"/>
+            <g fill="#ff4b18">
+              <circle cx="55" cy="168" r="3.5"/><circle cx="115" cy="160" r="3.5"/><circle cx="175" cy="145" r="3.5"/>
+              <circle cx="235" cy="130" r="3.5"/><circle cx="295" cy="105" r="3.5"/><circle cx="355" cy="50" r="4"/><circle cx="400" cy="25" r="4"/>
+            </g>
+            <text x="55" y="160" text-anchor="middle" fill="#b8320d">2.8亿</text>
+            <text x="175" y="137" text-anchor="middle" fill="#b8320d">9.85亿</text>
+            <text x="295" y="97" text-anchor="middle" fill="#b8320d">50.2亿</text>
+            <text x="355" y="42" text-anchor="middle" fill="#ff4b18" font-weight="700">77.4亿</text>
+            <text x="400" y="16" text-anchor="middle" fill="#ff4b18">100亿+</text>
+            <text x="400" y="29" text-anchor="middle" fill="#7b7972" font-size="8.5">IPO 传闻</text>
+            <text x="20" y="22" font-size="11" fill="#141414" font-weight="700">投后估值（人民币）</text>
+            <text x="352" y="70" text-anchor="middle" fill="#7b7972" font-size="9">递表前 12 天跳升</text>
+          </g>
+        </svg>
+   <figcaption class="fig-cap">图 07 · 硅基流动融资估值曲线。递表前 12 天从 50.2 亿元跳升至 77.4 亿元（约 89 亿港元），恰好越过 18C 章 80 亿港元门槛；100 亿+ 为 IPO 传闻估值，未经证实。</figcaption>
+  </figure>
+  <div class="prose">
+   <h3>招股书深挖：把 −24% 拆开看</h3>
+   <p>整体毛利率 −24% 只是表象。招股书按业务拆分后，暴露了这门生意真正的结构：亏在公有云转售，赚在本地部署。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 900 250" role="img" aria-label="硅基流动分业务毛利率对比">
+      <text x="20" y="20" font-size="12.5" font-weight="700" fill="#141414">分业务毛利率（%）：负值向左、正值向右</text>
+      <line x1="450" y1="40" x2="450" y2="215" stroke="#7b7972" stroke-width="1"/>
+      <g font-size="11" fill="#7b7972" text-anchor="middle">
+        <text x="150" y="234">−120</text><text x="250" y="234">−80</text><text x="350" y="234">−40</text>
+        <text x="450" y="234">0</text><text x="550" y="234">40</text><text x="650" y="234">80</text><text x="750" y="234">120</text>
+      </g>
+      <g font-size="12.5">
+        <text x="440" y="66" text-anchor="end" fill="#4a4a48" font-weight="600">公有云转售</text>
+        <rect x="152.5" y="54" width="297.5" height="20" rx="3" fill="#ff4b18" opacity=".85"/>
+        <text x="164" y="68" fill="#fffdf8" font-weight="700">−119.0%</text>
+        <text x="465" y="68" fill="#b8320d">算力租赁成本占销售成本 86.9%</text>
+
+        <text x="440" y="110" text-anchor="end" fill="#4a4a48" font-weight="600">本地部署</text>
+        <rect x="450" y="98" width="206.3" height="20" rx="3" fill="#5a5852" opacity=".85"/>
+        <text x="666" y="112" fill="#4a4a48" font-weight="700">+82.5%</text>
+        <text x="465" y="130" fill="#4a4a48" font-size="11">软件许可 + 私有集群编排，边际成本近零</text>
+
+        <text x="440" y="162" text-anchor="end" fill="#4a4a48" font-weight="600">整体毛利率</text>
+        <rect x="390" y="150" width="60" height="20" rx="3" fill="#ff4b18" opacity=".85"/>
+        <text x="398" y="164" fill="#fffdf8" font-weight="700">−24%</text>
+        <text x="465" y="164" fill="#b8320d">被公有云拖累，2024 年尚有 +39.4%</text>
+      </g>
+      <text x="20" y="206" font-size="11" fill="#7b7972">映射：0 在 x=450，每 1% = 2.5px；来源：硅基流动港交所招股书第 179 页</text>
+    </svg>
+   <figcaption class="fig-cap">图 08 · 硅基流动分业务毛利率（招股书第 179 页）。负值向左、正值向右；来源：硅基流动港交所招股说明书申请版本。</figcaption>
+  </figure>
+  <div class="tbl-wrap"><table>
+   <thead><tr><th>招股书指标</th><th>2024</th><th>2025</th><th>2026 近期 / 启示</th></tr></thead>
+   <tbody>
+    <tr><td><strong>营业收入</strong></td><td>734.6 万元</td><td>5,533 万元（+653%）</td><td>2026/05 海外月收入破 100 万美元</td></tr>
+    <tr><td><strong>算力采购成本</strong></td><td>261.4 万元</td><td>5,962.7 万元（占成本 86.9%）</td><td>2026/06 签 60 个月算力协议 34.91 亿元；固定月租在扩量期极易压垮毛利</td></tr>
+    <tr><td><strong>免费代金券算力</strong></td><td>93.2 万元</td><td>5,421.3 万元（占销售费 64.7%）</td><td>注册 1,028 万、付费客户 64.3 万，转化率约 6%；泛 C 端补贴不可取</td></tr>
+    <tr><td><strong>日均 Token 吞吐</strong></td><td>478 亿（12 月）</td><td>1,631 亿（12 月）</td><td>2026/04 达 5,785 亿、峰值 10,714 亿；月耗超万亿的头部客户已占过半流量</td></tr>
+    <tr><td><strong>客户 / 供应商重叠</strong></td><td colspan="2">第二大客户亦是第五大供应商，第四大供应商亦是客户（第 157 / 173 页）</td><td>头部平台早已通过互采算力与 Token 调剂余缺</td></tr>
+   </tbody>
+  </table></div>
+  <div class="quote">亏的是「向云厂租卡、低价转售、发券拉新」的公有云生意；赚的是「软件许可 + 私有集群编排」的本地部署。Token 本身不赚钱，围绕 Token 的软件、交付与场景才赚钱。<cite>硅基流动招股书分部数据推导</cite></div>
+ </section>
+
+ <section class="sec" id="cases">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">05 / Cases</span><h2>三家公司的单位经济对比</h2></div>
+   <span class="sec-aside">生产 · 转换 · 应用</span>
+  </div>
+  <div class="prose">
+   <p>把硅基流动、趋境科技与数式 Oinone 放在同一张桌面上，可以看到三种截然不同的生意：趋境代表上游「把算力炼成 Token」的生产侧，Oinone 代表下游「把 Token 嵌进企业工作流」的应用侧，硅基流动居中做转换。真正值得研究的，是它们各自的单位经济模型。</p>
+  </div>
+  <div class="tbl-wrap"><table>
+   <thead><tr><th>维度</th><th>硅基流动（中游转换）</th><th>趋境科技（上游生产）</th><th>数式 Oinone（下游应用）</th></tr></thead>
+   <tbody>
+    <tr><td><strong>收入来源</strong></td><td>按 Token 出售推理服务</td><td>Token 服务订阅 + 地方智算联合运营分成</td><td>软件许可 + 实施 + 高续费；Token 超市代运营</td></tr>
+    <tr><td><strong>核心成本</strong></td><td>向云厂租 GPU，公有云毛利 −119%</td><td>电力、折旧、异构调度；以存换算摊薄单卡成本</td><td>研发人力（90% 员工为研发），边际复制成本近零</td></tr>
+    <tr><td><strong>UE 关键变量</strong></td><td>单位算力产出 Token 数 vs 单价下滑速度</td><td>单卡有效产出 × 利用率 × SLA 等级溢价</td><td>客单价 × 续费率 × 交付人效；消纳协议锁定现金流</td></tr>
+    <tr><td><strong>当前盈利性</strong></td><td>整体毛利 −24%，年亏 3.45 亿元</td><td>公司称已跨成本线，收入同比近 10 倍</td><td>未披露；低代码 + 大客户续费避开模型价格战</td></tr>
+    <tr><td><strong>壁垒来源</strong></td><td>中立性 + 推理效率差，易被上下游夹击</td><td>异构调度 + 绑定地方国资算力资源</td><td>元数据 + 工程化标准，嵌入客户研发流程</td></tr>
+    <tr><td><strong>主要风险</strong></td><td>股东即对手，无独占算力、模型或场景</td><td>重资产扩张、地方智算利用率与回款</td><td>大客户集中、AI 生成代码对低代码的替代</td></tr>
+   </tbody>
+  </table></div>
+  <p class="map-note">UE 拆解基于公开披露、公司自述与行业均价推算，非审计口径，用于呈现商业模式差异而非精确财务对比。趋境科技为清华系，年内融资 24 亿元，主打 L4–L5 满血高品质 Token（1M 上下文、&gt;50 tps、99.9% SLA）；数式 Oinone 为阿里系，已形成「Token 工厂 + Token 超市 + 企业 Agent 生态」三位一体，并代运营金华、萧山、台州等地国资 Token 超市，以 5 年算力消纳闭口协议托底。</p>
+ </section>
+
+ <section class="sec" id="harness">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">06 / Harness Loop</span><h2>WorkBuddy、豆包工作、DeepSeek Harness 在哪一层</h2></div>
+   <span class="sec-aside">Agent = Model + Harness</span>
+  </div>
+  <div class="prose">
+   <p>竞争焦点已从「谁的模型更强」转向「谁的 Harness 更强、谁能把工作流固定下来」。这些工作 Harness 产品本质都是 Token 的消费终端：买推理服务、完成一项工作、按席位加用量收费。它们把 Token 经济的上游与下游接成了一个闭环。</p>
+  </div>
+  <figure class="figure"><svg class="chart" viewBox="0 0 920 560" role="img" aria-label="Agent Harness生态闭环图">
+      <defs>
+        <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#7b7972"/></marker>
+      </defs>
+      <text x="20" y="24" font-size="13" font-weight="700" fill="#141414">Token 的闭环：从用户一句话，到芯片与电力，再回到用户的账单</text>
+
+      <!-- central loop, clockwise -->
+      <!-- top: user task -->
+      <rect x="340" y="40" width="240" height="50" rx="10" fill="#eeeae0" stroke="#7b7972"/>
+      <text x="460" y="62" text-anchor="middle" font-size="13" font-weight="800" fill="#141414">用户任务（一句话）</text>
+      <text x="460" y="80" text-anchor="middle" font-size="10.5" fill="#7b7972">"帮我把这份报告做成PPT"</text>
+
+      <!-- L: harness products -->
+      <rect x="30" y="130" width="330" height="180" rx="12" fill="#eeeae0" stroke="#ff4b18"/>
+      <text x="48" y="155" font-size="13" font-weight="800" fill="#b8320d">⑦ 工作台 / Harness 层</text>
+      <text x="48" y="175" font-size="10.5" fill="#ff4b18">Agent = Model + Harness（编排·工具·长任务状态）</text>
+      <g font-size="11.5" fill="#4a4a48">
+        <text x="48" y="199">• WorkBuddy（腾讯）— DAU 千万级，办公 Agent 头部入口</text>
+        <text x="48" y="219">• 豆包工作（字节）— DAU 800万，企业ARR 20亿元</text>
+        <text x="48" y="239">• DeepSeek Harness — 开源MIT，占全国Token约18%</text>
+        <text x="48" y="259">• Claude Code — ARR 25亿美元；Cursor — ARR ~20亿</text>
+        <text x="48" y="279">• Manus — ARR 1.25亿美元（通用自主Agent）</text>
+        <text x="48" y="299" fill="#7b7972" font-size="10">入口从"应用"迁移到"Agent"，巨头以补贴换入口</text>
+      </g>
+
+      <!-- R: model & infra -->
+      <rect x="560" y="130" width="330" height="180" rx="12" fill="#eeeae0" stroke="#ff4b18"/>
+      <text x="578" y="155" font-size="13" font-weight="800" fill="#b8320d">⑥⑤ 模型层 + MaaS / Token 工厂</text>
+      <text x="578" y="175" font-size="10.5" fill="#ff4b18">按 Token 收费 · 模型毛利 60–70%</text>
+      <g font-size="11.5" fill="#4a4a48">
+        <text x="578" y="199">• 模型：Claude / DeepSeek / Qwen / 豆包 / Kimi</text>
+        <text x="578" y="219">• 云平台：火山 · 阿里云 · 腾讯云TokenHub · AWS</text>
+        <text x="578" y="239">• 独立Token工厂：硅基流动 · 无问芯穹 · 趋境</text>
+        <text x="578" y="259">• 计价：基础订阅 + 超额用量（"卖电表"）</text>
+        <text x="578" y="279">• 云厂转售毛利可为 −30%（用算力换入口）</text>
+        <text x="578" y="299" fill="#7b7972" font-size="10">Token 已商品化：双11直播间卖 Token 月卡</text>
+      </g>
+
+      <!-- bottom: compute -->
+      <rect x="230" y="360" width="460" height="76" rx="12" fill="#eeeae0" stroke="#b8320d"/>
+      <text x="248" y="383" font-size="12.5" font-weight="800" fill="#b8320d">①–④ 算力底座：GPU/ASIC · HBM/存储 · 光互联 · 智算中心 · 电力</text>
+      <text x="248" y="404" font-size="11" fill="#4a4a48">英伟达 / 昇腾 / 寒武纪 · 中际旭创 · 润泽 · 液冷 · 电力　—　约束：GPU 利用率低、电力与 HBM 供给刚性</text>
+      <text x="248" y="424" font-size="10.5" fill="#7b7972">评价体系已从"峰值算力"转向"单位能耗有效 Token 产出 / 单 Token 综合交付成本"</text>
+
+      <!-- arrows -->
+      <path d="M360 70 L175 128" fill="none" stroke="#7b7972" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <text x="235" y="92" font-size="10.5" fill="#7b7972">下任务</text>
+      <path d="M360 220 L558 220" fill="none" stroke="#7b7972" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <text x="430" y="212" font-size="10.5" fill="#7b7972">消耗 Token</text>
+      <path d="M700 312 L640 358" fill="none" stroke="#7b7972" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <path d="M280 358 L220 312" fill="none" stroke="#7b7972" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <text x="430" y="348" font-size="10.5" fill="#7b7972" text-anchor="middle">调用推理算力 → 扩容资本开支 → 反过来约束 Token 供给与价格</text>
+      <!-- feedback loop -->
+      <path d="M690 440 Q880 440 880 300 L880 90 Q880 66 585 66" fill="none" stroke="#ff4b18" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar2)"/>
+      <text x="838" y="470" font-size="10.5" fill="#ff4b18" text-anchor="end">反馈：可用性 / 时延 / 单价 → 更高用量与付费 → 拉动上游再投资</text>
+
+      <!-- amplification badge -->
+      <rect x="30" y="360" width="185" height="110" rx="10" fill="#eeeae0" stroke="#141414"/>
+      <text x="46" y="383" font-size="11.5" font-weight="800" fill="#141414">Token 放大器</text>
+      <text x="46" y="404" font-size="10.5" fill="#4a4a48">Chatbot：1千–3千 Token</text>
+      <text x="46" y="422" font-size="10.5" fill="#4a4a48">Agent：10万–100万+</text>
+      <text x="46" y="442" font-size="12" font-weight="800" fill="#ff4b18">单任务放大 15–100 倍</text>
+      <text x="46" y="460" font-size="9.5" fill="#7b7972">推理链叠加可再放大 10–30×</text>
+    </svg>
+   <figcaption class="fig-cap">图 09 · Token 的闭环：用户一句话，经 Harness 与模型，传导到芯片与电力，再回到用户账单。Agent 单任务 Token 消耗是聊天式的 15–100 倍，是 Token 贸易规模的放大器。</figcaption>
+  </figure>
+  <div class="quote">同样使用 Claude Opus，只更换 Harness，复杂任务通过率提高 22.1 个百分点，输入 Token 反而下降 21%。同一模型下的成本与效果差距，很大一部分由 Harness 决定。<cite>微软 2026 年 11 月白皮书实测</cite></div>
+  <div class="versus">
+   <div class="vcol">
+    <span class="vtag">Upside / 结构性机会</span>
+    <h3>入口即价值</h3>
+    <ul>
+      <li>工作流一旦固定，迁移成本形成，付费转化路径清晰。</li>
+      <li>标准化订阅毛利可达 84.9%，远超卖硬件与卖算力。</li>
+      <li>Agent 放大消耗：每一次点击都向上游触发成百上千次调度。</li>
+    </ul>
+   </div>
+   <div class="vcol calm">
+    <span class="vtag">Caution / 认知误区</span>
+    <h3>三个常见误判</h3>
+    <ul>
+      <li>DAU 高不等于生意好：3.45 亿 MAU 的 C 端长期未直接变现，差别在企业端付费转化。</li>
+      <li>套壳产品正被上游回收：Cursor 份额从 41% 跌至约 26%，DeepSeek 把 Harness 免费化。</li>
+      <li>数据打架时先对齐口径：DAU 与 MAU、年化与财年不可直接相除。</li>
+    </ul>
+   </div>
+  </div>
+ </section>
+
+ <section class="sec" id="trade">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">07 / Trade Thesis</span><h2>Token 贸易：成立条件与压力测试</h2></div>
+   <span class="sec-aside">四重剪刀差 vs 反面解读</span>
+  </div>
+  <div class="prose">
+   <p class="lead">产业链上存在四重结构性价差，这是贸易成立的必要条件；但同一组数据也能得出完全相反的结论。两面对照，才不会被单一乐观叙事带偏。</p>
+   <h3>四重结构性剪刀差</h3>
+  </div>
+  <div class="cards">
+   <div class="card"><div class="card-top">01 / 异构</div><h3>算力与模型生态差</h3><p>英伟达与昇腾、沐曦、摩尔线程、海光、平头哥的算子互不兼容；下游又要同时调用多个模型。跨芯片、全模型统一 API 是刚需。</p></div>
+   <div class="card"><div class="card-top">02 / 峰谷</div><h3>闲置算力与绿电差</h3><p>智算中心平均利用率仅 36.8%，在线推理有昼夜波峰波谷。把非高峰闲置算力折价批售，本质是跨时段套利。</p></div>
+   <div class="card"><div class="card-top">03 / 分级</div><h3>Token 质量分级差</h3><p>L1–L3 低价市场靠量化压缩，L4–L5 满血市场要 1M 上下文与 99.9% SLA。同一模型不同 SLA 报价可差数倍。</p></div>
+   <div class="card"><div class="card-top">04 / 账期</div><h3>结算错配差</h3><p>行业普遍存在客户与供应商重叠。若能把固定月租改为按用量分成、延后结算，就有机会做成正现金流的周转生意。</p></div>
+  </div>
+  <p class="map-note">四重剪刀差解释了价差从哪来，但不保证价差能被一家贸易商稳定拿到——这是必要条件，不是充分条件。</p>
+  <div class="prose"><h3>压力测试：同一事实，两种解读</h3></div>
+  <div class="tbl-wrap"><table>
+   <thead><tr><th>同一事实</th><th>乐观解读</th><th>审慎解读</th></tr></thead>
+   <tbody>
+    <tr><td><strong>独立生态仅占 1.5%</strong></td><td>中转空间巨大，整合早期即是机会窗口。</td><td>三大云厂已占 87%；同一数字也可读成独立玩家几乎没有空间。</td></tr>
+    <tr><td><strong>收入 +653%、日均吞吐 5,785 亿</strong></td><td>需求爆发，规模效应即将兑现。</td><td>吞吐不等于收入更不等于毛利：同期整体毛利 −24%、年亏 3.45 亿。</td></tr>
+    <tr><td><strong>公有云 −119% / 本地部署 +82.5%</strong></td><td>切到本地部署与软件许可就能赚钱。</td><td>这恰恰证明赚钱的是软件与交付，不是 Token 转售本身。</td></tr>
+    <tr><td><strong>按用量分成可改善现金流</strong></td><td>轻资产贸易能实现正现金流周转。</td><td>分成协议要求极强议价权；新进入者上游照样要预付、下游照样要账期。</td></tr>
+   </tbody>
+  </table></div>
+  <div class="quote">四重价差真实存在，但「轻资产贸易枢纽」能否拿到价差，取决于三件事：有没有独占或低成本的货源、有没有锁定流量的场景入口、有没有垫资与信用能力。三样都没有的纯通道，价差会被上下游两头吃掉。<cite>综合研判</cite></div>
+ </section>
+
+ <section class="sec" id="blueprint">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">08 / Blueprint</span><h2>三端落地蓝图与四条红线</h2></div>
+   <span class="sec-aside">冷启动的经营指标</span>
+  </div>
+  <div class="prose"><p>假设决定进场，行业里已被验证的打法可以拆成三个轻资产环节。核心原则是不囤裸卡、不背固定月租、不做泛 C 端补贴——这三条正是 −119% 毛损率换来的教训。</p></div>
+  <div class="cards three">
+   <div class="card"><div class="card-top">上游 / 采购</div><h3>只签分成，不囤裸卡</h3><p>接入地方国资智算中心闲置产能，签按用量分成或延后结算；采购谷电时段批量额度与异构国产卡低价产能；聚合模型原厂阶梯批发折扣。</p></div>
+   <div class="card"><div class="card-top">中游 / 交易</div><h3>统一网关与分级定价</h3><p>搭建高并发容灾路由与标准 Token 折算计费引擎；把货源切成 L1–L3 性价比通道与 L4–L5 满血通道，靠动态路由赚差价。</p></div>
+   <div class="card"><div class="card-top">下游 / 消纳</div><h3>锁定大流量与对公刚需</h3><p>以 BYOK 嵌入编码助手与企业智能体；联合地方国资代运营区域 Token 超市，承接政企信创合规与对公统一采购预算。</p></div>
+  </div>
+  <div class="prose"><h3>冷启动必须守住的四条红线</h3></div>
+  <div class="tbl-wrap"><table>
+   <thead><tr><th>风险点</th><th>产业现实 / 招股书实证</th><th>应对护城河</th><th>硬性验证指标</th></tr></thead>
+   <tbody>
+    <tr><td><strong>固定租约压垮毛利</strong></td><td>2025 年公有云算力成本 5,962.7 万，固定容量冗余导致毛损率 −119%</td><td>严控固定月租底仓，优先签按调用量分成或阶梯保底</td><td>通道毛利率 ≥ 15%</td></tr>
+    <tr><td><strong>账期倒挂</strong></td><td>大客户要 30–180 天账期，上游多要求预付</td><td>中小开发者预充值；政企绑 3–5 年消纳闭口协议并匹配上游账期</td><td>净营运资金周转天数 ≤ 0</td></tr>
+    <tr><td><strong>降智与 SLA 违约</strong></td><td>低价中转常偷偷量化、缩上下文，生产级客户流失</td><td>全链路可观测探针，隔离批售与满血通道，明码标价</td><td>生产通道 SLA ≥ 99.9%</td></tr>
+    <tr><td><strong>合规与跨境监管</strong></td><td>生成式 AI 暂行办法、内容标识办法与管制持续收紧</td><td>境内数据不出域、全量审计日志；海外业务独立主体隔离</td><td>合规审计 100% 覆盖</td></tr>
+   </tbody>
+  </table></div>
+  <p class="map-note">账期倒挂与 SLA 可审计，恰是国资背景主体能做出差异化的地方：有信用、有对公渠道、能签消纳闭口协议。但前提是借一个真实场景（被投企业、拟上市企业的 AI 改造）作为消纳底盘，而不是先建通道再找流量——顺序反了，就会回到发券拉新、亏损换规模的老路。</p>
+ </section>
+
+ <section class="sec" id="conclusion">
+  <div class="sec-head">
+   <div class="sec-head-left"><span class="sec-no">09 / Conclusion</span><h2>四条结论与五个观察窗口</h2></div>
+   <span class="sec-aside">产业链结构判断</span>
+  </div>
+  <div class="cards">
+   <div class="card"><div class="card-top">01 / 稀缺</div><h3>价值在卡脖子处沉淀</h3><p>芯片、光模块、先进封装掌握定价权；短板在芯片生态、HBM 与高端光芯片。</p></div>
+   <div class="card"><div class="card-top">02 / 效率</div><h3>中间层在打效率战</h3><p>Token 工厂胜负手是单位算力产出与稳定交付；毛利转正取决于效率提升是否快于单价下降。</p></div>
+   <div class="card"><div class="card-top">03 / 工作流</div><h3>闭环的尽头是工作流</h3><p>项目制应用净利最薄，标准化订阅天花板最高；把 Token 嵌进真实工作流才有迁移成本。</p></div>
+   <div class="card"><div class="card-top">04 / 贸易</div><h3>可做，但不能做纯通道</h3><p>转售 Token 不赚钱，软件、交付与场景才赚钱；进场须有独占货源、场景入口或垫资信用至少一样。</p></div>
+  </div>
+  <div class="prose"><h3>值得持续跟踪的五个观察窗口</h3></div>
+  <div class="tbl-wrap"><table>
+   <thead><tr><th>#</th><th>观察指标</th><th>为什么重要</th></tr></thead>
+   <tbody>
+    <tr><td>1</td><td>云巨头自由现金流能否回正、CoreWeave 与甲骨文信用利差</td><td>决定这轮资本开支潮是消化回吐还是信用事件</td></tr>
+    <tr><td>2</td><td>国产芯片出货能否转化为集群交付、液冷与先进封装订单</td><td>验证国产超节点是真实产能而非纸面份额</td></tr>
+    <tr><td>3</td><td>MaaS 单位 Token 成本下降与单价下降的速度差</td><td>判断 Token 工厂能否从负毛利转正的核心</td></tr>
+    <tr><td>4</td><td>智算中心利用率（当前 36.8%）能否提升</td><td>决定 AIDC 是资产还是包袱</td></tr>
+    <tr><td>5</td><td>Harness 产品的付费转化率与推理成本的赛跑</td><td>下游需求能否持续兑现，是闭环最大的不确定项</td></tr>
+   </tbody>
+  </table></div>
+  <p class="map-note">各生态位的战略结论：算力芯片价值最集中但门槛最高；服务器赚制造的钱；网络互联中国已全球主导；IDC 看利用率拐点；Token 工厂最热也最险；MaaS 是云厂主场；应用与 Harness 天花板最高，但需要场景纵深而非套壳。本文为产业链结构梳理与信息归纳，不构成投资建议。</p>
+ </section>
+
+ <footer class="foot">
+  <span>HillToken｜山外有词 · 技术与观察系列　/　数据来源：IDC、TrendForce、Gartner、信通院、国家数据局、弗若斯特沙利文、港交所招股书及公开报道，整理截至 2026-11-24</span>
+  <span><a href="#top">返回顶部 ↑</a></span>
+ </footer>
+</div>
+</body>
+</html>

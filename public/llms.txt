@@ -34,6 +34,8 @@
   摘要：从三大片区到18个行政区，再到291个规划街区与主干道：一张基于香港政府开放数据的可交互地理认知地图。
 - 005 FSD V15 · 一次真正的代际跃迁（2026-11-22）：https://hilltoken.net/notes/fsd-v15-video/
   摘要：特斯拉 FSD V15 公开评价速览：端到端网络重构、Tesla Reality View、安全场景处理能力提升25倍。附官方演示视频与简短结论。
+- 006 AI Infra 产业链全景 · 从一块芯片到一句话的工作流（2026-11-27）：https://hilltoken.net/notes/ai-infra-token-industry/
+  摘要：七层 AI 基础设施全景与利润梯度：芯片 55–75%、光模块 46–50%、应用 3%–85%；硅基流动招股书拆解公有云 −119% 与本地部署 +82.5% 的分部毛利，Token 贸易四重剪刀差与正反解读，Agent Harness 闭环与四条冷启动红线。
 - 完整列表：https://hilltoken.net/#notes
 
 ## 订阅与机器可读入口
